@@ -477,10 +477,10 @@ int	main(int argc, char **argv)
 	}
 	parse_scene(fd, &scene);
 	close(fd);
-	if (!validate_map(&scene.map))
-	{
-		perror("Invalid map");
-		return (EXIT_FAILURE);
-	}
+	//if (!validate_map(&scene.map))
+	//{
+	//	perror("Invalid map");
+	//	return (EXIT_FAILURE);
+	//}
 	return (EXIT_SUCCESS);
 }

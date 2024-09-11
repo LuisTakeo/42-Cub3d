@@ -2,7 +2,7 @@ NO ./path_to_the_north_texture.png
 SO ./path_to_the_south_texture.png
 WE ./path_to_the_west_texture.png
 EA ./path_to_the_east_texture.png
-F 220,100,8
+F 000000000000220,     100,4294967297
 C 255,30,8
 
 1111101111111111011111111
