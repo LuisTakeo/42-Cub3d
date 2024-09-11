@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "get_next_line.h"
 
 #define FT_VECTOR_INITIAL_CAPACITY 16
 
@@ -53,38 +54,6 @@ typedef struct s_pos
 	int				x;
 	int				y;
 }					t_pos;
-
-#define BUFFER_SIZE 42
-
-char	*get_next_line(int fd)
-{
-	static char	buffer[BUFFER_SIZE];
-	char		line[70000];
-	static int	buffer_readed;
-	static int	buffer_pos;
-	int			i;
-
-	i = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	while (1)
-	{
-		if (buffer_pos >= buffer_readed)
-		{
-			buffer_readed = read(fd, buffer, BUFFER_SIZE);
-			buffer_pos = 0;
-			if (buffer_readed <= 0)
-				break ;
-		}
-		line[i++] = buffer[buffer_pos++];
-		if (line[i - 1] == '\n')
-			break ;
-	}
-	line[i] = '\0';
-	if (i == 0)
-		return (NULL);
-	return (ft_strdup(line));
-}
 
 void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
 {
@@ -429,7 +398,7 @@ bool	validate_map(t_map *map)
 	int	j;
 
 	i = 0;
-	// map->map_width = get_map_columns(map->map);
+	map->map_width = get_map_columns(map->map);
 	while (i < map->map_height)
 	{
 		j = 0;
@@ -477,10 +446,10 @@ int	main(int argc, char **argv)
 	}
 	parse_scene(fd, &scene);
 	close(fd);
-	//if (!validate_map(&scene.map))
-	//{
-	//	perror("Invalid map");
-	//	return (EXIT_FAILURE);
-	//}
+	if (!validate_map(&scene.map))
+	{
+		perror("Invalid map");
+		return (EXIT_FAILURE);
+	}
 	return (EXIT_SUCCESS);
 }
