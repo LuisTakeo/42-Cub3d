@@ -231,7 +231,6 @@ int	is_valid_color_value(int value)
 //		printf("Error: Color values must be between 0 and 255\n");
 //		exit(EXIT_FAILURE);
 //	}
-//	// Free the components
 //	free(components[0]);
 //	free(components[1]);
 //	free(components[2]);
@@ -455,40 +454,6 @@ bool	validate_map(t_map *map)
 	return (true);
 }
 
-/* bool	validate_map(t_map *map) */
-/* { */
-/* 	int	i; */
-/* 	int	j; */
-/**/
-/* 	i = 0; */
-/* 	while (i < 10) */
-/* 	{ */
-/* 		j = 0; */
-/* 		while (j < 20) */
-/* 		{ */
-/* 			if (map->map[i][j] == '0' || map->map[i][j] == 'N' */
-/* 				|| map->map[i][j] == 'S' || map->map[i][j] == 'E' */
-/* 				|| map->map[i][j] == 'W') */
-/* 			{ */
-/* 				if (i == 0 || j == 0 || i == map->map_height - 1 */
-/* 					|| j == map->map_width - 1) */
-/* 				{ */
-/* 					perror("Map is not closed"); */
-/* 					return (false); */
-/* 				} */
-/* 				if (map->map[i - 1][j] == ' ' || map->map[i + 1][j] == ' ' */
-/* 					|| map->map[i][j - 1] == ' ' || map->map[i][j + 1] == ' ') */
-/* 				{ */
-/* 					perror("Map is not closed"); */
-/* 					return (false); */
-/* 				} */
-/* 			} */
-/* 			j++; */
-/* 		} */
-/* 		i++; */
-/* 	} */
-/* 	return (true); */
-/* } */
 int	main(int argc, char **argv)
 {
 	int		fd;

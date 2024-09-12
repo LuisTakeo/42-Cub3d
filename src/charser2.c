@@ -232,7 +232,6 @@ int	is_valid_color_value(int value)
 //		printf("Error: Color values must be between 0 and 255\n");
 //		exit(EXIT_FAILURE);
 //	}
-//	// Free the components
 //	free(components[0]);
 //	free(components[1]);
 //	free(components[2]);

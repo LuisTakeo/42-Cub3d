@@ -232,7 +232,6 @@ int	is_valid_color_value(int value)
 //		printf("Error: Color values must be between 0 and 255\n");
 //		exit(EXIT_FAILURE);
 //	}
-//	// Free the components
 //	free(components[0]);
 //	free(components[1]);
 //	free(components[2]);
@@ -321,10 +320,6 @@ void	parse_scene(int fd, t_scene *scene)
 	g = (color >> 8) & 0xFF;
 	b = color & 0xFF;
 	printf("Color - R: %d, G: %d, B: %d\n", r, g, b);
-	free(scene->north_texture);	
-	free(scene->south_texture);	
-	free(scene->east_texture);	
-	free(scene->west_texture);	
 	free(line);
 }
 
@@ -456,7 +451,6 @@ bool	validate_map(t_map *map)
 	int	j;
 
 	i = 0;
-		printf("ALOOOOOOOO");
 	while (i < map->map_height)
 	{
 		j = 0;
@@ -502,16 +496,13 @@ int	main(int argc, char **argv)
 		perror("Usage: ./cub3d <map_file.cub>");
 		return (EXIT_FAILURE);
 	}
-		printf("ALOOOOOOOO1\n");
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
-		printf("ALOOOOOOOO2\n");
 	parse_scene(fd, &scene);
-		printf("ALOOOOOOOO3\n");
 	close(fd);
 	//if (!validate_map(&scene.vap))
 	if (!validate_map(&scene.map))
@@ -519,6 +510,5 @@ int	main(int argc, char **argv)
 		perror("Invalid map");
 		return (EXIT_FAILURE);
 	}
-		printf("ALOOOOOOOO4\n");
 	return (EXIT_SUCCESS);
 }
