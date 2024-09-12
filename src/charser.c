@@ -9,7 +9,7 @@
 
 typedef struct s_vector
 {
-	void			**values;
+	char			**values;
 	unsigned long	size;
 	unsigned long	capacity;
 }					t_vector;
@@ -47,6 +47,7 @@ typedef struct s_scene
 	int				floor_color;
 	int				ceiling_color;
 	t_map			map;
+	t_vector		vap;
 }					t_scene;
 
 typedef struct s_pos
@@ -99,7 +100,7 @@ bool	ft_vector_empty(const t_vector *vector)
 
 bool	ft_vector_resize(t_vector *vector, unsigned long new_capacity)
 {
-	void	*new_values;
+	char	*new_values;
 
 	if (!vector)
 		return (false);
@@ -112,11 +113,11 @@ bool	ft_vector_resize(t_vector *vector, unsigned long new_capacity)
 	}
 	if (new_capacity < vector->size)
 		new_capacity = vector->size;
-	new_values = ft_realloc(vector->values, vector->capacity * sizeof(void *),
+	new_values = ft_realloc(vector->values, vector->capacity * sizeof(char *),
 			new_capacity * sizeof(long));
 	if (new_values == NULL)
 		return (false);
-	vector->values = new_values;
+	vector->values = &new_values;
 	vector->capacity = new_capacity;
 	if (new_capacity < vector->size)
 		vector->size = new_capacity;
@@ -124,7 +125,7 @@ bool	ft_vector_resize(t_vector *vector, unsigned long new_capacity)
 }
 
 unsigned long	ft_vector_insert(t_vector *vector, unsigned long position,
-		void *value)
+		char *value)
 {
 	unsigned long	new_capacity;
 	unsigned long	i;
@@ -159,7 +160,7 @@ t_vector	*ft_vector_create(void)
 		return (NULL);
 	new_vector->size = 0;
 	new_vector->capacity = FT_VECTOR_INITIAL_CAPACITY;
-	new_vector->values = malloc(new_vector->capacity * sizeof(void *));
+	new_vector->values = malloc(new_vector->capacity * sizeof(char *));
 	if (new_vector->values == NULL)
 	{
 		free(new_vector);
@@ -168,7 +169,7 @@ t_vector	*ft_vector_create(void)
 	return (new_vector);
 }
 
-void	ft_vector_push_back(t_vector *vector, void *value)
+void	ft_vector_push_back(t_vector *vector, char *value)
 {
 	unsigned long	new_capacity;
 
@@ -334,6 +335,23 @@ unsigned long	ft_vector_size(const t_vector *vector)
 	return (vector->size);
 }
 
+//int	get_map_columns(const char *map)
+//{
+//	int	i;
+//	int	max_cols;
+//	int	current_cols;
+//
+//	i = 0;
+//	max_cols = 0;
+//	while (map[i] != '\0')
+//	{
+//		current_cols = ft_strlen(&map[i]);
+//		if (current_cols > max_cols)
+//			max_cols = current_cols;
+//		i++;
+//	}
+//	return (max_cols);
+//}
 char	**vector_to_array(t_vector *vector)
 {
 	char			**array;
@@ -346,28 +364,13 @@ char	**vector_to_array(t_vector *vector)
 	while (i < vector->size)
 	{
 		array[i] = vector->values[i];
+		printf("%s", array[i]);
+		//printf("%s val \n", vector->values[i]);
 		i++;
 	}
 	return (array);
 }
 
-int	get_map_columns(const char *map)
-{
-	int	i;
-	int	max_cols;
-	int	current_cols;
-
-	i = 0;
-	max_cols = 0;
-	while (map[i] != '\0')
-	{
-		current_cols = ft_strlen(&map[i]);
-		if (current_cols > max_cols)
-			max_cols = current_cols;
-		i++;
-	}
-	return (max_cols);
-}
 int	get_map_columns2(t_vector *lines)
 {
 	int	i;
@@ -378,8 +381,8 @@ int	get_map_columns2(t_vector *lines)
 	max_cols = 0;
 	while ((char *)lines->values[i] != NULL)
 	{
-		current_cols = ft_strlen((char *)lines->values[i]);
-		printf("%d \n", current_cols);
+		current_cols = ft_strlen(lines->values[i]);
+		printf("%d curre %d \n", current_cols, i);
 		//printf("%s \n", (char *)lines->values[i]);
 		if (current_cols > max_cols)
 			max_cols = current_cols;
@@ -394,17 +397,20 @@ void	load_map(int fd, char *first_line, t_scene *scene)
 	char		*line;
 
 	map_lines = ft_vector_create();
-	ft_vector_push_back(map_lines, &first_line);
+	ft_vector_push_back(map_lines, first_line);
 	while ((line = get_next_line(fd)) != NULL)
-		ft_vector_push_back(map_lines, (char *)&line);
-	scene->map.map_width = get_map_columns2(map_lines);
+		ft_vector_push_back(map_lines, line);
+	scene->map.map_width = get_map_columns2(map_lines) - 1;
 	scene->map.map_height = ft_vector_size(map_lines);
-//	scene->map.map_data = vector_to_array(map_lines);
+	scene->map.map_data = vector_to_array(map_lines);
 //	scene->map.map_width = get_map_columns(*scene->map.map_data);
 	printf("Map width: %d\n", scene->map.map_width);
 	printf("Map height: %d\n", scene->map.map_height);
-//	printf("Map data: %s\n", *scene->map.map_data);
+	int i = 0;
+	printf("Map data: %s\n", scene->map.map_data[i++]);
 	free(line);
+	scene->vap = *map_lines;
+	scene->map.map = scene->map.map_data;
 	ft_vector_free(map_lines);
 }
 
@@ -426,6 +432,7 @@ bool	validate_map(t_map *map)
 	int	j;
 
 	i = 0;
+		printf("ALOOOOOOOO");
 	while (i < map->map_height)
 	{
 		j = 0;
@@ -499,18 +506,23 @@ int	main(int argc, char **argv)
 		perror("Usage: ./cub3d <map_file.cub>");
 		return (EXIT_FAILURE);
 	}
+		printf("ALOOOOOOOO1\n");
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
+		printf("ALOOOOOOOO2\n");
 	parse_scene(fd, &scene);
+		printf("ALOOOOOOOO3\n");
 	close(fd);
+	//if (!validate_map(&scene.vap))
 	if (!validate_map(&scene.map))
 	{
 		perror("Invalid map");
 		return (EXIT_FAILURE);
 	}
+		printf("ALOOOOOOOO4\n");
 	return (EXIT_SUCCESS);
 }

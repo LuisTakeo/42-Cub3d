@@ -11,7 +11,7 @@ FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a
 FLAGSMLX = -ldl -lglfw -pthread -lm
 
-SRC = ./src/parser.c
+SRC = ./src/charser.c
 
 SRC_BONUS = ./src_bonus/main_bonus.c \
 	 ./src_bonus/hooks_bonus.c \
