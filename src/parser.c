@@ -1,9 +1,9 @@
 #include "../lib/libft/libft.h"
+#include "get_next_line.h"
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "get_next_line.h"
 
 #define FT_VECTOR_INITIAL_CAPACITY 16
 
@@ -274,6 +274,10 @@ void	parse_scene(int fd, t_scene *scene)
 {
 	char		*line;
 	t_direction	dir;
+	int			color;
+	int			r;
+	int			g;
+	int			b;
 
 	while ((line = get_next_line(fd)) != NULL)
 	{
@@ -283,23 +287,19 @@ void	parse_scene(int fd, t_scene *scene)
 		if (dir != INVALID_DIRECTION)
 		{
 			if (dir == NORTH)
-				scene->north_texture = ft_strdup(ft_strtrim(line + 3, " \n"));
+				scene->north_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
 			else if (dir == SOUTH)
-				scene->south_texture = ft_strdup(ft_strtrim(line + 3, " \n"));
+				scene->south_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
 			else if (dir == WEST)
-				scene->west_texture = ft_strdup(ft_strtrim(line + 3, " \n"));
+				scene->west_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
 			else if (dir == EAST)
-				scene->east_texture = ft_strdup(ft_strtrim(line + 3, " \n"));
+				scene->east_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
 		}
 		else if (*line == 'F')
-		{
 			scene->floor_color = parse_color(line + 2);
-		}
 		else if (*line == 'C')
-		{
 			scene->ceiling_color = parse_color(line + 2);
-		}
-		else if (ft_isdigit(*line) || *line == ' ')
+		else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
 		{
 			load_map(fd, line, scene);
 			break ;
@@ -315,11 +315,16 @@ void	parse_scene(int fd, t_scene *scene)
 		scene->west_texture ? scene->west_texture : "(null)");
 	printf("East texture: %s\n",
 		scene->east_texture ? scene->east_texture : "(null)");
-	int color = scene->floor_color; 
-	int r = (color >> 16) & 0xFF;   
-	int g = (color >> 8) & 0xFF;    
-	int b = color & 0xFF;           
+	color = scene->floor_color;
+	r = (color >> 16) & 0xFF;
+	g = (color >> 8) & 0xFF;
+	b = color & 0xFF;
 	printf("Color - R: %d, G: %d, B: %d\n", r, g, b);
+	free(scene->north_texture);	
+	free(scene->south_texture);	
+	free(scene->east_texture);	
+	free(scene->west_texture);	
+	free(line);
 }
 
 unsigned long	ft_vector_size(const t_vector *vector)
@@ -346,6 +351,41 @@ char	**vector_to_array(t_vector *vector)
 	return (array);
 }
 
+int	get_map_columns(const char *map)
+{
+	int	i;
+	int	max_cols;
+	int	current_cols;
+
+	i = 0;
+	max_cols = 0;
+	while (map[i] != '\0')
+	{
+		current_cols = ft_strlen(&map[i]);
+		if (current_cols > max_cols)
+			max_cols = current_cols;
+		i++;
+	}
+	return (max_cols);
+}
+int	get_map_columns2(t_vector *map)
+{
+	int	i;
+	int	max_cols;
+	int	current_cols;
+
+	i = 0;
+	max_cols = 0;
+	while (map->values[i] != NULL)
+	{
+		current_cols = ft_strlen(map->values[i]);
+		if (current_cols > max_cols)
+			max_cols = current_cols;
+		i++;
+	}
+	return (max_cols);
+}
+
 void	load_map(int fd, char *first_line, t_scene *scene)
 {
 	t_vector	*map_lines;
@@ -354,11 +394,15 @@ void	load_map(int fd, char *first_line, t_scene *scene)
 	map_lines = ft_vector_create();
 	ft_vector_push_back(map_lines, &first_line);
 	while ((line = get_next_line(fd)) != NULL)
-	{
 		ft_vector_push_back(map_lines, &line);
-	}
+	scene->map.map_width = get_map_columns2(map_lines);
 	scene->map.map_height = ft_vector_size(map_lines);
-	scene->map.map_data = vector_to_array(map_lines);
+//	scene->map.map_data = vector_to_array(map_lines);
+//	scene->map.map_width = get_map_columns(*scene->map.map_data);
+	printf("Map width: %d\n", scene->map.map_width);
+	printf("Map height: %d\n", scene->map.map_height);
+//	printf("Map data: %s\n", *scene->map.map_data);
+	free(line);
 	ft_vector_free(map_lines);
 }
 
@@ -374,31 +418,12 @@ int	flood_fill(char **map, int x, int y, int width, int height)
 		&& flood_fill(map, x, y - 1, width, height));
 }
 
-int	get_map_columns(char **map)
-{
-	int	i;
-	int	max_cols;
-	int	current_cols;
-
-	i = 0;
-	max_cols = 0;
-	while (map[i] != NULL)
-	{
-		current_cols = ft_strlen(map[i]);
-		if (current_cols > max_cols)
-			max_cols = current_cols;
-		i++;
-	}
-	return (max_cols);
-}
-
 bool	validate_map(t_map *map)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	map->map_width = get_map_columns(map->map);
 	while (i < map->map_height)
 	{
 		j = 0;
@@ -446,10 +471,10 @@ int	main(int argc, char **argv)
 	}
 	parse_scene(fd, &scene);
 	close(fd);
-	if (!validate_map(&scene.map))
-	{
-		perror("Invalid map");
-		return (EXIT_FAILURE);
-	}
+	//if (!validate_map(&scene.map))
+	//{
+	//	perror("Invalid map");
+	//	return (EXIT_FAILURE);
+	//}
 	return (EXIT_SUCCESS);
 }
