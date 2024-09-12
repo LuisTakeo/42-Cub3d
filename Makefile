@@ -49,7 +49,7 @@ libft:
 	@make all bonus new_fun -C $(LIBFT) $(FLAGS) --no-print-directory
 
 %.o: %.c $(HEADERS)
-	@$(CC) $(FLAGS) $(FLAGSOMLX) -o $@ -c $< && echo "Compilando: $(notdir $<)"
+	@$(CC) $(FLAGS) -g3 $(FLAGSOMLX) -o $@ -c $< && echo "Compilando: $(notdir $<)"
 
 $(NAME): $(OBJS)
 	@echo "Criando arquivo $(NAME)"

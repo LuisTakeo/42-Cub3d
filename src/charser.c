@@ -335,6 +335,19 @@ unsigned long	ft_vector_size(const t_vector *vector)
 	return (vector->size);
 }
 
+unsigned long	ft_height(int fd)
+{
+
+	char * line;
+	int i = 0;
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
+			i++;
+	}
+	return(i);
+
+}
 //int	get_map_columns(const char *map)
 //{
 //	int	i;
@@ -379,9 +392,16 @@ int	get_map_columns2(t_vector *lines)
 
 	i = 0;
 	max_cols = 0;
-	while ((char *)lines->values[i] != NULL)
+	while (lines->values[i] != NULL)
 	{
+		int j = 0;
 		current_cols = ft_strlen(lines->values[i]);
+		while(lines->values[i][j])
+		{
+			if(lines->values[i][j] == '\t')
+				current_cols += 3;
+			j++;
+		}
 		printf("%d curre %d \n", current_cols, i);
 		//printf("%s \n", (char *)lines->values[i]);
 		if (current_cols > max_cols)
@@ -399,14 +419,18 @@ void	load_map(int fd, char *first_line, t_scene *scene)
 	map_lines = ft_vector_create();
 	ft_vector_push_back(map_lines, first_line);
 	while ((line = get_next_line(fd)) != NULL)
-		ft_vector_push_back(map_lines, line);
+	{
+	//	if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
+			ft_vector_push_back(map_lines, line);
+	}
 	scene->map.map_width = get_map_columns2(map_lines) - 1;
 	scene->map.map_height = ft_vector_size(map_lines);
+//	scene->map.map_height = ft_height(fd);
 	scene->map.map_data = vector_to_array(map_lines);
 //	scene->map.map_width = get_map_columns(*scene->map.map_data);
 	printf("Map width: %d\n", scene->map.map_width);
 	printf("Map height: %d\n", scene->map.map_height);
-	int i = 0;
+	int i = 1;
 	printf("Map data: %s\n", scene->map.map_data[i++]);
 	free(line);
 	scene->vap = *map_lines;
