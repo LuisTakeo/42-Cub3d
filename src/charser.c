@@ -394,14 +394,14 @@ int	get_map_columns2(t_vector *lines)
 	max_cols = 0;
 	while (lines->values[i] != NULL)
 	{
-		int j = 0;
+	//	int j = 0;
 		current_cols = ft_strlen(lines->values[i]);
-		while(lines->values[i][j])
-		{
-			if(lines->values[i][j] == '\t')
-				current_cols += 3;
-			j++;
-		}
+	//	while(lines->values[i][j])
+	//	{
+	//		if(lines->values[i][j] == '\t')
+	//			current_cols += 3;
+	//		j++;
+	//	}
 		printf("%d curre %d \n", current_cols, i);
 		//printf("%s \n", (char *)lines->values[i]);
 		if (current_cols > max_cols)
@@ -430,8 +430,9 @@ void	load_map(int fd, char *first_line, t_scene *scene)
 //	scene->map.map_width = get_map_columns(*scene->map.map_data);
 	printf("Map width: %d\n", scene->map.map_width);
 	printf("Map height: %d\n", scene->map.map_height);
-	int i = 1;
-	printf("Map data: %s\n", scene->map.map_data[i++]);
+	int i = 0;
+	while (i < scene->map.map_height)
+		printf("Map data: %s", scene->map.map_data[i++]);
 	free(line);
 	scene->vap = *map_lines;
 	scene->map.map = scene->map.map_data;
@@ -478,6 +479,12 @@ bool	validate_map(t_map *map)
 					perror("Map is not closed");
 					return (false);
 				}
+				//if (map->map[i - 1][j] == '\t' || map->map[i + 1][j] == '\t'
+				//	|| map->map[i][j - 1] == '\t' || map->map[i][j + 1] == '\t')
+				//{
+				//	perror("Map is not closed");
+				//	return (false);
+				//}
 			}
 			j++;
 		}
