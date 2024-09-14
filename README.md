@@ -19,10 +19,11 @@
 
 ## arg validations
 ### TODO
+- treat file called ".cub"?
+- treat errors like: "Error\n" followed by an explicit error message
+### DOING
 - is empty
 - is not a folder
-- treat file called ".cub"
-- treat errors like: "Error\n" followed by an explicit error message
 ### DONE
 - number of args
 - right extension(.cub) 
@@ -32,18 +33,18 @@
 
 ## elements
 ### TODO
-- throw all relevant elements on a struct
-- where elements end?
-- textures cant be duplicates
-- treat spaces on texture filenames
-- accept spacing on elements spacing
-- treat spaces and tabs
 - careful with \n and empty lines
 - "Error\n" followed by an explicit error message
 - dont accept elements after the map
 - 4294967297 overflow
 - treat errors like: "Error\n" followed by an explicit error message
+### DOING
+- throw all relevant elements on a struct
+- textures cardinal points cannot repeat
+- floor and ceiling colors line cannot repeat
+- treat spaces and tabs
 ### DONE
+- where elements end
 - RBG of the floor and celiing colors
 - receive elements in any order
 - textures are valid (exists, right extension, etc)
@@ -57,21 +58,24 @@
 ## map
 ### TODO
 - throw all relevant information on a struct
-- where the map starts?
-- treat tab as 4 width?
 - where it ends
-- floodfill
+- NWSE cannot repeat
 - empty line in the middle of the map
-- must be surrounded by walls
 - make sure texture are on the right cardinal point
 - make sure the player is looking for the right cardinal point
-- make sure floodfill starts on NSWE
 - make sure to treat only NSWE01(inside the map) 'spaces' and 'tabs'(outside)
 - treat non ascii chars
 - two maps on the same file?
 - treat errors like: "Error\n" followed by an explicit error message
 - accept triangles?
+- wholes in the map
+### DOING
+- must be surrounded by walls
+- floodfill
+- make sure floodfill starts on NSWE
 ### DONE
+- treat tab as 1 width
+- where the map starts
 - send data to validation
 - get height
 - get width
