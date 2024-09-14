@@ -524,14 +524,10 @@ bool	file_exists(const char *filename)
 
 bool	validate_file(const char *filename)
 {
+	//check if is empty
 	if (!validate_extension(filename, ".cub"))
 	{
 		perror("Invalid file extension. Must be .cub");
-		return (false);
-	}
-	if (!file_exists(filename))
-	{
-		perror("File is empty");
 		return (false);
 	}
 	return (true);

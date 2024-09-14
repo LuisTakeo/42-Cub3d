@@ -19,13 +19,12 @@
 
 ## arg validations
 ### TODO
-- right extension(.cub) 
 - is empty
 - is not a folder
-- treat spaces?
 - treat errors like: "Error\n" followed by an explicit error message
 ### DONE
 - number of args
+- right extension(.cub) 
 - exists
 
 # .cub validations
@@ -34,17 +33,18 @@
 ### TODO
 - where elements end?
 - textures cant be duplicates
-- textures are valid (exists, right extension, etc)
 - treat spaces on texture filenames
-- receive elements in any order and any spacing
+- accept spacing on elements spacing
 - treat spaces and tabs
 - careful with \n and empty lines
-- RBG of the floor and celiing colors
 - "Error\n" followed by an explicit error message
 - dont accept elements after the map
 - 4294967297 overflow
 - treat errors like: "Error\n" followed by an explicit error message
 ### DONE
+- RBG of the floor and celiing colors
+- receive elements in any order
+- textures are valid (exists, right extension, etc)
 - where the map starts?
 - check how to read the first lines that define textures and etc
 - read textures and rgb in any order
