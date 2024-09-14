@@ -21,6 +21,7 @@
 ### TODO
 - is empty
 - is not a folder
+- treat file called ".cub"
 - treat errors like: "Error\n" followed by an explicit error message
 ### DONE
 - number of args
@@ -31,6 +32,7 @@
 
 ## elements
 ### TODO
+- throw all relevant elements on a struct
 - where elements end?
 - textures cant be duplicates
 - treat spaces on texture filenames
@@ -54,6 +56,7 @@
 
 ## map
 ### TODO
+- throw all relevant information on a struct
 - where the map starts?
 - treat tab as 4 width?
 - where it ends

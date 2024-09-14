@@ -524,6 +524,7 @@ bool	file_exists(const char *filename)
 
 bool	validate_file(const char *filename)
 {
+
 	//check if is empty
 	if (!validate_extension(filename, ".cub"))
 	{
