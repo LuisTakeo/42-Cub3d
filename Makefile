@@ -5,7 +5,7 @@ LIBMLX = $(LIBS_FOLDER)/MLX42
 LIBFT = $(LIBS_FOLDER)/libft
 #HEADERS = ./includes/so_long.h ./includes/so_long_bonus.h
 
-CC = cc
+CC = clang-12
 FLAGS = -Wextra -Wall -Werror
 FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a
