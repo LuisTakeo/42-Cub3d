@@ -207,7 +207,8 @@ t_direction	get_direction(char *identifier)
 	return (INVALID_DIRECTION);
 }
 
-void				load_map(int fd, char *first_line, t_scene *scene, t_map *map);
+void				load_map(int fd, char *first_line, t_scene *scene,
+						t_map *map);
 int	is_valid_color_value(int value)
 {
 	return (value >= 0 && value <= 255);
@@ -469,45 +470,44 @@ char	ft_value(t_vector *vector, unsigned long i, unsigned long j)
 	char	*row;
 
 	if (vector == NULL || i >= vector->size)
-		return ('\0');  // Return null character or any error character
-	row = vector->values[i];  // Get the row (matrix row is a char *)
+		return ('\0');       // Return null character or any error character
+	row = vector->values[i]; // Get the row (matrix row is a char *)
 	if (row == NULL || j >= ft_strlen(row))
-		return ('\0');  // Check bounds for row
-	return (row[j]);    // Return the element at the i-th row, j-th column
+		return ('\0'); // Check bounds for row
+	return (row[j]);   // Return the element at the i-th row, j-th column
 }
 
-void ft_vector_set(t_vector *vector, int y, int x, char *value) {
-    t_vector *inner_vector = (t_vector *)ft_vector_at(vector, y);
-    if (inner_vector == NULL)
-        return;
-    inner_vector->values[x] = value;
-}
-
-int flood_fill(t_vector *map, int x, int y, int width, int height)
+void	ft_vector_set(t_vector *vector, int y, int x, char *value)
 {
-    char cell;
+	t_vector	*inner_vector;
 
-    if (x < 0 || y < 0 || x >= width || y >= height)
-        return (0);
-
-    cell = ft_value(map, y, x);  // Correctly using ft_value as char
-    if (cell == '1' || cell == 'F')  // Assuming 'F' marks filled areas
-        return (1);
-
-    // Mark current cell as filled
-    ft_vector_set(map, y, x, "F");  // Assuming ft_vector_set sets values in the matrix
-
-    // Recursively fill neighboring cells
-    flood_fill(map, x - 1, y, width, height);
-    flood_fill(map, x + 1, y, width, height);
-    flood_fill(map, x, y - 1, width, height);
-    flood_fill(map, x, y + 1, width, height);
-
-    return (1);
+	inner_vector = (t_vector *)ft_vector_at(vector, y);
+	if (inner_vector == NULL)
+		return ;
+	inner_vector->values[x] = value;
 }
 
+int	flood_fill(t_vector *map, int x, int y, int width, int height)
+{
+	char	cell;
 
-//int	flood_fill(char **map, int x, int y, int width, int height)
+	if (x < 0 || y < 0 || x >= width || y >= height)
+		return (0);
+	cell = ft_value(map, y, x);     // Correctly using ft_value as char
+	if (cell == '1' || cell == 'F') // Assuming 'F' marks filled areas
+		return (1);
+	// Mark current cell as filled
+	ft_vector_set(map, y, x, "F");
+		// Assuming ft_vector_set sets values in the matrix
+	// Recursively fill neighboring cells
+	flood_fill(map, x - 1, y, width, height);
+	flood_fill(map, x + 1, y, width, height);
+	flood_fill(map, x, y - 1, width, height);
+	flood_fill(map, x, y + 1, width, height);
+	return (1);
+}
+
+// int	flood_fill(char **map, int x, int y, int width, int height)
 //{
 //	if (x < 0 || y < 0 || x >= width || y >= height || map[y][x] == ' ')
 //		return (0);
@@ -519,31 +519,33 @@ int flood_fill(t_vector *map, int x, int y, int width, int height)
 //		&& flood_fill(map, x, y - 1, width, height));
 //}
 
-bool find_player_position(t_vector *map, int *start_x, int *start_y)
+bool	find_player_position(t_vector *map, int *start_x, int *start_y)
 {
-    unsigned long i = 0;
-    unsigned long j;
-    char cell;
+	unsigned long	i;
+	unsigned long	j;
+	char			cell;
 
-    while (i < map->size)
-    {
-        j = 0;
-        while (j < ((t_vector *)ft_vector_at(map, i))->size)
-        {
-            cell = ft_value(map, i, j);
-            if (cell == 'N' || cell == 'S' || cell == 'E' || cell == 'W')  // Player found
-            {
-                *start_x = j;
-                *start_y = i;
-                return (true);
-            }
-            j++;
-        }
-        i++;
-    }
-    return (false);
+	i = 0;
+	while (i < map->size)
+	{
+		j = 0;
+		while (j < ((t_vector *)ft_vector_at(map, i))->size)
+		{
+			cell = ft_value(map, i, j);
+			if (cell == 'N' || cell == 'S' || cell == 'E' || cell == 'W')
+				// Player found
+			{
+				*start_x = j;
+				*start_y = i;
+				return (true);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (false);
 }
-//bool	find_player_position(t_map *map, int *start_x, int *start_y)
+// bool	find_player_position(t_map *map, int *start_x, int *start_y)
 //{
 //	int	i;
 //	int	j;
@@ -581,7 +583,9 @@ bool	validate_map(t_map *map)
 		perror("No valid starting position found");
 		return (false);
 	}
-	if (!flood_fill(&map->vap, start_x, start_y, map->map_width, map->map_height))	{
+	if (!flood_fill(&map->vap, start_x, start_y, map->map_width,
+			map->map_height))
+	{
 		perror("Map is not enclosed by walls");
 		return (false);
 	}
@@ -645,13 +649,14 @@ int	main(int argc, char **argv)
 {
 	int		fd;
 	t_scene	scene;
-	t_map map;
+	t_map	map;
 
 	if (argc != 2)
 	{
 		perror("Usage: ./cub3d <map_file.cub>");
 		return (EXIT_FAILURE);
 	}
+	// use file exists
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{

@@ -42,6 +42,8 @@
 - throw all relevant elements on a struct
 - textures cardinal points cannot repeat
 - floor and ceiling colors line cannot repeat
+- textures cardinal points cannot be missing
+- floor and ceiling colors line cannot be missing
 - treat spaces and tabs
 ### DONE
 - where elements end
@@ -72,7 +74,8 @@
 ### DOING
 - must be surrounded by walls
 - floodfill
-- make sure floodfill starts on NSWE
+- make sure floodfill starts on NSWE or not
+- consider iterative flood_fill
 ### DONE
 - treat tab as 1 width
 - where the map starts
