@@ -29,6 +29,7 @@ typedef struct s_map
 	char			**map_data;
 	int				map_width;
 	int				map_height;
+	t_vector		vap;
 }					t_map;
 
 typedef struct s_color
@@ -206,7 +207,7 @@ t_direction	get_direction(char *identifier)
 	return (INVALID_DIRECTION);
 }
 
-void				load_map(int fd, char *first_line, t_scene *scene);
+void				load_map(int fd, char *first_line, t_scene *scene, t_map *map);
 int	is_valid_color_value(int value)
 {
 	return (value >= 0 && value <= 255);
@@ -255,6 +256,12 @@ int	parse_color(char *line)
 		printf("Error: Invalid color format\n");
 		exit(EXIT_FAILURE);
 	}
+	if (ft_strlen(components[0]) > 3 || ft_strlen(components[1]) > 3
+		|| ft_strlen(components[2]) > 3)
+	{
+		printf("Error: Invalid color format(len)\n");
+		exit(EXIT_FAILURE);
+	}
 	r = ft_atoi(components[0]);
 	g = ft_atoi(components[1]);
 	b = ft_atoi(components[2]);
@@ -270,7 +277,7 @@ int	parse_color(char *line)
 	free(components);
 	return ((r << 16) | (g << 8) | b);
 }
-void	parse_scene(int fd, t_scene *scene)
+void	parse_scene(int fd, t_scene *scene, t_map *map)
 {
 	char		*line;
 	t_direction	dir;
@@ -301,7 +308,7 @@ void	parse_scene(int fd, t_scene *scene)
 			scene->ceiling_color = parse_color(line + 2);
 		else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
 		{
-			load_map(fd, line, scene);
+			load_map(fd, line, scene, map);
 			break ;
 		}
 	}
@@ -406,7 +413,7 @@ int	get_map_columns2(t_vector *lines)
 	return (max_cols);
 }
 
-void	load_map(int fd, char *first_line, t_scene *scene)
+void	load_map(int fd, char *first_line, t_scene *scene, t_map *map)
 {
 	t_vector	*map_lines;
 	char		*line;
@@ -431,6 +438,7 @@ void	load_map(int fd, char *first_line, t_scene *scene)
 		printf("Map data: %s", scene->map.map_data[i++]);
 	free(line);
 	scene->vap = *map_lines;
+	map->vap = *map_lines;
 	scene->map.map = scene->map.map_data;
 	ft_vector_free(map_lines);
 }
@@ -447,43 +455,119 @@ void	load_map(int fd, char *first_line, t_scene *scene)
 //		&& flood_fill(map, x, y - 1, width, height));
 //}
 
-int	flood_fill(char **map, int x, int y, int width, int height)
+void	*ft_vector_at(const t_vector *vector, unsigned long index)
 {
-	if (x < 0 || y < 0 || x >= width || y >= height || map[y][x] == ' ')
+	if (vector == NULL)
 		return (0);
-	if (map[y][x] == '1' || map[y][x] == '2')
-		return (1);
-	map[y][x] = '2';
-	return (flood_fill(map, x + 1, y, width, height) && flood_fill(map, x - 1,
-			y, width, height) && flood_fill(map, x, y + 1, width, height)
-		&& flood_fill(map, x, y - 1, width, height));
+	if (index >= vector->size)
+		return (0);
+	return (vector->values[index]);
 }
 
-bool	find_player_position(t_map *map, int *start_x, int *start_y)
+char	ft_value(t_vector *vector, unsigned long i, unsigned long j)
 {
-	int	i;
-	int	j;
+	char	*row;
 
-	i = 0;
-	while (i < map->map_height)
-	{
-		j = 0;
-		while (j < map->map_width)
-		{
-			if (map->map[i][j] == '0' || map->map[i][j] == 'N'
-				|| map->map[i][j] == 'S' || map->map[i][j] == 'E'
-				|| map->map[i][j] == 'W')
-			{
-				*start_x = j;
-				*start_y = i;
-				return (true);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (false);
+	if (vector == NULL || i >= vector->size)
+		return ('\0');  // Return null character or any error character
+	row = vector->values[i];  // Get the row (matrix row is a char *)
+	if (row == NULL || j >= ft_strlen(row))
+		return ('\0');  // Check bounds for row
+	return (row[j]);    // Return the element at the i-th row, j-th column
 }
+
+void ft_vector_set(t_vector *vector, int y, int x, char *value) {
+    t_vector *inner_vector = (t_vector *)ft_vector_at(vector, y);
+    if (inner_vector == NULL)
+        return;
+    inner_vector->values[x] = value;
+}
+
+int flood_fill(t_vector *map, int x, int y, int width, int height)
+{
+    char cell;
+
+    if (x < 0 || y < 0 || x >= width || y >= height)
+        return (0);
+
+    cell = ft_value(map, y, x);  // Correctly using ft_value as char
+    if (cell == '1' || cell == 'F')  // Assuming 'F' marks filled areas
+        return (1);
+
+    // Mark current cell as filled
+    ft_vector_set(map, y, x, "F");  // Assuming ft_vector_set sets values in the matrix
+
+    // Recursively fill neighboring cells
+    flood_fill(map, x - 1, y, width, height);
+    flood_fill(map, x + 1, y, width, height);
+    flood_fill(map, x, y - 1, width, height);
+    flood_fill(map, x, y + 1, width, height);
+
+    return (1);
+}
+
+
+//int	flood_fill(char **map, int x, int y, int width, int height)
+//{
+//	if (x < 0 || y < 0 || x >= width || y >= height || map[y][x] == ' ')
+//		return (0);
+//	if (map[y][x] == '1' || map[y][x] == '2')
+//		return (1);
+//	map[y][x] = '2';
+//	return (flood_fill(map, x + 1, y, width, height) && flood_fill(map, x - 1,
+//			y, width, height) && flood_fill(map, x, y + 1, width, height)
+//		&& flood_fill(map, x, y - 1, width, height));
+//}
+
+bool find_player_position(t_vector *map, int *start_x, int *start_y)
+{
+    unsigned long i = 0;
+    unsigned long j;
+    char cell;
+
+    while (i < map->size)
+    {
+        j = 0;
+        while (j < ((t_vector *)ft_vector_at(map, i))->size)
+        {
+            cell = ft_value(map, i, j);
+            if (cell == 'N' || cell == 'S' || cell == 'E' || cell == 'W')  // Player found
+            {
+                *start_x = j;
+                *start_y = i;
+                return (true);
+            }
+            j++;
+        }
+        i++;
+    }
+    return (false);
+}
+//bool	find_player_position(t_map *map, int *start_x, int *start_y)
+//{
+//	int	i;
+//	int	j;
+//
+//	i = 0;
+//	while (i < map->map_height)
+//	{
+//		j = 0;
+//		while (j < map->map_width)
+//		{
+//			if (map->map[i][j] == '0' || map->map[i][j] == 'N'
+//				|| map->map[i][j] == 'S' || map->map[i][j] == 'E'
+//				|| map->map[i][j] == 'W')
+//			{
+//				*start_x = j;
+//				*start_y = i;
+//				return (true);
+//			}
+//			j++;
+//		}
+//		i++;
+//	}
+//	return (false);
+//}
 
 bool	validate_map(t_map *map)
 {
@@ -492,19 +576,18 @@ bool	validate_map(t_map *map)
 
 	start_x = -1;
 	start_y = -1;
-	if (!find_player_position(map, &start_x, &start_y))
+	if (!find_player_position(&map->vap, &start_x, &start_y))
 	{
 		perror("No valid starting position found");
 		return (false);
 	}
-	if (!flood_fill(map->map, start_x, start_y, map->map_width,
-			map->map_height))
-	{
+	if (!flood_fill(&map->vap, start_x, start_y, map->map_width, map->map_height))	{
 		perror("Map is not enclosed by walls");
 		return (false);
 	}
 	return (true);
 }
+
 bool	validate_extension(const char *filename, const char *ext)
 {
 	const char	*dot = ft_strrchr(filename, '.');
@@ -524,8 +607,7 @@ bool	file_exists(const char *filename)
 
 bool	validate_file(const char *filename)
 {
-
-	//check if is empty
+	// check if is empty
 	if (!validate_extension(filename, ".cub"))
 	{
 		perror("Invalid file extension. Must be .cub");
@@ -563,6 +645,7 @@ int	main(int argc, char **argv)
 {
 	int		fd;
 	t_scene	scene;
+	t_map map;
 
 	if (argc != 2)
 	{
@@ -580,7 +663,7 @@ int	main(int argc, char **argv)
 		close(fd);
 		return (EXIT_FAILURE);
 	}
-	parse_scene(fd, &scene);
+	parse_scene(fd, &scene, &map);
 	close(fd);
 	if (!validate_elements(&scene))
 	{
