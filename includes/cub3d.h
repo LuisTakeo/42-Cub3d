@@ -21,13 +21,25 @@
 # include "../lib/libft/gnl/includes/get_next_line.h"
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 
+typedef struct s_vector	t_vector;
 typedef struct s_cub3d	t_cub3d;
+
+struct s_vector
+{
+	float	x;
+	float	y;
+};
 
 struct s_cub3d
 {
-	mlx_t	*mlx;
-	char	**map;
+	mlx_t		*mlx;
+	char		**map;
+	t_vector	player;
+	t_vector	ray;
+	t_vector	plane;
 };
+
+
 
 void	init_values(t_cub3d *cub3d);
 int		init_game(t_cub3d *cub3d);
