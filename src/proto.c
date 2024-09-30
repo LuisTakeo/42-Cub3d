@@ -338,7 +338,7 @@ unsigned long	ft_vector_size(const t_vector *vector)
 	return (vector->size);
 }
 
-unsigned long	ft_height(int fd)
+int	ft_height(int fd)
 {
 	char	*line;
 	int		i;
@@ -349,6 +349,12 @@ unsigned long	ft_height(int fd)
 		if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
 			i++;
 	}
+	printf("Height: %d\n", i);
+	//if (i <= 0)
+	//{
+	//	perror("Error: Invalid map");
+	//	exit(EXIT_FAILURE);
+	//}
 	return (i);
 }
 // int	get_map_columns(const char *map)
@@ -592,6 +598,17 @@ bool	validate_map(t_map *map)
 	return (true);
 }
 
+bool	is_directory(const char *filename)
+{
+	int	fd;
+
+	fd = open(filename, O_DIRECTORY);
+	if (fd == -1)
+		return (false);
+	close(fd);
+	return (true);
+}
+
 bool	validate_extension(const char *filename, const char *ext)
 {
 	const char	*dot = ft_strrchr(filename, '.');
@@ -611,7 +628,11 @@ bool	file_exists(const char *filename)
 
 bool	validate_file(const char *filename)
 {
-	// check if is empty
+	if (is_directory(filename))
+	{
+		perror("Invalid file. Must be a file");
+		return (false);
+	}
 	if (!validate_extension(filename, ".cub"))
 	{
 		perror("Invalid file extension. Must be .cub");
@@ -656,13 +677,24 @@ int	main(int argc, char **argv)
 		perror("Usage: ./cub3d <map_file.cub>");
 		return (EXIT_FAILURE);
 	}
-	// use file exists
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
 		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
+	//make the following validation (empty file) its own function
+	//consider using it for textures?
+	char buffer[1];
+	if (read(fd, buffer, sizeof(buffer)) == 0)
+	{
+		close(fd);
+		perror("empty");
+		return(EXIT_FAILURE);
+	}
+	close(fd);
+	//end of empty validation, the following open might not be needed
+	fd = open(argv[1], O_RDONLY);
 	if (!validate_file(argv[1]))
 	{
 		close(fd);

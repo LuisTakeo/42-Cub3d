@@ -22,9 +22,9 @@
 - treat file called ".cub"?
 - treat errors like: "Error\n" followed by an explicit error message
 ### DOING
+### DONE
 - is empty
 - is not a folder
-### DONE
 - number of args
 - right extension(.cub) 
 - exists
@@ -36,7 +36,6 @@
 - careful with \n and empty lines
 - "Error\n" followed by an explicit error message
 - dont accept elements after the map
-- 4294967297 overflow
 - treat errors like: "Error\n" followed by an explicit error message
 ### DOING
 - throw all relevant elements on a struct
@@ -46,6 +45,7 @@
 - floor and ceiling colors line cannot be missing
 - treat spaces and tabs
 ### DONE
+- 4294967297 overflow
 - where elements end
 - RBG of the floor and celiing colors
 - receive elements in any order
@@ -65,7 +65,7 @@
 - empty line in the middle of the map
 - make sure texture are on the right cardinal point
 - make sure the player is looking for the right cardinal point
-- make sure to treat only NSWE01(inside the map) 'spaces' and 'tabs'(outside)
+- make sure to treat only NEWS01(inside the map) 'spaces' and 'tabs'(outside)
 - treat non ascii chars
 - two maps on the same file?
 - treat errors like: "Error\n" followed by an explicit error message
@@ -74,7 +74,7 @@
 ### DOING
 - must be surrounded by walls
 - floodfill
-- make sure floodfill starts on NSWE or not
+- make sure floodfill starts on NEWS or not
 - consider iterative flood_fill
 ### DONE
 - treat tab as 1 width
