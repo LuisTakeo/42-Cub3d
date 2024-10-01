@@ -47,6 +47,12 @@ typedef struct s_scene
 	char			*east_texture;
 	int				floor_color;
 	int				ceiling_color;
+	int			no_counter;
+	int			so_counter;
+	int			we_counter;
+	int			ea_counter;
+	int			f_counter;
+	int			c_counter;
 	t_map			map;
 	t_vector		vap;
 }					t_scene;
@@ -295,18 +301,36 @@ void	parse_scene(int fd, t_scene *scene, t_map *map)
 		if (dir != INVALID_DIRECTION)
 		{
 			if (dir == NORTH)
+			{
 				scene->north_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
+				scene->no_counter++;
+			}
 			else if (dir == SOUTH)
+			{
 				scene->south_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
+				scene->so_counter++;
+			}
 			else if (dir == WEST)
+			{
 				scene->west_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
+				scene->we_counter++;
+			}
 			else if (dir == EAST)
+			{
 				scene->east_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
+				scene->ea_counter++;
+			}
 		}
 		else if (*line == 'F')
+		{
 			scene->floor_color = parse_color(line + 2);
+			scene->f_counter++;
+		}
 		else if (*line == 'C')
+		{
 			scene->ceiling_color = parse_color(line + 2);
+			scene->c_counter++;
+		}
 		else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
 		{
 			load_map(fd, line, scene, map);
@@ -696,10 +720,16 @@ bool	validate_elements(t_scene *scene)
 		perror("Texture file does not exist");
 		return (false);
 	}
+	//if is_empty?
 	if (scene->ceiling_color == -1 || scene->floor_color == -1)
 	{
 		perror("Color values missing");
 		return (false);
+	}
+	if (scene->no_counter !=1 || scene->so_counter !=1 || scene->we_counter !=1 || scene->ea_counter !=1 || scene->f_counter !=1 || scene->c_counter !=1)
+	{
+		perror("missing or repeated elements");
+		return(false);
 	}
 	return (true);
 }
@@ -710,7 +740,6 @@ int	main(int argc, char **argv)
 	int		fd;
 	t_scene	scene;
 	t_map	map;
-//	char	buffer[1];
 
 	if (argc != 2)
 	{
@@ -723,19 +752,6 @@ int	main(int argc, char **argv)
 		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
-	// make the following validation (empty file) its own function
-	// consider using it for textures?
-	//if (read(fd, buffer, sizeof(buffer)) == 0)
-	//{
-	//	close(fd);
-	//	perror("empty");
-	//	return (EXIT_FAILURE);
-	//}
-	//close(fd);
-	//// end of empty validation, the following open might not be needed
-	//if(!is_empty(fd))
-	//	return (EXIT_FAILURE);
-	//fd = open(argv[1], O_RDONLY);
 	if (!validate_file(argv[1]))
 	{
 		close(fd);
@@ -743,6 +759,7 @@ int	main(int argc, char **argv)
 	}
 	parse_scene(fd, &scene, &map);
 	close(fd);
+	printf("alou");
 	if (!validate_elements(&scene))
 	{
 		perror("Invalid elements");
