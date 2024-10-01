@@ -21,8 +21,8 @@
 ### TODO
 - treat file called ".cub"?
 - treat errors like: "Error\n" followed by an explicit error message
-- INIT EVERYTHING
 ### DOING
+- INIT EVERYTHING
 ### DONE
 - is empty
 - is not a folder
@@ -34,17 +34,17 @@
 
 ## elements
 ### TODO
-- careful with \n and empty lines
 - "Error\n" followed by an explicit error message
 - dont accept elements after the map
 - treat errors like: "Error\n" followed by an explicit error message
-- INIT EVERYTHING
 ### DOING
 - throw all relevant elements on a struct
+- treat spaces and tabs
+- careful with \n and empty lines
+- INIT EVERYTHING
+### DONE
 - textures cardinal points cannot be missing
 - floor and ceiling colors line cannot be missing
-- treat spaces and tabs
-### DONE
 - textures cardinal points cannot repeat
 - floor and ceiling colors line cannot repeat
 - 4294967297 overflow
@@ -73,8 +73,8 @@
 - treat errors like: "Error\n" followed by an explicit error message
 - accept triangles?
 - wholes in the map
-- INIT EVERYTHING
 ### DOING
+- INIT EVERYTHING
 - must be surrounded by walls
 - floodfill
 - make sure floodfill starts on NEWS or not

@@ -194,6 +194,89 @@ int	parse_color(char *line)
 //	free(line);
 //}
 
+// void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
+//{
+//	char		*line;
+//	char		*temp;
+//	t_direction	dir;
+//	int			color;
+//	int			r;
+//	int			g;
+//	int			b;
+//
+//	line = get_next_line(fd);
+//	while (line != NULL)
+//	{
+//		while (*line && (*line == ' ' || *line == '\n'))
+//			line++;
+//		dir = get_direction(line);
+//		if (dir != INVALID_DIRECTION)
+//		{
+//			temp = ft_strtrim(line + 3, "\n");
+//			if (!temp)
+//			{
+//				free(line);
+//				return ; // Handle error or exit early
+//			}
+//			if (dir == NORTH)
+//			{
+//				scene->north_texture = ft_strdup(temp);
+//				scene->no_counter++;
+//			}
+//			else if (dir == SOUTH)
+//			{
+//				scene->south_texture = ft_strdup(temp);
+//				scene->so_counter++;
+//			}
+//			else if (dir == WEST)
+//			{
+//				scene->west_texture = ft_strdup(temp);
+//				scene->we_counter++;
+//			}
+//			else if (dir == EAST)
+//			{
+//				scene->east_texture = ft_strdup(temp);
+//				scene->ea_counter++;
+//			}
+//			free(temp); // Free temp after use
+//		}
+//		else if (*line == 'F')
+//		{
+//			scene->floor_color = parse_color(line + 2);
+//			scene->f_counter++;
+//		}
+//		else if (*line == 'C')
+//		{
+//			scene->ceiling_color = parse_color(line + 2);
+//			scene->c_counter++;
+//		}
+//		//	else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
+//		//	{
+//		//		load_map(fd, line, scene, map);
+//		//		free(line);
+//		//		break ;
+//		//	}
+//		free(line);
+//		line = get_next_line(fd);
+//	}
+//	printf("Ceiling color: %#X\n", scene->ceiling_color);
+//	printf("Floor color: %#X\n", scene->floor_color);
+//	printf("North texture: %s\n",
+//		scene->north_texture ? scene->north_texture : "(null)");
+//	printf("South texture: %s\n",
+//		scene->south_texture ? scene->south_texture : "(null)");
+//	printf("West texture: %s\n",
+//		scene->west_texture ? scene->west_texture : "(null)");
+//	printf("East texture: %s\n",
+//		scene->east_texture ? scene->east_texture : "(null)");
+//	color = scene->floor_color;
+//	r = (color >> 16) & 0xFF;
+//	g = (color >> 8) & 0xFF;
+//	b = color & 0xFF;
+//	printf("Color - R: %d, G: %d, B: %d\n", r, g, b);
+//	//free(line);
+//}
+
 void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 {
 	char		*line;
@@ -208,7 +291,16 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 	while (line != NULL)
 	{
 		while (*line && (*line == ' ' || *line == '\n'))
-			line++;
+		{
+			free(line);
+			line = get_next_line(fd);
+		}
+		// if (*line == '\0')
+		//{
+		//	//free(line);
+		//	line = get_next_line(fd);
+		//	continue ;
+		//}
 		dir = get_direction(line);
 		if (dir != INVALID_DIRECTION)
 		{
@@ -238,7 +330,7 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 				scene->east_texture = ft_strdup(temp);
 				scene->ea_counter++;
 			}
-			free(temp); // Free temp after use
+			free(temp);
 		}
 		else if (*line == 'F')
 		{
@@ -274,7 +366,7 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 	g = (color >> 8) & 0xFF;
 	b = color & 0xFF;
 	printf("Color - R: %d, G: %d, B: %d\n", r, g, b);
-	free(line);
+	// free(line);
 }
 
 bool	is_whitespace(char c)
@@ -345,6 +437,13 @@ bool	validate_file(const char *filename)
 }
 bool	validate_elements(t_scene *scene)
 {
+	if (scene->no_counter != 1 || scene->so_counter != 1
+		|| scene->we_counter != 1 || scene->ea_counter != 1
+		|| scene->f_counter != 1 || scene->c_counter != 1)
+	{
+		perror("missing or repeated elements");
+		return (false);
+	}
 	if (!validate_extension(scene->north_texture, ".png")
 		|| !validate_extension(scene->south_texture, ".png")
 		|| !validate_extension(scene->west_texture, ".png")
@@ -364,13 +463,6 @@ bool	validate_elements(t_scene *scene)
 	if (scene->ceiling_color == -1 || scene->floor_color == -1)
 	{
 		perror("Color values missing");
-		return (false);
-	}
-	if (scene->no_counter != 1 || scene->so_counter != 1
-		|| scene->we_counter != 1 || scene->ea_counter != 1
-		|| scene->f_counter != 1 || scene->c_counter != 1)
-	{
-		perror("missing or repeated elements");
 		return (false);
 	}
 	return (true);
@@ -405,10 +497,10 @@ int	main(int argc, char **argv)
 	printf("alou");
 	if (!validate_elements(&scene))
 	{
-		 free(scene.north_texture);
-		 free(scene.south_texture);
-		 free(scene.west_texture);
-		 free(scene.east_texture);
+		free(scene.north_texture);
+		free(scene.south_texture);
+		free(scene.west_texture);
+		free(scene.east_texture);
 		perror("Invalid elements");
 		return (EXIT_FAILURE);
 	}
