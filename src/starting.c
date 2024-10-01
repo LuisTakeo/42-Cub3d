@@ -119,163 +119,47 @@ int	parse_color(char *line)
 	return ((r << 16) | (g << 8) | b);
 }
 
-// void	parse_scene(int fd, t_scene *scene/*, t_map *map*/)
-//{
-//	char		*line;
-//	t_direction	dir;
-//	int			color;
-//	int			r;
-//	int			g;
-//	int			b;
-//
-//	line = get_next_line(fd);
-//	while (line != NULL)
-//	{
-//		while (*line && (*line == ' ' || *line == '\n'))
-//			line++;
-//		dir = get_direction(line);
-//		if (dir != INVALID_DIRECTION)
-//		{
-//			if (dir == NORTH)
-//			{
-//				scene->north_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
-//				scene->no_counter++;
-//			}
-//			else if (dir == SOUTH)
-//			{
-//				scene->south_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
-//				scene->so_counter++;
-//			}
-//			else if (dir == WEST)
-//			{
-//				scene->west_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
-//				scene->we_counter++;
-//			}
-//			else if (dir == EAST)
-//			{
-//				scene->east_texture = ft_strdup(ft_strtrim(line + 3, "\n"));
-//				scene->ea_counter++;
-//			}
-//		}
-//		else if (*line == 'F')
-//		{
-//			scene->floor_color = parse_color(line + 2);
-//			scene->f_counter++;
-//		}
-//		else if (*line == 'C')
-//		{
-//			scene->ceiling_color = parse_color(line + 2);
-//			scene->c_counter++;
-//		}
-//		//	else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
-//		//	{
-//		//		load_map(fd, line, scene, map);
-//		//		free(line);
-//		//		break ;
-//		//	}
-//		free(line);
-//		line = get_next_line(fd);
-//	}
-//	printf("Ceiling color: %#X\n", scene->ceiling_color);
-//	printf("Floor color: %#X\n", scene->floor_color);
-//	printf("North texture: %s\n",
-//		scene->north_texture ? scene->north_texture : "(null)");
-//	printf("South texture: %s\n",
-//		scene->south_texture ? scene->south_texture : "(null)");
-//	printf("West texture: %s\n",
-//		scene->west_texture ? scene->west_texture : "(null)");
-//	printf("East texture: %s\n",
-//		scene->east_texture ? scene->east_texture : "(null)");
-//	color = scene->floor_color;
-//	r = (color >> 16) & 0xFF;
-//	g = (color >> 8) & 0xFF;
-//	b = color & 0xFF;
-//	printf("Color - R: %d, G: %d, B: %d\n", r, g, b);
-//	free(line);
-//}
+bool	count_elements(int fd, t_scene *scene)
+{
+	char		*line;
+	t_direction	dir;
 
-// void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
-//{
-//	char		*line;
-//	char		*temp;
-//	t_direction	dir;
-//	int			color;
-//	int			r;
-//	int			g;
-//	int			b;
-//
-//	line = get_next_line(fd);
-//	while (line != NULL)
-//	{
-//		while (*line && (*line == ' ' || *line == '\n'))
-//			line++;
-//		dir = get_direction(line);
-//		if (dir != INVALID_DIRECTION)
-//		{
-//			temp = ft_strtrim(line + 3, "\n");
-//			if (!temp)
-//			{
-//				free(line);
-//				return ; // Handle error or exit early
-//			}
-//			if (dir == NORTH)
-//			{
-//				scene->north_texture = ft_strdup(temp);
-//				scene->no_counter++;
-//			}
-//			else if (dir == SOUTH)
-//			{
-//				scene->south_texture = ft_strdup(temp);
-//				scene->so_counter++;
-//			}
-//			else if (dir == WEST)
-//			{
-//				scene->west_texture = ft_strdup(temp);
-//				scene->we_counter++;
-//			}
-//			else if (dir == EAST)
-//			{
-//				scene->east_texture = ft_strdup(temp);
-//				scene->ea_counter++;
-//			}
-//			free(temp); // Free temp after use
-//		}
-//		else if (*line == 'F')
-//		{
-//			scene->floor_color = parse_color(line + 2);
-//			scene->f_counter++;
-//		}
-//		else if (*line == 'C')
-//		{
-//			scene->ceiling_color = parse_color(line + 2);
-//			scene->c_counter++;
-//		}
-//		//	else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
-//		//	{
-//		//		load_map(fd, line, scene, map);
-//		//		free(line);
-//		//		break ;
-//		//	}
-//		free(line);
-//		line = get_next_line(fd);
-//	}
-//	printf("Ceiling color: %#X\n", scene->ceiling_color);
-//	printf("Floor color: %#X\n", scene->floor_color);
-//	printf("North texture: %s\n",
-//		scene->north_texture ? scene->north_texture : "(null)");
-//	printf("South texture: %s\n",
-//		scene->south_texture ? scene->south_texture : "(null)");
-//	printf("West texture: %s\n",
-//		scene->west_texture ? scene->west_texture : "(null)");
-//	printf("East texture: %s\n",
-//		scene->east_texture ? scene->east_texture : "(null)");
-//	color = scene->floor_color;
-//	r = (color >> 16) & 0xFF;
-//	g = (color >> 8) & 0xFF;
-//	b = color & 0xFF;
-//	printf("Color - R: %d, G: %d, B: %d\n", r, g, b);
-//	//free(line);
-//}
+	line = get_next_line(fd);
+	while (line != NULL)
+	{
+		while (*line && (*line == ' ' || *line == '\n'))
+		{
+			free(line);
+			line = get_next_line(fd);
+		}
+		dir = get_direction(line);
+		if (dir != INVALID_DIRECTION)
+		{
+			if (dir == NORTH)
+				scene->no_counter++;
+			else if (dir == SOUTH)
+				scene->so_counter++;
+			else if (dir == WEST)
+				scene->we_counter++;
+			else if (dir == EAST)
+				scene->ea_counter++;
+		}
+		else if (*line == 'F')
+			scene->f_counter++;
+		else if (*line == 'C')
+			scene->c_counter++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	if (scene->no_counter != 1 || scene->so_counter != 1
+		|| scene->we_counter != 1 || scene->ea_counter != 1
+		|| scene->f_counter != 1 || scene->c_counter != 1)
+	{
+		perror("missing or repeated elements");
+		return (false);
+	}
+	return(true);
+}
 
 void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 {
@@ -295,12 +179,6 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 			free(line);
 			line = get_next_line(fd);
 		}
-		// if (*line == '\0')
-		//{
-		//	//free(line);
-		//	line = get_next_line(fd);
-		//	continue ;
-		//}
 		dir = get_direction(line);
 		if (dir != INVALID_DIRECTION)
 		{
@@ -311,37 +189,19 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 				return ; // Handle error or exit early
 			}
 			if (dir == NORTH)
-			{
 				scene->north_texture = ft_strdup(temp);
-				scene->no_counter++;
-			}
 			else if (dir == SOUTH)
-			{
 				scene->south_texture = ft_strdup(temp);
-				scene->so_counter++;
-			}
 			else if (dir == WEST)
-			{
 				scene->west_texture = ft_strdup(temp);
-				scene->we_counter++;
-			}
 			else if (dir == EAST)
-			{
 				scene->east_texture = ft_strdup(temp);
-				scene->ea_counter++;
-			}
 			free(temp);
 		}
 		else if (*line == 'F')
-		{
 			scene->floor_color = parse_color(line + 2);
-			scene->f_counter++;
-		}
 		else if (*line == 'C')
-		{
 			scene->ceiling_color = parse_color(line + 2);
-			scene->c_counter++;
-		}
 		//	else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
 		//	{
 		//		load_map(fd, line, scene, map);
@@ -437,13 +297,13 @@ bool	validate_file(const char *filename)
 }
 bool	validate_elements(t_scene *scene)
 {
-	if (scene->no_counter != 1 || scene->so_counter != 1
-		|| scene->we_counter != 1 || scene->ea_counter != 1
-		|| scene->f_counter != 1 || scene->c_counter != 1)
-	{
-		perror("missing or repeated elements");
-		return (false);
-	}
+	//if (scene->no_counter != 1 || scene->so_counter != 1
+	//	|| scene->we_counter != 1 || scene->ea_counter != 1
+	//	|| scene->f_counter != 1 || scene->c_counter != 1)
+	//{
+	//	perror("missing or repeated elements");
+	//	return (false);
+	//}
 	if (!validate_extension(scene->north_texture, ".png")
 		|| !validate_extension(scene->south_texture, ".png")
 		|| !validate_extension(scene->west_texture, ".png")
@@ -492,6 +352,12 @@ int	main(int argc, char **argv)
 		close(fd);
 		return (EXIT_FAILURE);
 	}
+	if (!count_elements(fd, &scene))
+	{
+		close(fd);
+		return (EXIT_FAILURE);
+	}
+	fd = open(argv[1], O_RDONLY);
 	parse_scene(fd, &scene /*, &map*/);
 	close(fd);
 	printf("alou");
