@@ -42,8 +42,9 @@
 - treat spaces and tabs
 - careful with \n and empty lines
 - INIT EVERYTHING
-- make separate counter
+- last line empty 
 ### DONE
+- make separate counter
 - textures cardinal points cannot be missing
 - floor and ceiling colors line cannot be missing
 - textures cardinal points cannot repeat

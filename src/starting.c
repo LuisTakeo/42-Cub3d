@@ -148,6 +148,11 @@ bool	count_elements(int fd, t_scene *scene)
 			scene->f_counter++;
 		else if (*line == 'C')
 			scene->c_counter++;
+	//	else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
+	//	{
+	//		free(line);
+	//		break ;
+	//	}
 		free(line);
 		line = get_next_line(fd);
 	}
@@ -155,12 +160,23 @@ bool	count_elements(int fd, t_scene *scene)
 		|| scene->we_counter != 1 || scene->ea_counter != 1
 		|| scene->f_counter != 1 || scene->c_counter != 1)
 	{
-		perror("missing or repeated elements");
+		perror("missing/repeated/aftermap elements");
 		return (false);
 	}
 	return(true);
 }
 
+int	count_whitespace(char *c)
+{
+	int i = 0;
+	while (*c == ' ' || (*c >= 9 && *c <= 13))
+	{
+		i++;
+		c++;
+	}
+	return (i);
+		
+}
 void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 {
 	char		*line;
@@ -170,6 +186,7 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 	int			r;
 	int			g;
 	int			b;
+//	int	ws;
 
 	line = get_next_line(fd);
 	while (line != NULL)
@@ -182,6 +199,14 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 		dir = get_direction(line);
 		if (dir != INVALID_DIRECTION)
 		{
+			//if (dir == NORTH)
+			//	ws = count_whitespace(line);
+			//else if (dir == SOUTH)
+			//	ws = count_whitespace(line);
+			//else if (dir == WEST)
+			//	ws = count_whitespace(line);
+			//else if (dir == EAST)
+			//	ws = count_whitespace(line);
 			temp = ft_strtrim(line + 3, "\n");
 			if (!temp)
 			{
