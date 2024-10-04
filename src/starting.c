@@ -5,14 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define FT_VECTOR_INITIAL_CAPACITY 16
-
-typedef struct s_vector
-{
-	char			**values;
-	unsigned long	size;
-	unsigned long	capacity;
-}					t_vector;
+#define VALID_M "01NEWS"
+#define VALID_P "NEWS"
+#define WALL '1'
+#define GROUND '0'
+#define SPACE ' '
+#define TAB '\t'
 
 typedef enum e_direction
 {
@@ -21,47 +19,72 @@ typedef enum e_direction
 	WEST,
 	EAST,
 	INVALID_DIRECTION
-}					t_direction;
+}			t_direction;
 
 typedef struct s_map
 {
-	char			**map;
-	char			**map_data;
-	int				map_width;
-	int				map_height;
-	t_vector		vap;
-}					t_map;
+	char	**map;
+	char	**map_data;
+	int		map_width;
+	int		map_height;
+}			t_map;
 
 typedef struct s_color
 {
-	int				r;
-	int				g;
-	int				b;
-}					t_color;
+	int		r;
+	int		g;
+	int		b;
+}			t_color;
 
 typedef struct s_scene
 {
-	char			*north_texture;
-	char			*south_texture;
-	char			*west_texture;
-	char			*east_texture;
-	int				floor_color;
-	int				ceiling_color;
-	int				no_counter;
-	int				so_counter;
-	int				we_counter;
-	int				ea_counter;
-	int				f_counter;
-	int				c_counter;
-	t_map			map;
-	t_vector		vap;
-}					t_scene;
+	char	*north_texture;
+	char	*south_texture;
+	char	*west_texture;
+	char	*east_texture;
+	int		floor_color;
+	int		ceiling_color;
+	int		no_counter;
+	int		so_counter;
+	int		we_counter;
+	int		ea_counter;
+	int		f_counter;
+	int		c_counter;
+	t_map	map;
+}			t_scene;
 
 typedef struct s_pos
 {
-	int				x;
-	int				y;
-}					t_pos;
+	int		x;
+	int		y;
+}			t_pos;
+
+void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
+{
+	void	*new;
+
+	if (new_size == 0)
+	{
+		free(ptr);
+		return (NULL);
+	}
+	else if (!ptr)
+		return (malloc(new_size));
+	else if (new_size <= original_size)
+		return (ptr);
+	else
+	{
+		new = malloc(new_size);
+		if (!new)
+		{
+			free(ptr);
+			return (NULL);
+		}
+		ft_memcpy(new, ptr, original_size);
+		free(ptr);
+		return (new);
+	}
+}
 
 t_direction	get_direction(char *identifier)
 {
@@ -76,6 +99,13 @@ t_direction	get_direction(char *identifier)
 	return (INVALID_DIRECTION);
 }
 
+bool	is_whitespace(char c)
+{
+	if (c == ' ' || (c >= 9 && c <= 13))
+		return (true);
+	else
+		return (false);
+}
 int	is_valid_color_value(int value)
 {
 	return (value >= 0 && value <= 255);
@@ -90,18 +120,26 @@ int	parse_color(char *line)
 	if (!components)
 	{
 		perror("ft_split");
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	if (!components[0] || !components[1] || !components[2])
 	{
 		printf("Error: Invalid color format\n");
-		exit(EXIT_FAILURE);
+		free(components[0]);
+		free(components[1]);
+		free(components[2]);
+		free(components);
+		return (EXIT_FAILURE);
 	}
 	if (ft_strlen(components[0]) > 3 || ft_strlen(components[1]) > 3
 		|| ft_strlen(components[2]) > 3)
 	{
 		printf("Error: Invalid color format(len)\n");
-		exit(EXIT_FAILURE);
+		free(components[0]);
+		free(components[1]);
+		free(components[2]);
+		free(components);
+		return (EXIT_FAILURE);
 	}
 	r = ft_atoi(components[0]);
 	g = ft_atoi(components[1]);
@@ -110,7 +148,7 @@ int	parse_color(char *line)
 		|| !is_valid_color_value(b))
 	{
 		printf("Error: Color values must be between 0 and 255\n");
-		exit(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	free(components[0]);
 	free(components[1]);
@@ -119,120 +157,166 @@ int	parse_color(char *line)
 	return ((r << 16) | (g << 8) | b);
 }
 
-bool	count_elements(int fd, t_scene *scene)
+bool	is_map_line(char *line)
 {
-	char		*line;
+	return (ft_isdigit(*line) || *line == SPACE || *line == TAB);
+}
+
+void	count_texture_elements(char *line, t_scene *scene)
+{
 	t_direction	dir;
 
-	line = get_next_line(fd);
-	while (line != NULL)
+	dir = get_direction(line);
+	if (dir == NORTH)
+		scene->no_counter++;
+	else if (dir == SOUTH)
+		scene->so_counter++;
+	else if (dir == WEST)
+		scene->we_counter++;
+	else if (dir == EAST)
+		scene->ea_counter++;
+	else if (*line == 'F')
+		scene->f_counter++;
+	else if (*line == 'C')
+		scene->c_counter++;
+}
+
+bool	handle_line(char *line, t_scene *scene, bool *map_started)
+{
+	if (is_whitespace(*line))
+		return (false);
+	if (is_map_line(line))
 	{
-		while (*line && (*line == ' ' || *line == '\n'))
+		*map_started = true;
+		return (false);
+	}
+	count_texture_elements(line, scene);
+	return (true);
+}
+
+bool	count_elements(int fd, t_scene *scene)
+{
+	char	*line;
+	bool	map_started;
+	bool	success;
+
+	map_started = false;
+	success = true;
+	while (true)
+	{
+		line = get_next_line(fd); 
+		if (line == NULL)
+			break ;
+		if (!handle_line(line, scene, &map_started))
 		{
 			free(line);
-			line = get_next_line(fd);
+			continue ; 
 		}
-		dir = get_direction(line);
-		if (dir != INVALID_DIRECTION)
-		{
-			if (dir == NORTH)
-				scene->no_counter++;
-			else if (dir == SOUTH)
-				scene->so_counter++;
-			else if (dir == WEST)
-				scene->we_counter++;
-			else if (dir == EAST)
-				scene->ea_counter++;
-		}
-		else if (*line == 'F')
-			scene->f_counter++;
-		else if (*line == 'C')
-			scene->c_counter++;
-	//	else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
-	//	{
-	//		free(line);
-	//		break ;
-	//	}
 		free(line);
-		line = get_next_line(fd);
 	}
 	if (scene->no_counter != 1 || scene->so_counter != 1
 		|| scene->we_counter != 1 || scene->ea_counter != 1
 		|| scene->f_counter != 1 || scene->c_counter != 1)
 	{
-		perror("missing/repeated/aftermap elements");
-		return (false);
+		perror("missing/repeated elements");
+		success = false;
 	}
-	return(true);
+	return (success); 
 }
 
 int	count_whitespace(char *c)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (*c == ' ' || (*c >= 9 && *c <= 13))
 	{
 		i++;
 		c++;
 	}
 	return (i);
-		
 }
-void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
+
+void	handle_texture(t_scene *scene, t_direction dir, char *line)
+{
+	char	*temp;
+
+	temp = ft_strchr(line, ' ');
+	if (temp)
+	{
+		temp++;
+		while (is_whitespace(*temp))
+			temp++;
+		temp = ft_strtrim(temp, "\n");
+		if (!temp)
+		{
+			free(line);
+			return ; 
+		}
+		if (dir == NORTH)
+			scene->north_texture = ft_strdup(temp);
+		else if (dir == SOUTH)
+			scene->south_texture = ft_strdup(temp);
+		else if (dir == WEST)
+			scene->west_texture = ft_strdup(temp);
+		else if (dir == EAST)
+			scene->east_texture = ft_strdup(temp);
+		free(temp);
+	}
+}
+
+void	handle_floor_color(t_scene *scene, char *line)
+{
+	char	*temp;
+
+	temp = ft_strchr(line, ' ');
+	if (temp)
+	{
+		temp++;
+		while (is_whitespace(*temp))
+			temp++;
+		scene->floor_color = parse_color(temp);
+	}
+}
+
+void	handle_ceiling_color(t_scene *scene, char *line)
+{
+	char	*temp;
+
+	temp = ft_strchr(line, ' ');
+	if (temp)
+	{
+		temp++;
+		while (is_whitespace(*temp))
+			temp++;
+		scene->ceiling_color = parse_color(temp);
+	}
+}
+
+void	parse_scene(int fd, t_scene *scene)
 {
 	char		*line;
-	char		*temp;
 	t_direction	dir;
-	int			color;
-	int			r;
-	int			g;
-	int			b;
-//	int	ws;
 
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		while (*line && (*line == ' ' || *line == '\n'))
+		while (*line && is_whitespace(*line))
 		{
 			free(line);
 			line = get_next_line(fd);
+			if (line == NULL)
+				break ;
 		}
+		if (line == NULL)
+			break ;
 		dir = get_direction(line);
 		if (dir != INVALID_DIRECTION)
-		{
-			//if (dir == NORTH)
-			//	ws = count_whitespace(line);
-			//else if (dir == SOUTH)
-			//	ws = count_whitespace(line);
-			//else if (dir == WEST)
-			//	ws = count_whitespace(line);
-			//else if (dir == EAST)
-			//	ws = count_whitespace(line);
-			temp = ft_strtrim(line + 3, "\n");
-			if (!temp)
-			{
-				free(line);
-				return ; // Handle error or exit early
-			}
-			if (dir == NORTH)
-				scene->north_texture = ft_strdup(temp);
-			else if (dir == SOUTH)
-				scene->south_texture = ft_strdup(temp);
-			else if (dir == WEST)
-				scene->west_texture = ft_strdup(temp);
-			else if (dir == EAST)
-				scene->east_texture = ft_strdup(temp);
-			free(temp);
-		}
+			handle_texture(scene, dir, line);
 		else if (*line == 'F')
-			scene->floor_color = parse_color(line + 2);
+			handle_floor_color(scene, line);
 		else if (*line == 'C')
-			scene->ceiling_color = parse_color(line + 2);
-		//	else if (ft_isdigit(*line) || *line == ' ' || *line == '\t')
-		//	{
-		//		load_map(fd, line, scene, map);
-		//		free(line);
-		//		break ;
-		//	}
+			handle_ceiling_color(scene, line);
 		free(line);
 		line = get_next_line(fd);
 	}
@@ -246,21 +330,70 @@ void	parse_scene(int fd, t_scene *scene /*, t_map *map*/)
 		scene->west_texture ? scene->west_texture : "(null)");
 	printf("East texture: %s\n",
 		scene->east_texture ? scene->east_texture : "(null)");
-	color = scene->floor_color;
-	r = (color >> 16) & 0xFF;
-	g = (color >> 8) & 0xFF;
-	b = color & 0xFF;
-	printf("Color - R: %d, G: %d, B: %d\n", r, g, b);
-	// free(line);
 }
 
-bool	is_whitespace(char c)
+int	rgb_to_hex(int r, int g, int b)
 {
-	if (c == ' ' || (c >= 9 && c <= 13))
-		return (true);
-	else
-		return (false);
+	return ((r << 16) | (g << 8) | b);
 }
+
+void	hex_to_rgb(int hex, int *r, int *g, int *b)
+{
+	*r = (hex >> 16) & 0xFF; 
+	*g = (hex >> 8) & 0xFF; 
+	*b = hex & 0xFF;       
+}
+
+void	parse_map(int fd, t_scene *scene)
+{
+	char	*line;
+	int		map_height;
+	int		map_width;
+	int		current_width;
+
+	map_height = 0;
+	map_width = 0;
+	scene->map.map_data = NULL;
+
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		if (!is_map_line(line))
+		{
+			free(line);
+			continue;
+		}
+
+		current_width = ft_strlen(line);
+		while (current_width > 0 && is_whitespace(line[current_width - 1]))
+			current_width--;
+
+		if (current_width > map_width)
+			map_width = current_width;
+
+		scene->map.map_data = ft_realloc(scene->map.map_data, sizeof(char *) * (map_height), sizeof(char *) * (map_height + 1));
+		if (!scene->map.map_data)
+		{
+			perror("Memory allocation failed");
+			exit(EXIT_FAILURE);
+		}
+
+		scene->map.map_data[map_height] = ft_strdup(line);
+		if (!scene->map.map_data[map_height])
+		{
+			perror("Memory allocation failed");
+			exit(EXIT_FAILURE);
+		}
+		map_height++;
+		free(line);
+	}
+	scene->map.map_height = map_height;
+	scene->map.map_width = map_width;
+
+	printf("%d width \n", scene->map.map_width);
+	printf("%d height \n", scene->map.map_height);
+}
+
+
 bool	is_directory(const char *filename)
 {
 	int	fd;
@@ -322,7 +455,7 @@ bool	validate_file(const char *filename)
 }
 bool	validate_elements(t_scene *scene)
 {
-	//if (scene->no_counter != 1 || scene->so_counter != 1
+	// if (scene->no_counter != 1 || scene->so_counter != 1
 	//	|| scene->we_counter != 1 || scene->ea_counter != 1
 	//	|| scene->f_counter != 1 || scene->c_counter != 1)
 	//{
@@ -385,6 +518,10 @@ int	main(int argc, char **argv)
 	fd = open(argv[1], O_RDONLY);
 	parse_scene(fd, &scene /*, &map*/);
 	close(fd);
+	fd = open(argv[1], O_RDONLY);
+	parse_map(fd, &scene);
+	close(fd);
+	free(scene.map.map_data);
 	printf("alou");
 	if (!validate_elements(&scene))
 	{
@@ -406,3 +543,4 @@ int	main(int argc, char **argv)
 	//	}
 	return (EXIT_SUCCESS);
 }
+

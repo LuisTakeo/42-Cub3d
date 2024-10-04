@@ -18,8 +18,9 @@
 # pre-exec
 
 ## arg validations
-### TODO
+### BACKLOG
 - treat file called ".cub"?
+### TODO
 - treat errors like: "Error\n" followed by an explicit error message
 ### DOING
 - INIT EVERYTHING
@@ -33,18 +34,18 @@
 # .cub validations
 
 ## elements
+### BACKLOG
 ### TODO
-- "Error\n" followed by an explicit error message
-- dont accept elements after the map
 - treat errors like: "Error\n" followed by an explicit error message
 ### DOING
+- dont accept elements after the map
 - throw all relevant elements on a struct
-- treat spaces and tabs
-- careful with \n and empty lines
 - INIT EVERYTHING
-- last line empty 
 ### DONE
+- careful with \n and empty lines
+- treat spaces and tabs
 - make separate counter
+- last line empty 
 - textures cardinal points cannot be missing
 - floor and ceiling colors line cannot be missing
 - textures cardinal points cannot repeat
@@ -62,6 +63,9 @@
 - spaces on rgb
 
 ## map
+### BACKLOG
+- two maps on the same file?
+- accept triangles?
 ### TODO
 - throw all relevant information on a struct
 - where it ends
@@ -71,10 +75,8 @@
 - make sure the player is looking for the right cardinal point
 - make sure to treat only NEWS01(inside the map) 'spaces' and 'tabs'(outside)
 - treat non ascii chars
-- two maps on the same file?
 - treat errors like: "Error\n" followed by an explicit error message
-- accept triangles?
-- wholes in the map
+- holes in the map
 ### DOING
 - INIT EVERYTHING
 - must be surrounded by walls
@@ -87,3 +89,4 @@
 - send data to validation
 - get height
 - get width
+
