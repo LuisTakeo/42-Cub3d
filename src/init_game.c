@@ -90,17 +90,7 @@ void	init_values(t_cub3d *cub3d)
 	cub3d->player.angle = 0.0;
 }
 
-void	draw_vertical_line(mlx_image_t *image, t_vector vector, int y_end, int8_t color)
-{
-	int y;
 
-	y = vector.y;
-	while (y < y_end)
-	{
-		mlx_put_pixel(image, vector.x, y, color);
-		y++;
-	}
-}
 
 static void ft_hook(void* param)
 {
@@ -124,8 +114,6 @@ int	init_game(t_cub3d *cub3d)
 		return (EXIT_FAILURE);
 	}
 	mlx_image_to_window(cub3d->mlx, image, 0, 0);
-	draw_vertical_line(image, (t_vector){WIDTH / 2, 200}, HEIGHT / 2 + HEIGHT / 4, (int8_t)0xFFFFFFFF);
-	// ft_memset(image->pixels, 0x00FF0000, image->width * image->height * sizeof(int32_t));
 	mlx_loop_hook(cub3d->mlx, &ft_hook, cub3d->mlx);
 	mlx_key_hook(cub3d->mlx, &listen_moves, cub3d);
 	mlx_loop(cub3d->mlx);

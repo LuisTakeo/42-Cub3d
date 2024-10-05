@@ -1,0 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/05 20:23:15 by tpaim-yu          #+#    #+#             */
+/*   Updated: 2024/10/05 20:23:15 by tpaim-yu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../includes/cub3d.h"
+
+t_vector	rotate_vector(t_vector v, float angle)
+{
+	t_vector	vector;
+	float		radians;
+
+	radians = angle * M_PI / 180.0;
+	vector.x = v.x * cos(radians) - v.y * sin(radians);
+	vector.y = v.x * sin(radians) + v.y * cos(radians);
+	return (vector);
+}

@@ -11,7 +11,7 @@ FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a
 FLAGSMLX = -ldl -lglfw -pthread -lm
 
-SRC = ./src/main.c ./src/init_game.c ./src/finish_game.c
+SRC = ./src/main.c ./src/init_game.c ./src/finish_game.c ./src/draw.c ./src/vector.c
 
 SRC_BONUS = ./src_bonus/main_bonus.c
 
