@@ -2,6 +2,8 @@
 	"files.associations": {
 		"cub3d.h": "c",
 		"mlx42.h": "c",
-		"libft.h": "c"
-	}
+		"libft.h": "c",
+		"get_next_line.h": "c"
+	},
+	"cmake.sourceDirectory": "/nfs/homes/tpaim-yu/repo/42-Cub3d/lib/MLX42"
 }

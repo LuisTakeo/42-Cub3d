@@ -12,6 +12,10 @@
 
 #ifndef CUB3D_H
 # define CUB3D_H
+# define TILE_SIZE 8.0
+# define FOV 0.66
+# define WIDTH 800
+# define HEIGHT 600
 
 # include <unistd.h>
 # include <stdio.h>
@@ -22,6 +26,7 @@
 # include "../lib/MLX42/include/MLX42/MLX42.h"
 
 typedef struct s_vector	t_vector;
+typedef struct s_player	t_player;
 typedef struct s_cub3d	t_cub3d;
 
 struct s_vector
@@ -30,16 +35,24 @@ struct s_vector
 	float	y;
 };
 
+struct s_player
+{
+	float		angle;
+	t_vector	pos;
+	t_vector	dir;
+	t_vector	plane;
+	t_vector	delta_dist;
+	t_vector	dist_to_side;
+};
+
 struct s_cub3d
 {
-	mlx_t		*mlx;
 	char		**map;
-	t_vector	player;
+	mlx_t		*mlx;
+	t_player	player;
 	t_vector	ray;
 	t_vector	plane;
 };
-
-
 
 void	init_values(t_cub3d *cub3d);
 int		init_game(t_cub3d *cub3d);
