@@ -111,6 +111,61 @@ int	is_valid_color_value(int value)
 	return (value >= 0 && value <= 255);
 }
 
+void	free_line_array(char **lines, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		free(lines[i]);
+		i++;
+	}
+	free(lines);
+}
+
+void	print_map(char **map_data, int map_height, int map_width)
+{
+	int	i;
+
+	i = 0;
+	printf("Map (Height: %d, Width: %d):\n", map_height, map_width);
+	while (i < map_height)
+	{
+		printf("%s\n", map_data[i]);
+		i++;
+	}
+}
+char	**read_file_lines(int fd, int *line_count)
+{
+	char	**lines;
+	char	*line;
+	int		count;
+
+	count = 0;
+	lines = NULL;
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("Read line: %s", line); // Debugging line
+		lines = ft_realloc(lines, sizeof(char *) * count, sizeof(char *)
+				* (count + 1));
+		if (!lines)
+		{
+			perror("Memory allocation failed");
+			exit(EXIT_FAILURE);
+		}
+		lines[count] = ft_strdup(line);
+		if (!lines[count])
+		{
+			perror("Memory allocation failed");
+			exit(EXIT_FAILURE);
+		}
+		count++;
+		free(line);
+	}
+	*line_count = count;
+	return (lines);
+}
 int	parse_color(char *line)
 {
 	char	**components;
@@ -194,36 +249,6 @@ bool	handle_line(char *line, t_scene *scene, bool *map_started)
 	return (true);
 }
 
-bool	count_elements(int fd, t_scene *scene)
-{
-	char	*line;
-	bool	map_started;
-	bool	success;
-
-	map_started = false;
-	success = true;
-	while (true)
-	{
-		line = get_next_line(fd); 
-		if (line == NULL)
-			break ;
-		if (!handle_line(line, scene, &map_started))
-		{
-			free(line);
-			continue ; 
-		}
-		free(line);
-	}
-	if (scene->no_counter != 1 || scene->so_counter != 1
-		|| scene->we_counter != 1 || scene->ea_counter != 1
-		|| scene->f_counter != 1 || scene->c_counter != 1)
-	{
-		perror("missing/repeated elements");
-		success = false;
-	}
-	return (success); 
-}
-
 int	count_whitespace(char *c)
 {
 	int	i;
@@ -251,7 +276,7 @@ void	handle_texture(t_scene *scene, t_direction dir, char *line)
 		if (!temp)
 		{
 			free(line);
-			return ; 
+			return ;
 		}
 		if (dir == NORTH)
 			scene->north_texture = ft_strdup(temp);
@@ -293,23 +318,16 @@ void	handle_ceiling_color(t_scene *scene, char *line)
 	}
 }
 
-void	parse_scene(int fd, t_scene *scene)
+void	parse_scene_from_lines(char **lines, int line_count, t_scene *scene)
 {
+	int			i;
 	char		*line;
 	t_direction	dir;
 
-	line = get_next_line(fd);
-	while (line != NULL)
+	i = 0;
+	while (i < line_count)
 	{
-		while (*line && is_whitespace(*line))
-		{
-			free(line);
-			line = get_next_line(fd);
-			if (line == NULL)
-				break ;
-		}
-		if (line == NULL)
-			break ;
+		line = lines[i];
 		dir = get_direction(line);
 		if (dir != INVALID_DIRECTION)
 			handle_texture(scene, dir, line);
@@ -317,8 +335,7 @@ void	parse_scene(int fd, t_scene *scene)
 			handle_floor_color(scene, line);
 		else if (*line == 'C')
 			handle_ceiling_color(scene, line);
-		free(line);
-		line = get_next_line(fd);
+		i++;
 	}
 	printf("Ceiling color: %#X\n", scene->ceiling_color);
 	printf("Floor color: %#X\n", scene->floor_color);
@@ -339,61 +356,200 @@ int	rgb_to_hex(int r, int g, int b)
 
 void	hex_to_rgb(int hex, int *r, int *g, int *b)
 {
-	*r = (hex >> 16) & 0xFF; 
-	*g = (hex >> 8) & 0xFF; 
-	*b = hex & 0xFF;       
+	*r = (hex >> 16) & 0xFF;
+	*g = (hex >> 8) & 0xFF;
+	*b = hex & 0xFF;
 }
 
-void	parse_map(int fd, t_scene *scene)
+void	flood_fill(char **map, int width, int height, int x, int y)
 {
-	char	*line;
+	if (x < 0 || y < 0 || x >= width || y >= height)
+		return ;
+	if (map[y][x] == '1' || map[y][x] == 'F') 
+		return ;
+	map[y][x] = 'F';
+	flood_fill(map, width, height, x + 1, y); 
+	flood_fill(map, width, height, x - 1, y); 
+	flood_fill(map, width, height, x, y + 1); 
+	flood_fill(map, width, height, x, y - 1); 
+}
+
+bool	validate_map_enclosure(char **map, int width, int height,
+		t_pos player_pos)
+{
+	char	**map_copy;
+	int		i;
+	int		y;
+	int		x;
+
+	map_copy = malloc(sizeof(char *) * height);
+	i = 0;
+	while (i < height)
+	{
+		map_copy[i] = ft_strdup(map[i]);
+		i++;
+	}
+	flood_fill(map_copy, width, height, player_pos.x, player_pos.y);
+	y = 0;
+	while (y < height)
+	{
+		x = 0;
+		while (x < width)
+		{
+			if (map_copy[y][x] == '0')
+			{
+				printf("Error: Open space not enclosed by walls at position (%d, %d).\n", x, y);
+				free_line_array(map_copy, height);
+				return (false);
+			}
+			x++;
+		}
+		y++;
+	}
+	free_line_array(map_copy, height);
+	return (true);
+}
+bool	is_valid_map_char(char c)
+{
+	return (c == '1' || c == '0' || c == ' ' || c == '\t');
+}
+
+bool	is_player_char(char c)
+{
+	return (c == 'N' || c == 'W' || c == 'E' || c == 'S');
+}
+
+void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
+		t_pos *player_pos)
+{
 	int		map_height;
 	int		map_width;
+	int		player_count;
+	bool	map_started;
+	char	*line;
+	int		i;
+	int		j;
 	int		current_width;
+	char	c;
 
 	map_height = 0;
 	map_width = 0;
+	player_count = 0;
+	map_started = false;
+	i = 0;
 	scene->map.map_data = NULL;
-
-	while ((line = get_next_line(fd)) != NULL)
+	while (i < line_count)
 	{
-		if (!is_map_line(line))
+		line = lines[i];
+		if (is_map_line(&line[0]))
 		{
-			free(line);
-			continue;
+			map_started = true;
 		}
-
+		if (!is_map_line(line) && map_started)
+		{
+			printf("Stopped parsing at non-map line after map started.\n");
+			break ;
+		}
 		current_width = ft_strlen(line);
 		while (current_width > 0 && is_whitespace(line[current_width - 1]))
 			current_width--;
-
 		if (current_width > map_width)
 			map_width = current_width;
-
-		scene->map.map_data = ft_realloc(scene->map.map_data, sizeof(char *) * (map_height), sizeof(char *) * (map_height + 1));
+		scene->map.map_data = ft_realloc(scene->map.map_data, sizeof(char *)
+				* map_height, sizeof(char *) * (map_height + 1));
 		if (!scene->map.map_data)
 		{
 			perror("Memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
-
 		scene->map.map_data[map_height] = ft_strdup(line);
 		if (!scene->map.map_data[map_height])
 		{
 			perror("Memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
+		if (map_started)
+		{
+			j = 0;
+			while (j < current_width)
+			{
+				c = line[j];
+				if (is_player_char(c))
+				{
+					player_count++;
+					if (player_count > 1)
+					{
+						printf("Error: More than one player character found.\n");
+						exit(EXIT_FAILURE);
+					}
+					player_pos->x = j;
+					player_pos->y = map_height;
+				}
+				else if (!is_valid_map_char(c) && map_started)
+				{
+					printf("Error: Invalid character '%c' found in map.\n", c);
+					exit(EXIT_FAILURE);
+				}
+				j++;
+			}
+		}
 		map_height++;
-		free(line);
+		i++;
+	}
+	if (player_count == 0)
+	{
+		printf("Error: No player character found in the map.\n");
+		exit(EXIT_FAILURE);
 	}
 	scene->map.map_height = map_height;
 	scene->map.map_width = map_width;
-
-	printf("%d width \n", scene->map.map_width);
-	printf("%d height \n", scene->map.map_height);
+	printf("Map width: %d, Map height: %d\n", scene->map.map_width,
+		scene->map.map_height);
+	printf("Player found at position: (%d, %d)\n", player_pos->x,
+		player_pos->y);
 }
 
+bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
+{
+	bool	map_started;
+	int		i;
+	char	*line;
 
+	map_started = false;
+	i = 0;
+	while (i < line_count)
+	{
+		line = lines[i];
+		printf("Processing line %d: %s", i, line);
+		if (is_whitespace(*line))
+		{
+			printf("Line %d is whitespace.\n", i);
+			i++;
+			continue ;
+		}
+		if (is_map_line(line))
+		{
+			printf("Map line detected at line %d: %s\n", i, line);
+			map_started = true;
+		}
+		else
+		{
+			count_texture_elements(line, scene);
+			printf("Texture/Element Counters - NO: %d, SO: %d, WE: %d, EA: %d,F:%d, C: %d\n", scene->no_counter, scene->so_counter,
+				scene->we_counter, scene->ea_counter, scene->f_counter,
+					scene->c_counter); 
+		}
+		i++;
+	}
+	if (scene->no_counter != 1 || scene->so_counter != 1
+		|| scene->we_counter != 1 || scene->ea_counter != 1
+		|| scene->f_counter != 1 || scene->c_counter != 1)
+	{
+		perror("Missing or repeated elements");
+		return (false);
+	}
+	return (true);
+}
 bool	is_directory(const char *filename)
 {
 	int	fd;
@@ -490,9 +646,10 @@ int	main(int argc, char **argv)
 {
 	int		fd;
 	t_scene	scene;
+	char	**file_lines;
+	int		line_count;
+	t_pos	pos;
 
-	//	t_map	map;
-	// init
 	ft_memset(&scene, 0, sizeof(t_scene));
 	if (argc != 2)
 	{
@@ -505,42 +662,20 @@ int	main(int argc, char **argv)
 		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
-	if (!validate_file(argv[1]))
+	file_lines = read_file_lines(fd, &line_count);
+	close(fd);
+	if (!count_elements_from_lines(file_lines, line_count, &scene))
 	{
-		close(fd);
+		free_line_array(file_lines, line_count);
 		return (EXIT_FAILURE);
 	}
-	if (!count_elements(fd, &scene))
-	{
-		close(fd);
-		return (EXIT_FAILURE);
-	}
-	fd = open(argv[1], O_RDONLY);
-	parse_scene(fd, &scene /*, &map*/);
-	close(fd);
-	fd = open(argv[1], O_RDONLY);
-	parse_map(fd, &scene);
-	close(fd);
+	parse_scene_from_lines(file_lines, line_count, &scene);
+	parse_map_from_lines(file_lines, line_count, &scene, &pos);
+	free_line_array(file_lines, line_count);
 	free(scene.map.map_data);
-	printf("alou");
-	if (!validate_elements(&scene))
-	{
-		free(scene.north_texture);
-		free(scene.south_texture);
-		free(scene.west_texture);
-		free(scene.east_texture);
-		perror("Invalid elements");
-		return (EXIT_FAILURE);
-	}
 	free(scene.north_texture);
 	free(scene.south_texture);
 	free(scene.west_texture);
 	free(scene.east_texture);
-	//	if (!validate_map(&scene.map))
-	//	{
-	//		perror("Invalid map");
-	//		return (EXIT_FAILURE);
-	//	}
 	return (EXIT_SUCCESS);
 }
-
