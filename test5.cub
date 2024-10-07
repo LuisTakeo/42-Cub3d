@@ -1,8 +1,7 @@
-NO ./t1.png
+NO ./t1.png               
 
 SO ./t2.png
 
-WE ./t3.png
 WE ./t3.png
 
 EA ./t4.png

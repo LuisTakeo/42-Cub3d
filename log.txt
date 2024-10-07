@@ -1,0 +1,97 @@
+Read line: NO ./t1.png               
+Read line: 
+Read line: SO ./t2.png
+Read line: 
+Read line: WE ./t3.png
+Read line: 
+Read line: EA ./t4.png
+Read line: 
+Read line: F 220,100,0
+Read line: C 225,30,0
+Read line: 
+Read line: 1111111111111111111111111
+Read line: 1000000000110000000000001
+Read line: 1011000001110000000000001
+Read line: 1001000000000000000000001
+Read line: 111111111011000001110000000000001
+Read line: 100000000011000001110111111111111
+Read line: 11110111111111011100000010001
+Read line: 11110111111111011101010010001
+Read line: 11000000110101011100000010001
+Read line: 10000000000000001100000010001
+Read line: 10000000000000001101010010001
+Read line: 11000001110101011111011110N0111
+Read line: 11110111 1110101 101111010001
+Read line: 11111111 1111111 111111111111
+Processing line 0: NO ./t1.png               
+Texture/Element Counters - NO: 1, SO: 0, WE: 0, EA: 0,F:0, C: 0
+Processing line 1: 
+Line 1 is whitespace.
+Processing line 2: SO ./t2.png
+Texture/Element Counters - NO: 1, SO: 1, WE: 0, EA: 0,F:0, C: 0
+Processing line 3: 
+Line 3 is whitespace.
+Processing line 4: WE ./t3.png
+Texture/Element Counters - NO: 1, SO: 1, WE: 1, EA: 0,F:0, C: 0
+Processing line 5: 
+Line 5 is whitespace.
+Processing line 6: EA ./t4.png
+Texture/Element Counters - NO: 1, SO: 1, WE: 1, EA: 1,F:0, C: 0
+Processing line 7: 
+Line 7 is whitespace.
+Processing line 8: F 220,100,0
+Texture/Element Counters - NO: 1, SO: 1, WE: 1, EA: 1,F:1, C: 0
+Processing line 9: C 225,30,0
+Texture/Element Counters - NO: 1, SO: 1, WE: 1, EA: 1,F:1, C: 1
+Processing line 10: 
+Line 10 is whitespace.
+Processing line 11: 1111111111111111111111111
+Map line detected at line 11: 1111111111111111111111111
+
+Processing line 12: 1000000000110000000000001
+Map line detected at line 12: 1000000000110000000000001
+
+Processing line 13: 1011000001110000000000001
+Map line detected at line 13: 1011000001110000000000001
+
+Processing line 14: 1001000000000000000000001
+Map line detected at line 14: 1001000000000000000000001
+
+Processing line 15: 111111111011000001110000000000001
+Map line detected at line 15: 111111111011000001110000000000001
+
+Processing line 16: 100000000011000001110111111111111
+Map line detected at line 16: 100000000011000001110111111111111
+
+Processing line 17: 11110111111111011100000010001
+Map line detected at line 17: 11110111111111011100000010001
+
+Processing line 18: 11110111111111011101010010001
+Map line detected at line 18: 11110111111111011101010010001
+
+Processing line 19: 11000000110101011100000010001
+Map line detected at line 19: 11000000110101011100000010001
+
+Processing line 20: 10000000000000001100000010001
+Map line detected at line 20: 10000000000000001100000010001
+
+Processing line 21: 10000000000000001101010010001
+Map line detected at line 21: 10000000000000001101010010001
+
+Processing line 22: 11000001110101011111011110N0111
+Map line detected at line 22: 11000001110101011111011110N0111
+
+Processing line 23: 11110111 1110101 101111010001
+Map line detected at line 23: 11110111 1110101 101111010001
+
+Processing line 24: 11111111 1111111 111111111111
+Map line detected at line 24: 11111111 1111111 111111111111
+
+Ceiling color: 0XE11E00
+Floor color: 0XDC6400
+North texture: ./t1.png
+South texture: ./t2.png
+West texture: ./t3.png
+East texture: ./t4.png
+Map width: 33, Map height: 14
+Player found at position: (26, 12)

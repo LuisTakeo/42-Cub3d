@@ -272,7 +272,7 @@ void	handle_texture(t_scene *scene, t_direction dir, char *line)
 		temp++;
 		while (is_whitespace(*temp))
 			temp++;
-		temp = ft_strtrim(temp, "\n");
+		temp = ft_strtrim(temp, "\n ' ' '\t'");
 		if (!temp)
 		{
 			free(line);
@@ -409,6 +409,7 @@ bool	validate_map_enclosure(char **map, int width, int height,
 	free_line_array(map_copy, height);
 	return (true);
 }
+
 bool	is_valid_map_char(char c)
 {
 	return (c == '1' || c == '0' || c == ' ' || c == '\t');
@@ -483,7 +484,7 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 						exit(EXIT_FAILURE);
 					}
 					player_pos->x = j;
-					player_pos->y = map_height;
+					player_pos->y = map_height + 1;
 				}
 				else if (!is_valid_map_char(c) && map_started)
 				{
@@ -493,7 +494,8 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 				j++;
 			}
 		}
-		map_height++;
+		if(map_started)
+			map_height++;
 		i++;
 	}
 	if (player_count == 0)
@@ -550,6 +552,7 @@ bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 	}
 	return (true);
 }
+
 bool	is_directory(const char *filename)
 {
 	int	fd;
@@ -567,6 +570,7 @@ bool	validate_extension(const char *filename, const char *ext)
 
 	return (dot && ft_strcmp(dot, ext) == 0);
 }
+
 bool	file_exists(const char *filename)
 {
 	int	fd;
@@ -577,6 +581,7 @@ bool	file_exists(const char *filename)
 	close(fd);
 	return (true);
 }
+
 bool	is_empty(const char *filename)
 {
 	char	buffer[1];
@@ -590,6 +595,7 @@ bool	is_empty(const char *filename)
 	close(fd);
 	return (true);
 }
+
 bool	validate_file(const char *filename)
 {
 	if (is_directory(filename))
