@@ -132,7 +132,7 @@ void	print_map(char **map_data, int map_height, int map_width)
 	printf("Map (Height: %d, Width: %d):\n", map_height, map_width);
 	while (i < map_height)
 	{
-		printf("%s\n", map_data[i]);
+		printf("%s", map_data[i]);
 		i++;
 	}
 }
@@ -389,6 +389,9 @@ bool	validate_map_enclosure(char **map, int width, int height,
 		map_copy[i] = ft_strdup(map[i]);
 		i++;
 	}
+	printf("MAP COPY: \n");
+	print_map(map_copy, height, width);
+
 	flood_fill(map_copy, width, height, player_pos.x, player_pos.y);
 	y = 0;
 	while (y < height)
@@ -668,6 +671,8 @@ int	main(int argc, char **argv)
 		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
+	validate_file(argv[1]);
+	
 	file_lines = read_file_lines(fd, &line_count);
 	close(fd);
 	if (!count_elements_from_lines(file_lines, line_count, &scene))
@@ -676,7 +681,10 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	}
 	parse_scene_from_lines(file_lines, line_count, &scene);
+	validate_elements(&scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
+	validate_map_enclosure(scene.map.map_data, scene.map.map_width, scene.map.map_height, pos);
+	
 	free_line_array(file_lines, line_count);
 	free(scene.map.map_data);
 	free(scene.north_texture);
