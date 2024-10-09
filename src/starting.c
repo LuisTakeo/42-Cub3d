@@ -300,6 +300,12 @@ void	handle_floor_color(t_scene *scene, char *line)
 		temp++;
 		while (is_whitespace(*temp))
 			temp++;
+		temp = ft_strtrim(temp, "\n ' ' '\t'");
+		if (!temp)
+		{
+			free(line);
+			return ;
+		}
 		scene->floor_color = parse_color(temp);
 	}
 }
@@ -314,6 +320,12 @@ void	handle_ceiling_color(t_scene *scene, char *line)
 		temp++;
 		while (is_whitespace(*temp))
 			temp++;
+		temp = ft_strtrim(temp, "\n ' ' '\t'");
+		if (!temp)
+		{
+			free(line);
+			return ;
+		}
 		scene->ceiling_color = parse_color(temp);
 	}
 }
@@ -360,57 +372,55 @@ void	hex_to_rgb(int hex, int *r, int *g, int *b)
 	*g = (hex >> 8) & 0xFF;
 	*b = hex & 0xFF;
 }
-
-void	flood_fill(char **map, int width, int height, int x, int y)
+static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
-	if (x < 0 || y < 0 || x >= width || y >= height)
-		return ;
-	if (map[y][x] == '1' || map[y][x] == 'F') 
-		return ;
-	map[y][x] = 'F';
-	flood_fill(map, width, height, x + 1, y); 
-	flood_fill(map, width, height, x - 1, y); 
-	flood_fill(map, width, height, x, y + 1); 
-	flood_fill(map, width, height, x, y - 1); 
+	bool	is_surrounded;
+
+	if (i < 0 || i >= scene->map.map_height || j < 0 || j >= scene->map.map_width)
+		return (false);
+	if (scene->map.map_data[i][j] == '1' || filled_map[i][j] == true)
+		return (true);
+	else
+		filled_map[i][j] = true;
+	is_surrounded = true;
+	is_surrounded &= floodfill(scene, filled_map, i - 1, j);
+	is_surrounded &= floodfill(scene, filled_map, i + 1, j);
+	is_surrounded &= floodfill(scene, filled_map, i, j - 1);
+	is_surrounded &= floodfill(scene, filled_map, i, j + 1);
+	return (is_surrounded);
 }
 
-bool	validate_map_enclosure(char **map, int width, int height,
-		t_pos player_pos)
+int			check_map_surrounded(t_scene *scene, t_pos pos)
 {
-	char	**map_copy;
-	int		i;
-	int		y;
 	int		x;
+	int		y;
+	int		i;
+	bool	**filled_map;
+	bool	is_surrounded;
 
-	map_copy = malloc(sizeof(char *) * height);
+	x = pos.x;
+	y = pos.y;
+	filled_map = ft_calloc(scene->map.map_height + 1, sizeof(bool*));
 	i = 0;
-	while (i < height)
+	while (i < scene->map.map_height)
 	{
-		map_copy[i] = ft_strdup(map[i]);
+		filled_map[i] = ft_calloc(scene->map.map_width, sizeof(bool));
+//		if (!filled_map[i])
+//		{
+//			free_ptrarr((void**)filled_map);
+//			return (put_and_return_err("Malloc is failed"));
+//		}
 		i++;
 	}
-	printf("MAP COPY: \n");
-	print_map(map_copy, height, width);
-
-	flood_fill(map_copy, width, height, player_pos.x, player_pos.y);
-	y = 0;
-	while (y < height)
+	is_surrounded = floodfill(scene, filled_map, x, y);
+//	free_ptrarr((void**)filled_map);
+	if (!is_surrounded)
 	{
-		x = 0;
-		while (x < width)
-		{
-			if (map_copy[y][x] == '0')
-			{
-				printf("Error: Open space not enclosed by walls at position (%d, %d).\n", x, y);
-				free_line_array(map_copy, height);
-				return (false);
-			}
-			x++;
-		}
-		y++;
+		perror("not surrounded");
+		//return (put_and_return_err("Map isn't surrounded by wall"));
 	}
-	free_line_array(map_copy, height);
-	return (true);
+	print_map(scene->map.map_data, scene->map.map_height, scene->map.map_width);
+	return (0);
 }
 
 bool	is_valid_map_char(char c)
@@ -454,11 +464,14 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 			printf("Stopped parsing at non-map line after map started.\n");
 			break ;
 		}
-		current_width = ft_strlen(line);
-		while (current_width > 0 && is_whitespace(line[current_width - 1]))
-			current_width--;
-		if (current_width > map_width)
-			map_width = current_width;
+		if(map_started)
+		{
+			current_width = ft_strlen(line);
+			while (current_width > 0 && is_whitespace(line[current_width - 1]))
+				current_width--;
+			if (current_width > map_width)
+				map_width = current_width;
+		}
 		scene->map.map_data = ft_realloc(scene->map.map_data, sizeof(char *)
 				* map_height, sizeof(char *) * (map_height + 1));
 		if (!scene->map.map_data)
@@ -522,7 +535,7 @@ bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 
 	map_started = false;
 	i = 0;
-	while (i < line_count)
+	while (i < line_count && !map_started)
 	{
 		line = lines[i];
 		printf("Processing line %d: %s", i, line);
@@ -534,7 +547,7 @@ bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 		}
 		if (is_map_line(line))
 		{
-			printf("Map line detected at line %d: %s\n", i, line);
+			printf("Map line detected at line %d: %s", i, line);
 			map_started = true;
 		}
 		else
@@ -671,7 +684,8 @@ int	main(int argc, char **argv)
 		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
-	validate_file(argv[1]);
+	if (!validate_file(argv[1]))
+		return (EXIT_FAILURE);
 	
 	file_lines = read_file_lines(fd, &line_count);
 	close(fd);
@@ -683,7 +697,7 @@ int	main(int argc, char **argv)
 	parse_scene_from_lines(file_lines, line_count, &scene);
 	validate_elements(&scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
-	validate_map_enclosure(scene.map.map_data, scene.map.map_width, scene.map.map_height, pos);
+	check_map_surrounded(&scene, pos);
 	
 	free_line_array(file_lines, line_count);
 	free(scene.map.map_data);

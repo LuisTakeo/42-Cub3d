@@ -37,11 +37,16 @@
 ### BACKLOG
 ### TODO
 - treat errors like: "Error\n" followed by an explicit error message
+- MUST EXIT AFTER AN ERROR
+- CLEAN LEAKS ON EXIT
+- CHECK UNUSED FUNCTIONS, VARS, STRUCTS, ETC
+- norm
+- use takeo's makefile
 ### DOING
-- dont accept elements after the map
 - throw all relevant elements on a struct
 - INIT EVERYTHING
 ### DONE
+- dont accept elements after the map
 - careful with \n and empty lines
 - treat spaces and tabs
 - make separate counter
@@ -69,22 +74,22 @@
 ### TODO
 - throw all relevant information on a struct
 - where it ends
-- NWSE cannot repeat
-- empty line in the middle of the map
 - make sure texture are on the right cardinal point
 - make sure the player is looking for the right cardinal point
-- make sure to treat only NEWS01(inside the map) 'spaces' and 'tabs'(outside)
-- treat non ascii chars
 - treat errors like: "Error\n" followed by an explicit error message
-- holes in the map
 ### DOING
 - INIT EVERYTHING
 - must be surrounded by walls
+- treat non ascii chars
 - floodfill
 - make sure floodfill starts on NEWS or not
+- make sure to treat only NEWS01(inside the map) 'spaces' and 'tabs'(outside)
 - consider iterative flood_fill
 ### DONE
 - treat tab as 1 width
+- holes in the map
+- NWSE cannot repeat
+- empty line in the middle of the map
 - where the map starts
 - send data to validation
 - get height
