@@ -18,6 +18,7 @@ int	update_vector(t_vector *vector, float x, float y)
 		return (EXIT_FAILURE);
 	vector->x = x;
 	vector->y = y;
+
 	return (EXIT_SUCCESS);
 }
 
@@ -90,30 +91,53 @@ void	init_values(t_cub3d *cub3d)
 	cub3d->player.angle = 0.0;
 }
 
+void	draw_background(t_cub3d *cub3d)
+{
+	int	i;
+
+	i = 0;
+	while (i < WIDTH)
+	{
+		draw_vertical_line(cub3d->image, (t_vector){i, 0}, HEIGHT, 0xFFFFFFFF);
+		i++;
+	}
+}
+
+
+// void	draw_walls(t_cub3d	*cub3d)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (i < WIDTH)
+// 	{
+// 		i++;
+// 	}
+// }
 
 
 static void ft_hook(void* param)
 {
-	const t_cub3d* cub3d = param;
+	t_cub3d	*cub3d;
 
-	printf("WIDTH: %d | HEIGHT: %d\n", cub3d->mlx->width, cub3d->mlx->height);
+	cub3d = (t_cub3d *)param;
+	draw_background(cub3d);
+	// draw_walls(cub3d);
 }
 
 int	init_game(t_cub3d *cub3d)
 {
-	mlx_image_t	*image;
-
 	// mlx_set_setting(MLX_MAXIMIZED, true);
 	cub3d->mlx = mlx_init(WIDTH, HEIGHT, "Cub3d", true);
 	if (!cub3d->mlx)
 		return (EXIT_FAILURE);
-	image = mlx_new_image(cub3d->mlx, WIDTH, HEIGHT);
-	if (!image)
+	cub3d->image = mlx_new_image(cub3d->mlx, WIDTH, HEIGHT);
+	if (!cub3d->image)
 	{
 		mlx_terminate(cub3d->mlx);
 		return (EXIT_FAILURE);
 	}
-	mlx_image_to_window(cub3d->mlx, image, 0, 0);
+	mlx_image_to_window(cub3d->mlx, cub3d->image, 0, 0);
 	mlx_loop_hook(cub3d->mlx, &ft_hook, cub3d->mlx);
 	mlx_key_hook(cub3d->mlx, &listen_moves, cub3d);
 	mlx_loop(cub3d->mlx);

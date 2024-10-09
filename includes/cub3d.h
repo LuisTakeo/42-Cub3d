@@ -52,10 +52,13 @@ struct s_cub3d
 	t_player	player;
 	t_vector	ray;
 	t_vector	plane;
+	mlx_image_t	*image;
 };
 
 void	init_values(t_cub3d *cub3d);
 int		init_game(t_cub3d *cub3d);
 void	finish_game(t_cub3d *cub3d);
+void	draw_vertical_line(mlx_image_t *image,
+			t_vector vector, int y_end, int32_t color);
 
 #endif
