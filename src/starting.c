@@ -308,6 +308,7 @@ void	handle_floor_color(t_scene *scene, char *line)
 		}
 		scene->floor_color = parse_color(temp);
 	}
+	free(temp);
 }
 
 void	handle_ceiling_color(t_scene *scene, char *line)
@@ -328,6 +329,7 @@ void	handle_ceiling_color(t_scene *scene, char *line)
 		}
 		scene->ceiling_color = parse_color(temp);
 	}
+	free(temp);
 }
 
 void	parse_scene_from_lines(char **lines, int line_count, t_scene *scene)
