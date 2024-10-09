@@ -376,7 +376,8 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
 
-	if (i < 0 || i >= scene->map.map_height || j < 0 || j >= scene->map.map_width)
+	if (i < 0 || i >= scene->map.map_height || j < 0
+		|| j >= scene->map.map_width)
 		return (false);
 	if (scene->map.map_data[i][j] == '1' || filled_map[i][j] == true)
 		return (true);
@@ -390,7 +391,7 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 	return (is_surrounded);
 }
 
-int			check_map_surrounded(t_scene *scene, t_pos pos)
+int	check_map_surrounded(t_scene *scene, t_pos pos)
 {
 	int		x;
 	int		y;
@@ -400,24 +401,23 @@ int			check_map_surrounded(t_scene *scene, t_pos pos)
 
 	x = pos.x;
 	y = pos.y;
-	filled_map = ft_calloc(scene->map.map_height + 1, sizeof(bool*));
+	filled_map = ft_calloc(scene->map.map_height + 1, sizeof(bool *));
 	i = 0;
 	while (i < scene->map.map_height)
 	{
 		filled_map[i] = ft_calloc(scene->map.map_width, sizeof(bool));
-//		if (!filled_map[i])
-//		{
-//			free_ptrarr((void**)filled_map);
-//			return (put_and_return_err("Malloc is failed"));
-//		}
+				if (!filled_map[i])
+				{
+					free_line_array((char **)filled_map, scene->map.map_height);
+					perror("malloc failed");
+				}
 		i++;
 	}
 	is_surrounded = floodfill(scene, filled_map, x, y);
-//	free_ptrarr((void**)filled_map);
+		free_line_array((char **)filled_map, scene->map.map_height);
 	if (!is_surrounded)
 	{
 		perror("not surrounded");
-		//return (put_and_return_err("Map isn't surrounded by wall"));
 	}
 	print_map(scene->map.map_data, scene->map.map_height, scene->map.map_width);
 	return (0);
@@ -464,7 +464,7 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 			printf("Stopped parsing at non-map line after map started.\n");
 			break ;
 		}
-		if(map_started)
+		if (map_started)
 		{
 			current_width = ft_strlen(line);
 			while (current_width > 0 && is_whitespace(line[current_width - 1]))
@@ -510,7 +510,7 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 				j++;
 			}
 		}
-		if(map_started)
+		if (map_started)
 			map_height++;
 		i++;
 	}
@@ -555,7 +555,7 @@ bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 			count_texture_elements(line, scene);
 			printf("Texture/Element Counters - NO: %d, SO: %d, WE: %d, EA: %d,F:%d, C: %d\n", scene->no_counter, scene->so_counter,
 				scene->we_counter, scene->ea_counter, scene->f_counter,
-					scene->c_counter); 
+				scene->c_counter);
 		}
 		i++;
 	}
@@ -686,7 +686,6 @@ int	main(int argc, char **argv)
 	}
 	if (!validate_file(argv[1]))
 		return (EXIT_FAILURE);
-	
 	file_lines = read_file_lines(fd, &line_count);
 	close(fd);
 	if (!count_elements_from_lines(file_lines, line_count, &scene))
@@ -698,7 +697,6 @@ int	main(int argc, char **argv)
 	validate_elements(&scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
 	check_map_surrounded(&scene, pos);
-	
 	free_line_array(file_lines, line_count);
 	free(scene.map.map_data);
 	free(scene.north_texture);
