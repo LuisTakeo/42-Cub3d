@@ -22,3 +22,22 @@ t_vector	rotate_vector(t_vector v, float angle)
 	vector.y = v.x * sin(radians) + v.y * cos(radians);
 	return (vector);
 }
+
+t_vector	sum_vector(t_vector v, t_vector z)
+{
+	t_vector	vector;
+
+	vector.x = v.x + z.x;
+	vector.y = v.y + z.y;
+	return (vector);
+}
+
+t_vector	multi_vector(t_vector v, float num)
+{
+	t_vector	vector;
+
+	vector.x = v.x * num;
+	vector.y = v.y + num;
+	return (vector);
+}
+
