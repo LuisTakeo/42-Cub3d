@@ -511,14 +511,14 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 		if (!filled_map[i])
 		{
 			free_line_array((char **)filled_map, scene->map.map_height);
-			err("malloc failed");
+			err_exit("malloc failed");
 		}
 		i++;
 	}
 	is_surrounded = floodfill(scene, filled_map, y, x);
 	free_line_array((char **)filled_map, scene->map.map_height);
 	if (!is_surrounded)
-		err("not surrounded");
+		panic("not surrounded", scene);
 	return (0);
 }
 
@@ -595,10 +595,7 @@ void	validate_map_characters(char *line, int current_width, t_scene *scene,
 			player_pos->y = scene->map.map_height + 1;
 		}
 		else if (!is_valid_map_char(c))
-		{
-			err("Error: Invalid character found in map.");
 			scene->invalid_c++;
-		}
 		j++;
 	}
 }
@@ -606,7 +603,7 @@ void	validate_map_characters(char *line, int current_width, t_scene *scene,
 void	final_map_validation(t_scene *scene)
 {
 	if (scene->player_count != 1)
-		panic("No player", scene);
+		panic("This is not a multiplayer game", scene);
 	if (scene->invalid_c > 0)
 		panic("Invalid characters in map", scene);
 }
@@ -788,6 +785,7 @@ int	main(int argc, char **argv)
 	ft_memset(&scene, 0, sizeof(t_scene));
 	if (!valid_arg(argc, argv, fd))
 		return (EXIT_FAILURE);
+	fd = open(argv[1], O_RDONLY);
 	file_lines = read_file_lines(fd, &line_count);
 	scene.file_lines = file_lines;
 	scene.line_count = line_count;

@@ -43,7 +43,6 @@
 - INVALID CHAR LEAK
 - norm
 - use takeo's makefile
-- RETIRAR EXITS (FUNCAO PROIBIDA)
 - TRATAR O FREE EM CASO DE NENHUM PLAYER
 ### DOING
 - throw all relevant elements on a struct
