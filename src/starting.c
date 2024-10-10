@@ -773,6 +773,32 @@ bool	valid_arg(int ac, char **av, int fd)
 	return (true);
 }
 
+void	fill_short_lines_with_zeros(t_scene *scene)
+{
+	int		max_width;
+	int		i;
+	int		current_length;
+	char	*new_line;
+
+	i = 0;
+	max_width = scene->map.map_width;
+	while (i < scene->map.map_height)
+	{
+		current_length = ft_strlen(scene->map.map_data[i]);
+		if (current_length < max_width)
+		{
+			new_line = malloc(max_width + 1);
+			if (!new_line)
+				err_exit("Memory allocation failed");
+			ft_memset(new_line, '0', max_width);
+			new_line[max_width] = '\0';
+			free(scene->map.map_data[i]);
+			scene->map.map_data[i] = new_line;
+		}
+		i++;
+	}
+}
+
 int	main(int argc, char **argv)
 {
 	int		fd;
@@ -796,6 +822,7 @@ int	main(int argc, char **argv)
 	if (!validate_elements(&scene))
 		panic("invalid elements", &scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
+	fill_short_lines_with_zeros(&scene);
 	check_map_surrounded(&scene, pos);
 	ok_free("ok", &scene);
 }
