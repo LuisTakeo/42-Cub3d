@@ -50,6 +50,7 @@ typedef struct s_scene
 	int		ea_counter;
 	int		f_counter;
 	int		c_counter;
+	int		invalid_c;
 	char 		**file_lines;
 	int		line_count;
 	t_map	map;
@@ -422,9 +423,9 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
 
-	printf("FLOOOOOOOOOD \n");
-	print_flood_filled_map(scene, filled_map);
-	printf("\n");
+	//printf("FLOOOOOOOOOD \n");
+	//print_flood_filled_map(scene, filled_map);
+	//printf("\n");
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
 		return (false);
@@ -485,12 +486,13 @@ bool	is_player_char(char c)
 }
 
 void	init_map_vars(int *map_height, int *map_width, int *player_count,
-		bool *map_started)
+		bool *map_started, int *invalid_c)
 {
 	*map_height = 0;
 	*map_width = 0;
 	*player_count = 0;
 	*map_started = false;
+	*invalid_c = 0;
 }
 
 bool	handle_map_line(char *line, bool *map_started)
@@ -540,7 +542,7 @@ void	copy_map_line(t_scene *scene, char *line, int map_height)
 }
 
 void	validate_map_characters(char *line, int current_width,
-		t_pos *player_pos, int *player_count, int map_height/*, t_scene scene*/)
+		t_pos *player_pos, int *player_count, int map_height, t_scene scene, int *invalid_c)
 {
 	int		j;
 	char	c;
@@ -570,18 +572,21 @@ void	validate_map_characters(char *line, int current_width,
 		else if (!is_valid_map_char(c))
 		{
 			printf("Error: Invalid character '%c' found in map.\n", c);
-			exit(EXIT_FAILURE);
+			(*invalid_c)++;
+		//	exit(EXIT_FAILURE);
 		}
 		j++;
 	}
+	scene.invalid_c = *invalid_c;
 		
 }
 
 void	final_map_validation(t_scene *scene, int map_height, int map_width,
-		int player_count, t_pos *player_pos)
+		int player_count, t_pos *player_pos, int invalid_c)
 {
 	scene->map.map_height = map_height;
 	scene->map.map_width = map_width;
+	printf("%d \n", invalid_c);
 	if(player_count != 1)
 	{
 		printf("error: no players\n");
@@ -592,8 +597,20 @@ void	final_map_validation(t_scene *scene, int map_height, int map_width,
 		free(scene->south_texture);
 		free(scene->west_texture);
 		free(scene->east_texture);
+		exit(EXIT_FAILURE);
+	}
+	if(invalid_c > 0 )
+	{
+		printf("error: invalid char\n");
+		free_map_data(scene->map.map_data, scene->map.map_height);
+		free_line_array(scene->file_lines, scene->line_count);
+		free(scene->map.map_data);
+		free(scene->north_texture);
+		free(scene->south_texture);
+		free(scene->west_texture);
+		free(scene->east_texture);
+		exit(EXIT_FAILURE);
 
-			exit(EXIT_FAILURE);
 	}
 	printf("Map width: %d, Map height: %d\n", scene->map.map_width,
 		scene->map.map_height);
@@ -609,9 +626,9 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	int		i;
 	char	*line;
 
-	int map_height, map_width, player_count;
+	int map_height, map_width, player_count, invalid_c;
 	i = 0;
-	init_map_vars(&map_height, &map_width, &player_count, &map_started);
+	init_map_vars(&map_height, &map_width, &player_count, &map_started, &invalid_c);
 	scene->map.map_data = NULL;
 	while (i < line_count)
 	{
@@ -624,14 +641,14 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 			resize_map_data(scene, map_height);
 			copy_map_line(scene, line, map_height);
 			validate_map_characters(line, ft_strlen(line), player_pos,
-				&player_count, map_height/*, *scene*/);
+				&player_count, map_height, *scene, &invalid_c);
 			map_height++;
 		}
 		i++;
 	}
 	//scene->map.map_data[map_height] = NULL;
 	final_map_validation(scene, map_height, map_width, player_count,
-		player_pos);
+		player_pos, invalid_c);
 }
 
 bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
