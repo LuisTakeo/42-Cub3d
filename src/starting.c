@@ -391,9 +391,16 @@ void	handle_floor_color(t_scene *scene, char *line)
 		if (!temp)
 		{
 			free(line);
+			scene->floor_color = -1;
 			return ;
 		}
 		scene->floor_color = parse_color(temp);
+		if (scene->floor_color == EXIT_FAILURE)
+		{
+			free(temp);
+			scene->floor_color = -1;
+			return ;
+		}
 	}
 	free(temp);
 }
@@ -412,9 +419,16 @@ void	handle_ceiling_color(t_scene *scene, char *line)
 		if (!temp)
 		{
 			free(line);
+			scene->ceiling_color = -1;
 			return ;
 		}
 		scene->ceiling_color = parse_color(temp);
+		if (scene->ceiling_color == EXIT_FAILURE) 
+		{
+			free(temp);
+			scene->ceiling_color = -1;
+			return ;
+		}
 	}
 	free(temp);
 }
@@ -824,5 +838,5 @@ int	main(int argc, char **argv)
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
 	fill_short_lines_with_zeros(&scene);
 	check_map_surrounded(&scene, pos);
-	ok_free("ok", &scene);
+	ok_free("OK OK OK OK OK OK OK OK OK OK OK OK OOOOOOOOOOOKKKKKKKK", &scene);
 }
