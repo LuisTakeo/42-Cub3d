@@ -145,12 +145,6 @@ int	is_valid_color_value(int value)
 }
 
 
-void		err(char *str)
-{
-	ft_putstr_fd("Error\n", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-}
-
 void	print_map(char **map_data, int map_height, int map_width)
 {
 	int	i;
@@ -174,17 +168,18 @@ char	**read_file_lines(int fd, int *line_count)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
+		printf("Read line: %s", line); // Debugging line
 		lines = ft_realloc(lines, sizeof(char *) * count, sizeof(char *)
 				* (count + 1));
 		if (!lines)
 		{
-			err("Memory allocation failed");
+			perror("Memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
 		lines[count] = ft_strdup(line);
 		if (!lines[count])
 		{
-			err("Memory allocation failed");
+			perror("Memory allocation failed");
 			exit(EXIT_FAILURE);
 		}
 		count++;
@@ -203,12 +198,12 @@ int	parse_color(char *line)
 	components = ft_split(line, ',');
 	if (!components)
 	{
-		err("ft_split");
+		perror("ft_split");
 		return (EXIT_FAILURE);
 	}
 	if (!components[0] || !components[1] || !components[2])
 	{
-		err("Invalid color format");
+		printf("Error: Invalid color format\n");
 		free(components[0]);
 		free(components[1]);
 		free(components[2]);
@@ -218,7 +213,7 @@ int	parse_color(char *line)
 	if (ft_strlen(components[0]) > 3 || ft_strlen(components[1]) > 3
 		|| ft_strlen(components[2]) > 3)
 	{
-		err("Error: Invalid color format(len)");
+		printf("Error: Invalid color format(len)\n");
 		free(components[0]);
 		free(components[1]);
 		free(components[2]);
@@ -231,7 +226,7 @@ int	parse_color(char *line)
 	if (!is_valid_color_value(r) || !is_valid_color_value(g)
 		|| !is_valid_color_value(b))
 	{
-		err("Error: Color values must be between 0 and 255");
+		printf("Error: Color values must be between 0 and 255\n");
 		return (EXIT_FAILURE);
 	}
 	free(components[0]);
@@ -380,6 +375,16 @@ void	parse_scene_from_lines(char **lines, int line_count, t_scene *scene)
 			handle_ceiling_color(scene, line);
 		i++;
 	}
+	printf("Ceiling color: %#X\n", scene->ceiling_color);
+	printf("Floor color: %#X\n", scene->floor_color);
+	printf("North texture: %s\n",
+		scene->north_texture ? scene->north_texture : "(null)");
+	printf("South texture: %s\n",
+		scene->south_texture ? scene->south_texture : "(null)");
+	printf("West texture: %s\n",
+		scene->west_texture ? scene->west_texture : "(null)");
+	printf("East texture: %s\n",
+		scene->east_texture ? scene->east_texture : "(null)");
 }
 
 int	rgb_to_hex(int r, int g, int b)
@@ -418,6 +423,9 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
 
+	//printf("FLOOOOOOOOOD \n");
+	//print_flood_filled_map(scene, filled_map);
+	//printf("\n");
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
 		return (false);
@@ -452,7 +460,7 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 		if (!filled_map[i])
 		{
 			free_line_array((char **)filled_map, scene->map.map_height);
-			err("malloc failed");
+			perror("malloc failed");
 		}
 		i++;
 	}
@@ -460,8 +468,9 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 	free_line_array((char **)filled_map, scene->map.map_height);
 	if (!is_surrounded)
 	{
-		err("not surrounded");
+		perror("not surrounded");
 	}
+	print_map(scene->map.map_data, scene->map.map_height, scene->map.map_width);
 	return (0);
 }
 
@@ -494,7 +503,7 @@ bool	handle_map_line(char *line, bool *map_started)
 	}
 	else if (!is_map_line(line) && *map_started)
 	{
-		err("Stopped parsing at non-map line after map started.");
+		printf("Stopped parsing at non-map line after map started.\n");
 		return (false);
 	}
 	return (true);
@@ -517,7 +526,7 @@ void	resize_map_data(t_scene *scene, int map_height)
 			* map_height, sizeof(char *) * (map_height + 1));
 	if (!scene->map.map_data)
 	{
-		err("Memory allocation failed");
+		perror("Memory allocation failed");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -527,7 +536,7 @@ void	copy_map_line(t_scene *scene, char *line, int map_height)
 	scene->map.map_data[map_height] = ft_strdup(line);
 	if (!scene->map.map_data[map_height])
 	{
-		err("Memory allocation failed");
+		perror("Memory allocation failed");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -545,13 +554,26 @@ void	validate_map_characters(char *line, int current_width,
 		if (is_player_char(c))
 		{
 			(*player_count)++;
+		//	if (*player_count > 1)
+		//	{
+		//		printf("Error: More than one player character found.\n");
+		//		free_map_data(scene.map.map_data, scene.map.map_height);
+		//		free_line_array(scene.file_lines, scene.line_count);
+		//		free(scene.map.map_data);
+		//		free(scene.north_texture);
+		//		free(scene.south_texture);
+		//		free(scene.west_texture);
+		//		free(scene.east_texture);
+		//		exit(EXIT_FAILURE);
+		//	}
 			player_pos->x = j + 1;
 			player_pos->y = map_height + 1;
 		}
 		else if (!is_valid_map_char(c))
 		{
-			err("Error: Invalid character '%c' found in map.");
+			printf("Error: Invalid character '%c' found in map.\n", c);
 			(*invalid_c)++;
+		//	exit(EXIT_FAILURE);
 		}
 		j++;
 	}
@@ -560,13 +582,14 @@ void	validate_map_characters(char *line, int current_width,
 }
 
 void	final_map_validation(t_scene *scene, int map_height, int map_width,
-		int player_count, int invalid_c)
+		int player_count, t_pos *player_pos, int invalid_c)
 {
 	scene->map.map_height = map_height;
 	scene->map.map_width = map_width;
+	printf("%d \n", invalid_c);
 	if(player_count != 1)
 	{
-		err("No player");
+		printf("error: no players\n");
 		free_map_data(scene->map.map_data, scene->map.map_height);
 		free_line_array(scene->file_lines, scene->line_count);
 		free(scene->map.map_data);
@@ -578,7 +601,7 @@ void	final_map_validation(t_scene *scene, int map_height, int map_width,
 	}
 	if(invalid_c > 0 )
 	{
-		err("invalid char");
+		printf("error: invalid char\n");
 		free_map_data(scene->map.map_data, scene->map.map_height);
 		free_line_array(scene->file_lines, scene->line_count);
 		free(scene->map.map_data);
@@ -589,6 +612,11 @@ void	final_map_validation(t_scene *scene, int map_height, int map_width,
 		exit(EXIT_FAILURE);
 
 	}
+	printf("Map width: %d, Map height: %d\n", scene->map.map_width,
+		scene->map.map_height);
+	if(player_count == 1)
+		printf("Player found at position: (%d, %d)\n", player_pos->x,
+		player_pos->y);
 }
 
 void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
@@ -618,7 +646,9 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 		}
 		i++;
 	}
-	final_map_validation(scene, map_height, map_width, player_count, invalid_c);
+	//scene->map.map_data[map_height] = NULL;
+	final_map_validation(scene, map_height, map_width, player_count,
+		player_pos, invalid_c);
 }
 
 bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
@@ -632,22 +662,32 @@ bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 	while (i < line_count && !map_started)
 	{
 		line = lines[i];
+		printf("Processing line %d: %s", i, line);
 		if (is_whitespace(*line))
 		{
+			printf("Line %d is whitespace.\n", i);
 			i++;
 			continue ;
 		}
 		if (is_map_line(line))
+		{
+			printf("Map line detected at line %d: %s", i, line);
 			map_started = true;
+		}
 		else
+		{
 			count_texture_elements(line, scene);
+			printf("Texture/Element Counters - NO: %d, SO: %d, WE: %d, EA: %d,F:%d, C: %d\n", scene->no_counter, scene->so_counter,
+				scene->we_counter, scene->ea_counter, scene->f_counter,
+				scene->c_counter);
+		}
 		i++;
 	}
 	if (scene->no_counter != 1 || scene->so_counter != 1
 		|| scene->we_counter != 1 || scene->ea_counter != 1
 		|| scene->f_counter != 1 || scene->c_counter != 1)
 	{
-		err("Missing or repeated elements");
+		perror("Missing or repeated elements");
 		return (false);
 	}
 	return (true);
@@ -700,17 +740,17 @@ bool	validate_file(const char *filename)
 {
 	if (is_directory(filename))
 	{
-		err("Invalid file. Must be a file");
+		perror("Invalid file. Must be a file");
 		return (false);
 	}
 	if (!validate_extension(filename, ".cub"))
 	{
-		err("Invalid file extension. Must be .cub");
+		perror("Invalid file extension. Must be .cub");
 		return (false);
 	}
 	if (!is_empty(filename))
 	{
-		err("emptyyyyy");
+		perror("emptyyyyy");
 		return (false);
 	}
 	return (true);
@@ -722,19 +762,19 @@ bool	validate_elements(t_scene *scene)
 		|| !validate_extension(scene->west_texture, ".png")
 		|| !validate_extension(scene->east_texture, ".png"))
 	{
-		err("Invalid texture format");
+		perror("Invalid texture format");
 		return (false);
 	}
 	if (!file_exists(scene->north_texture) || !file_exists(scene->south_texture)
 		|| !file_exists(scene->west_texture)
 		|| !file_exists(scene->east_texture))
 	{
-		err("Texture file does not exist");
+		perror("Texture file does not exist");
 		return (false);
 	}
 	if (scene->ceiling_color == -1 || scene->floor_color == -1)
 	{
-		err("Color values missing");
+		perror("Color values missing");
 		return (false);
 	}
 	return (true);
@@ -751,13 +791,13 @@ int	main(int argc, char **argv)
 	ft_memset(&scene, 0, sizeof(t_scene));
 	if (argc != 2)
 	{
-		err("Usage: ./cub3d <map_file.cub>");
+		perror("Usage: ./cub3d <map_file.cub>");
 		return (EXIT_FAILURE);
 	}
 	fd = open(argv[1], O_RDONLY);
 	if (fd == -1)
 	{
-		err("Error opening file");
+		perror("Error opening file");
 		return (EXIT_FAILURE);
 	}
 	if (!validate_file(argv[1]))
