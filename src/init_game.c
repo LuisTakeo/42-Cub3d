@@ -12,16 +12,6 @@
 
 #include "../includes/cub3d.h"
 
-int	update_vector(t_vector *vector, float x, float y)
-{
-	if (!vector)
-		return (EXIT_FAILURE);
-	vector->x = x;
-	vector->y = y;
-
-	return (EXIT_SUCCESS);
-}
-
 void	move_to(t_vector *pos, t_vector dir, float speed)
 {
 	pos->x += dir.x * speed;
@@ -84,45 +74,23 @@ void	init_values(t_cub3d *cub3d)
 	cub3d->map = NULL;
 	update_vector(&cub3d->player.pos, (5.0 * TILE_SIZE + TILE_SIZE / 2.0),
 		(2 * TILE_SIZE + TILE_SIZE / 2));
-	update_vector(&cub3d->player.dir, -1.0, 0.0);
-	update_vector(&cub3d->player.plane, 0.0, 0.66);
-	update_vector(&cub3d->plane, 0, 0);
+	printf("Player position: x = %f, y = %f\n", cub3d->player.pos.x, cub3d->player.pos.y);
+	update_vector(&cub3d->player.dir, 0.0, -1.0);
+	update_vector(&cub3d->player.cameraPlane, 0.66, 0.0);
+	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
+	update_vector(&cub3d->player.delta_dist, 0, 0);
 	cub3d->player.angle = 0.0;
 }
 
-void	draw_background(t_cub3d *cub3d)
-{
-	int	i;
 
-	i = 0;
-	while (i < WIDTH)
-	{
-		draw_vertical_line(cub3d->image, (t_vector){i, 0}, HEIGHT, 0xFFFFFFFF);
-		i++;
-	}
-}
-
-
-// void	draw_walls(t_cub3d	*cub3d)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < WIDTH)
-// 	{
-// 		i++;
-// 	}
-// }
-
-
-static void ft_hook(void* param)
+void	ft_hook(void* param)
 {
 	t_cub3d	*cub3d;
 
 	cub3d = (t_cub3d *)param;
 	draw_background(cub3d);
-	// draw_walls(cub3d);
+	draw_walls(cub3d);
 }
 
 int	init_game(t_cub3d *cub3d)
@@ -138,7 +106,7 @@ int	init_game(t_cub3d *cub3d)
 		return (EXIT_FAILURE);
 	}
 	mlx_image_to_window(cub3d->mlx, cub3d->image, 0, 0);
-	mlx_loop_hook(cub3d->mlx, &ft_hook, cub3d->mlx);
+	mlx_loop_hook(cub3d->mlx, &ft_hook, cub3d);
 	mlx_key_hook(cub3d->mlx, &listen_moves, cub3d);
 	mlx_loop(cub3d->mlx);
 	return (EXIT_SUCCESS);

@@ -41,3 +41,13 @@ t_vector	multi_vector(t_vector v, float num)
 	return (vector);
 }
 
+int	update_vector(t_vector *vector, float x, float y)
+{
+	if (!vector)
+		return (EXIT_FAILURE);
+	vector->x = x;
+	vector->y = y;
+
+	return (EXIT_SUCCESS);
+}
+

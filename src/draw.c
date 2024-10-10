@@ -17,10 +17,42 @@ int	get_rgba(int r, int g, int b, int a)
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
+void	draw_background(t_cub3d *cub3d)
+{
+	draw_ceiling(cub3d);
+	draw_floor(cub3d);
+}
+
+void	draw_ceiling(t_cub3d *cub3d)
+{
+	int	i;
+
+	i = 0;
+	while (i < WIDTH)
+	{
+		draw_vertical_line(cub3d->image, (t_vector){i, 0},
+			HEIGHT / 2, 0xAAAAFFFF);
+		i++;
+	}
+}
+
+void	draw_floor(t_cub3d *cub3d)
+{
+	int	i;
+
+	i = 0;
+	while (i < WIDTH)
+	{
+		draw_vertical_line(cub3d->image, (t_vector){i, HEIGHT / 2 + 1},
+			HEIGHT, 0x1111FFFF);
+		i++;
+	}
+}
+
 void	draw_vertical_line(mlx_image_t *image,
 	t_vector vector, int y_end, int32_t color)
 {
-	int y;
+	int	y;
 
 	y = vector.y;
 	while (y < y_end)
