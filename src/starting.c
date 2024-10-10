@@ -50,6 +50,8 @@ typedef struct s_scene
 	int		ea_counter;
 	int		f_counter;
 	int		c_counter;
+	char 		**file_lines;
+	int		line_count;
 	t_map	map;
 }			t_scene;
 
@@ -86,6 +88,36 @@ void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
 	}
 }
 
+void	free_line_array(char **lines, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		free(lines[i]);
+		i++;
+	}
+	free(lines);
+}
+void	free_map_data(char **map_data, int height)
+{
+	int	i;
+
+	i = 0;
+	if (map_data)
+	{
+		while (i < height)
+		{
+			if (map_data[i])
+			{
+				free(map_data[i]);
+				map_data[i] = NULL;
+			}
+			i++;
+		}
+	}
+}
 t_direction	get_direction(char *identifier)
 {
 	if (ft_strncmp(identifier, "NO", 2) == 0)
@@ -111,18 +143,6 @@ int	is_valid_color_value(int value)
 	return (value >= 0 && value <= 255);
 }
 
-void	free_line_array(char **lines, int count)
-{
-	int	i;
-
-	i = 0;
-	while (i < count)
-	{
-		free(lines[i]);
-		i++;
-	}
-	free(lines);
-}
 
 void	print_map(char **map_data, int map_height, int map_width)
 {
@@ -520,7 +540,7 @@ void	copy_map_line(t_scene *scene, char *line, int map_height)
 }
 
 void	validate_map_characters(char *line, int current_width,
-		t_pos *player_pos, int *player_count, int map_height)
+		t_pos *player_pos, int *player_count, int map_height/*, t_scene scene*/)
 {
 	int		j;
 	char	c;
@@ -532,11 +552,18 @@ void	validate_map_characters(char *line, int current_width,
 		if (is_player_char(c))
 		{
 			(*player_count)++;
-			if (*player_count != 1)
-			{
-				printf("Error: More than one player character found.\n");
-				exit(EXIT_FAILURE);
-			}
+		//	if (*player_count > 1)
+		//	{
+		//		printf("Error: More than one player character found.\n");
+		//		free_map_data(scene.map.map_data, scene.map.map_height);
+		//		free_line_array(scene.file_lines, scene.line_count);
+		//		free(scene.map.map_data);
+		//		free(scene.north_texture);
+		//		free(scene.south_texture);
+		//		free(scene.west_texture);
+		//		free(scene.east_texture);
+		//		exit(EXIT_FAILURE);
+		//	}
 			player_pos->x = j + 1;
 			player_pos->y = map_height + 1;
 		}
@@ -547,21 +574,31 @@ void	validate_map_characters(char *line, int current_width,
 		}
 		j++;
 	}
+		
 }
 
 void	final_map_validation(t_scene *scene, int map_height, int map_width,
 		int player_count, t_pos *player_pos)
 {
-	if (player_count == 0)
-	{
-		printf("Error: No player character found in the map.\n");
-	//	exit(EXIT_FAILURE);
-	}
 	scene->map.map_height = map_height;
 	scene->map.map_width = map_width;
+	if(player_count != 1)
+	{
+		printf("error: no players\n");
+		free_map_data(scene->map.map_data, scene->map.map_height);
+		free_line_array(scene->file_lines, scene->line_count);
+		free(scene->map.map_data);
+		free(scene->north_texture);
+		free(scene->south_texture);
+		free(scene->west_texture);
+		free(scene->east_texture);
+
+			exit(EXIT_FAILURE);
+	}
 	printf("Map width: %d, Map height: %d\n", scene->map.map_width,
 		scene->map.map_height);
-	printf("Player found at position: (%d, %d)\n", player_pos->x,
+	if(player_count == 1)
+		printf("Player found at position: (%d, %d)\n", player_pos->x,
 		player_pos->y);
 }
 
@@ -587,11 +624,12 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 			resize_map_data(scene, map_height);
 			copy_map_line(scene, line, map_height);
 			validate_map_characters(line, ft_strlen(line), player_pos,
-				&player_count, map_height);
+				&player_count, map_height/*, *scene*/);
 			map_height++;
 		}
 		i++;
 	}
+	//scene->map.map_data[map_height] = NULL;
 	final_map_validation(scene, map_height, map_width, player_count,
 		player_pos);
 }
@@ -725,24 +763,6 @@ bool	validate_elements(t_scene *scene)
 	return (true);
 }
 
-void	free_map_data(char **map_data, int height)
-{
-	int	i;
-
-	i = 0;
-	if (map_data)
-	{
-		while (i < height)
-		{
-			if (map_data[i])
-			{
-				free(map_data[i]);
-				map_data[i] = NULL;
-			}
-			i++;
-		}
-	}
-}
 int	main(int argc, char **argv)
 {
 	int		fd;
@@ -766,6 +786,8 @@ int	main(int argc, char **argv)
 	if (!validate_file(argv[1]))
 		return (EXIT_FAILURE);
 	file_lines = read_file_lines(fd, &line_count);
+	scene.file_lines = file_lines;
+	scene.line_count = line_count;
 	close(fd);
 	if (!count_elements_from_lines(file_lines, line_count, &scene))
 	{
