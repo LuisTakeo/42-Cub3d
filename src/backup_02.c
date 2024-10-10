@@ -76,7 +76,6 @@ void	err_exit(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
-
 void	free_line_array(char **lines, int count)
 {
 	int	i;
@@ -135,21 +134,6 @@ void	panic(char *err_msg, t_scene *scene)
 	free(scene->west_texture);
 	free(scene->east_texture);
 	exit(EXIT_FAILURE);
-}
-
-void	ok_free(char *err_msg, t_scene *scene)
-{
-	err(err_msg);
-	if (scene->map.map_data)
-		free_map_data(scene->map.map_data, scene->map.map_height);
-	if (scene->file_lines)
-		free_line_array(scene->file_lines, scene->line_count);
-	free(scene->map.map_data);
-	free(scene->north_texture);
-	free(scene->south_texture);
-	free(scene->west_texture);
-	free(scene->east_texture);
-	exit(EXIT_SUCCESS);
 }
 
 void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
@@ -578,8 +562,9 @@ void	copy_map_line(t_scene *scene, char *line, int map_height)
 	}
 }
 
-void	validate_map_characters(char *line, int current_width, t_scene *scene,
-		t_pos *player_pos)
+void	validate_map_characters(char *line, int current_width,
+		t_pos *player_pos, int *player_count, int map_height, t_scene scene,
+		int *invalid_c)
 {
 	int		j;
 	char	c;
@@ -590,25 +575,29 @@ void	validate_map_characters(char *line, int current_width, t_scene *scene,
 		c = line[j];
 		if (is_player_char(c))
 		{
-			scene->player_count++;
+			(*player_count)++;
 			player_pos->x = j + 1;
-			player_pos->y = scene->map.map_height + 1;
+			player_pos->y = map_height + 1;
 		}
 		else if (!is_valid_map_char(c))
 		{
-			err("Error: Invalid character found in map.");
-			scene->invalid_c++;
+			err("Error: Invalid character '%c' found in map.");
+			(*invalid_c)++;
 		}
 		j++;
 	}
+	scene.invalid_c = *invalid_c;
 }
 
-void	final_map_validation(t_scene *scene)
+void	final_map_validation(t_scene *scene, int map_height, int map_width,
+		int player_count, int invalid_c)
 {
-	if (scene->player_count != 1)
+	scene->map.map_height = map_height;
+	scene->map.map_width = map_width;
+	if (player_count != 1)
 		panic("No player", scene);
-	if (scene->invalid_c > 0)
-		panic("Invalid characters in map", scene);
+	if (invalid_c > 0)
+		panic("invalid char", scene);
 }
 
 void	init_map_vars(t_scene scene)
@@ -639,12 +628,15 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 			calculate_map_width(line, &scene->map.map_width);
 			resize_map_data(scene, scene->map.map_height);
 			copy_map_line(scene, line, scene->map.map_height);
-			validate_map_characters(line, ft_strlen(line), scene, player_pos);
+			validate_map_characters(line, ft_strlen(line), player_pos,
+				&scene->player_count, scene->map.map_height, *scene,
+				&scene->invalid_c);
 			scene->map.map_height++;
 		}
 		i++;
 	}
-	final_map_validation(scene);
+	final_map_validation(scene, scene->map.map_height, scene->map.map_width,
+		scene->player_count, scene->invalid_c);
 }
 
 bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
@@ -764,18 +756,6 @@ bool	validate_elements(t_scene *scene)
 	return (true);
 }
 
-bool	valid_arg(int ac, char **av, int fd)
-{
-	if (ac != 2)
-		return (err("Usage: ./cub3d <map_file.cub>"), false);
-	fd = open(av[1], O_RDONLY);
-	if (fd == -1)
-		return (err("Error opening file"), false);
-	if (!validate_file(av[1]))
-		return (false);
-	return (true);
-}
-
 int	main(int argc, char **argv)
 {
 	int		fd;
@@ -784,20 +764,34 @@ int	main(int argc, char **argv)
 	int		line_count;
 	t_pos	pos;
 
-	fd = 0;
 	ft_memset(&scene, 0, sizeof(t_scene));
-	if (!valid_arg(argc, argv, fd))
+	if (argc != 2)
+	{
+		err("Usage: ./cub3d <map_file.cub>");
+		return (EXIT_FAILURE);
+	}
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+	{
+		err("Error opening file");
+		return (EXIT_FAILURE);
+	}
+	if (!validate_file(argv[1]))
 		return (EXIT_FAILURE);
 	file_lines = read_file_lines(fd, &line_count);
 	scene.file_lines = file_lines;
 	scene.line_count = line_count;
 	close(fd);
 	if (!count_elements_from_lines(file_lines, line_count, &scene))
-		return (free_line_array(file_lines, line_count), EXIT_FAILURE);
+	{
+		free_line_array(file_lines, line_count);
+		return (EXIT_FAILURE);
+	}
 	parse_scene_from_lines(file_lines, line_count, &scene);
 	if (!validate_elements(&scene))
 		panic("invalid elements", &scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
 	check_map_surrounded(&scene, pos);
-	ok_free("ok", &scene);
+	panic("ok", &scene);
+	return (EXIT_SUCCESS);
 }

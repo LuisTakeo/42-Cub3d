@@ -76,7 +76,6 @@ void	err_exit(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
-
 void	free_line_array(char **lines, int count)
 {
 	int	i;
@@ -135,21 +134,6 @@ void	panic(char *err_msg, t_scene *scene)
 	free(scene->west_texture);
 	free(scene->east_texture);
 	exit(EXIT_FAILURE);
-}
-
-void	ok_free(char *err_msg, t_scene *scene)
-{
-	err(err_msg);
-	if (scene->map.map_data)
-		free_map_data(scene->map.map_data, scene->map.map_height);
-	if (scene->file_lines)
-		free_line_array(scene->file_lines, scene->line_count);
-	free(scene->map.map_data);
-	free(scene->north_texture);
-	free(scene->south_texture);
-	free(scene->west_texture);
-	free(scene->east_texture);
-	exit(EXIT_SUCCESS);
 }
 
 void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
@@ -764,18 +748,6 @@ bool	validate_elements(t_scene *scene)
 	return (true);
 }
 
-bool	valid_arg(int ac, char **av, int fd)
-{
-	if (ac != 2)
-		return (err("Usage: ./cub3d <map_file.cub>"), false);
-	fd = open(av[1], O_RDONLY);
-	if (fd == -1)
-		return (err("Error opening file"), false);
-	if (!validate_file(av[1]))
-		return (false);
-	return (true);
-}
-
 int	main(int argc, char **argv)
 {
 	int		fd;
@@ -784,20 +756,34 @@ int	main(int argc, char **argv)
 	int		line_count;
 	t_pos	pos;
 
-	fd = 0;
 	ft_memset(&scene, 0, sizeof(t_scene));
-	if (!valid_arg(argc, argv, fd))
+	if (argc != 2)
+	{
+		err("Usage: ./cub3d <map_file.cub>");
+		return (EXIT_FAILURE);
+	}
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+	{
+		err("Error opening file");
+		return (EXIT_FAILURE);
+	}
+	if (!validate_file(argv[1]))
 		return (EXIT_FAILURE);
 	file_lines = read_file_lines(fd, &line_count);
 	scene.file_lines = file_lines;
 	scene.line_count = line_count;
 	close(fd);
 	if (!count_elements_from_lines(file_lines, line_count, &scene))
-		return (free_line_array(file_lines, line_count), EXIT_FAILURE);
+	{
+		free_line_array(file_lines, line_count);
+		return (EXIT_FAILURE);
+	}
 	parse_scene_from_lines(file_lines, line_count, &scene);
 	if (!validate_elements(&scene))
 		panic("invalid elements", &scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
 	check_map_surrounded(&scene, pos);
-	ok_free("ok", &scene);
+	panic("ok", &scene);
+	return (EXIT_SUCCESS);
 }

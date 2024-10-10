@@ -54,8 +54,6 @@ typedef struct s_scene
 	char	**file_lines;
 	int		line_count;
 	t_map	map;
-	bool	map_started;
-	int		player_count;
 }			t_scene;
 
 typedef struct s_pos
@@ -76,7 +74,6 @@ void	err_exit(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
-
 void	free_line_array(char **lines, int count)
 {
 	int	i;
@@ -135,21 +132,6 @@ void	panic(char *err_msg, t_scene *scene)
 	free(scene->west_texture);
 	free(scene->east_texture);
 	exit(EXIT_FAILURE);
-}
-
-void	ok_free(char *err_msg, t_scene *scene)
-{
-	err(err_msg);
-	if (scene->map.map_data)
-		free_map_data(scene->map.map_data, scene->map.map_height);
-	if (scene->file_lines)
-		free_line_array(scene->file_lines, scene->line_count);
-	free(scene->map.map_data);
-	free(scene->north_texture);
-	free(scene->south_texture);
-	free(scene->west_texture);
-	free(scene->east_texture);
-	exit(EXIT_SUCCESS);
 }
 
 void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
@@ -245,37 +227,6 @@ char	**read_file_lines(int fd, int *line_count)
 	return (lines);
 }
 
-void	free_components(char **components)
-{
-	int	i;
-
-	i = 0;
-	while (components[i])
-	{
-		free(components[i]);
-		i++;
-	}
-	free(components);
-}
-
-bool	validate_color_components(char **components)
-{
-	if (!components[0] || !components[1] || !components[2])
-	{
-		err("Invalid color format");
-		free_components(components);
-		return (false);
-	}
-	if (ft_strlen(components[0]) > 3 || ft_strlen(components[1]) > 3
-		|| ft_strlen(components[2]) > 3)
-	{
-		err("Error: Invalid color format (length)");
-		free_components(components);
-		return (false);
-	}
-	return (true);
-}
-
 int	parse_color(char *line)
 {
 	char	**components;
@@ -285,17 +236,42 @@ int	parse_color(char *line)
 
 	components = ft_split(line, ',');
 	if (!components)
-		return (err("ft_split"), EXIT_FAILURE);
-	if (!validate_color_components(components))
+	{
+		err("ft_split");
 		return (EXIT_FAILURE);
+	}
+	if (!components[0] || !components[1] || !components[2])
+	{
+		err("Invalid color format");
+		free(components[0]);
+		free(components[1]);
+		free(components[2]);
+		free(components);
+		return (EXIT_FAILURE);
+	}
+	if (ft_strlen(components[0]) > 3 || ft_strlen(components[1]) > 3
+		|| ft_strlen(components[2]) > 3)
+	{
+		err("Error: Invalid color format(len)");
+		free(components[0]);
+		free(components[1]);
+		free(components[2]);
+		free(components);
+		return (EXIT_FAILURE);
+	}
 	r = ft_atoi(components[0]);
 	g = ft_atoi(components[1]);
 	b = ft_atoi(components[2]);
-	free_components(components);
 	if (!is_valid_color_value(r) || !is_valid_color_value(g)
 		|| !is_valid_color_value(b))
-		return (err("Error: Color values must be between 0 and 255"),
-			EXIT_FAILURE);
+	{
+		err("Error: Color values must be between 0 and 255");
+		return (EXIT_FAILURE);
+	}
+	free(components[0]);
+	free(components[1]);
+	free(components[2]);
+	free(components);
 	return ((r << 16) | (g << 8) | b);
 }
 
@@ -532,6 +508,16 @@ bool	is_player_char(char c)
 	return (c == 'N' || c == 'W' || c == 'E' || c == 'S');
 }
 
+void	init_map_vars(int *map_height, int *map_width, int *player_count,
+		bool *map_started, int *invalid_c)
+{
+	*map_height = 0;
+	*map_width = 0;
+	*player_count = 0;
+	*map_started = false;
+	*invalid_c = 0;
+}
+
 bool	handle_map_line(char *line, bool *map_started)
 {
 	if (is_map_line(&line[0]))
@@ -578,8 +564,9 @@ void	copy_map_line(t_scene *scene, char *line, int map_height)
 	}
 }
 
-void	validate_map_characters(char *line, int current_width, t_scene *scene,
-		t_pos *player_pos)
+void	validate_map_characters(char *line, int current_width,
+		t_pos *player_pos, int *player_count, int map_height, t_scene scene,
+		int *invalid_c)
 {
 	int		j;
 	char	c;
@@ -590,61 +577,63 @@ void	validate_map_characters(char *line, int current_width, t_scene *scene,
 		c = line[j];
 		if (is_player_char(c))
 		{
-			scene->player_count++;
+			(*player_count)++;
 			player_pos->x = j + 1;
-			player_pos->y = scene->map.map_height + 1;
+			player_pos->y = map_height + 1;
 		}
 		else if (!is_valid_map_char(c))
 		{
-			err("Error: Invalid character found in map.");
-			scene->invalid_c++;
+			err("Error: Invalid character '%c' found in map.");
+			(*invalid_c)++;
 		}
 		j++;
 	}
+	scene.invalid_c = *invalid_c;
 }
 
-void	final_map_validation(t_scene *scene)
+void	final_map_validation(t_scene *scene, int map_height, int map_width,
+		int player_count, int invalid_c)
 {
-	if (scene->player_count != 1)
+	scene->map.map_height = map_height;
+	scene->map.map_width = map_width;
+	if (player_count != 1)
 		panic("No player", scene);
-	if (scene->invalid_c > 0)
-		panic("Invalid characters in map", scene);
-}
-
-void	init_map_vars(t_scene scene)
-{
-	scene.map.map_height = 0;
-	scene.map.map_width = 0;
-	scene.player_count = 0;
-	scene.map_started = false;
-	scene.invalid_c = 0;
+	if (invalid_c > 0)
+		panic("invalid char", scene);
 }
 
 void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 		t_pos *player_pos)
 {
-	char	*line;
+	bool	map_started;
 	int		i;
+	char	*line;
+	int		map_height;
+	int		map_width;
+	int		player_count;
+	int		invalid_c;
 
-	init_map_vars(*scene);
 	i = 0;
 	scene->map.map_data = NULL;
+	init_map_vars(&map_height, &map_width, &player_count, &map_started,
+		&invalid_c);
 	while (i < line_count)
 	{
 		line = lines[i];
-		if (!handle_map_line(line, &scene->map_started))
+		if (!handle_map_line(line, &map_started))
 			break ;
-		if (scene->map_started)
+		if (map_started)
 		{
-			calculate_map_width(line, &scene->map.map_width);
-			resize_map_data(scene, scene->map.map_height);
-			copy_map_line(scene, line, scene->map.map_height);
-			validate_map_characters(line, ft_strlen(line), scene, player_pos);
-			scene->map.map_height++;
+			calculate_map_width(line, &map_width);
+			resize_map_data(scene, map_height);
+			copy_map_line(scene, line, map_height);
+			validate_map_characters(line, ft_strlen(line), player_pos,
+				&player_count, map_height, *scene, &invalid_c);
+			map_height++;
 		}
 		i++;
 	}
-	final_map_validation(scene);
+	final_map_validation(scene, map_height, map_width, player_count, invalid_c);
 }
 
 bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
@@ -764,18 +753,6 @@ bool	validate_elements(t_scene *scene)
 	return (true);
 }
 
-bool	valid_arg(int ac, char **av, int fd)
-{
-	if (ac != 2)
-		return (err("Usage: ./cub3d <map_file.cub>"), false);
-	fd = open(av[1], O_RDONLY);
-	if (fd == -1)
-		return (err("Error opening file"), false);
-	if (!validate_file(av[1]))
-		return (false);
-	return (true);
-}
-
 int	main(int argc, char **argv)
 {
 	int		fd;
@@ -784,20 +761,34 @@ int	main(int argc, char **argv)
 	int		line_count;
 	t_pos	pos;
 
-	fd = 0;
 	ft_memset(&scene, 0, sizeof(t_scene));
-	if (!valid_arg(argc, argv, fd))
+	if (argc != 2)
+	{
+		err("Usage: ./cub3d <map_file.cub>");
+		return (EXIT_FAILURE);
+	}
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+	{
+		err("Error opening file");
+		return (EXIT_FAILURE);
+	}
+	if (!validate_file(argv[1]))
 		return (EXIT_FAILURE);
 	file_lines = read_file_lines(fd, &line_count);
 	scene.file_lines = file_lines;
 	scene.line_count = line_count;
 	close(fd);
 	if (!count_elements_from_lines(file_lines, line_count, &scene))
-		return (free_line_array(file_lines, line_count), EXIT_FAILURE);
+	{
+		free_line_array(file_lines, line_count);
+		return (EXIT_FAILURE);
+	}
 	parse_scene_from_lines(file_lines, line_count, &scene);
 	if (!validate_elements(&scene))
 		panic("invalid elements", &scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
 	check_map_surrounded(&scene, pos);
-	ok_free("ok", &scene);
+	panic("ok", &scene);
+	return (EXIT_SUCCESS);
 }
