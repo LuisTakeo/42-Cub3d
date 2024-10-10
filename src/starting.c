@@ -377,10 +377,34 @@ void	hex_to_rgb(int hex, int *r, int *g, int *b)
 	*g = (hex >> 8) & 0xFF;
 	*b = hex & 0xFF;
 }
+void	print_flood_filled_map(t_scene *scene, bool **filled_map)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < scene->map.map_height)
+	{
+		j = 0;
+		while (j < scene->map.map_width)
+		{
+			if (filled_map[i][j])
+				ft_putchar_fd('#', 2);  // Mark visited spots
+			else
+				ft_putchar_fd(scene->map.map_data[i][j] ,2);  // Print the original map
+			j++;
+		}
+		ft_putchar_fd('\n', 2);
+		i++;
+	}
+}
 static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
 
+	printf("FLOOOOOOOOOD \n");
+	print_flood_filled_map(scene, filled_map);
+	printf("\n");
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
 		return (false);
@@ -395,6 +419,7 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 	is_surrounded &= floodfill(scene, filled_map, i, j + 1);
 	return (is_surrounded);
 }
+
 
 int	check_map_surrounded(t_scene *scene, t_pos pos)
 {
@@ -418,7 +443,7 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 		}
 		i++;
 	}
-	is_surrounded = floodfill(scene, filled_map, x, y);
+	is_surrounded = floodfill(scene, filled_map, y, x);
 	free_line_array((char **)filled_map, scene->map.map_height);
 	if (!is_surrounded)
 	{
@@ -427,6 +452,7 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 	print_map(scene->map.map_data, scene->map.map_height, scene->map.map_width);
 	return (0);
 }
+
 
 bool	is_valid_map_char(char c)
 {
@@ -506,12 +532,12 @@ void	validate_map_characters(char *line, int current_width,
 		if (is_player_char(c))
 		{
 			(*player_count)++;
-			if (*player_count > 1)
+			if (*player_count != 1)
 			{
 				printf("Error: More than one player character found.\n");
 				exit(EXIT_FAILURE);
 			}
-			player_pos->x = j;
+			player_pos->x = j + 1;
 			player_pos->y = map_height + 1;
 		}
 		else if (!is_valid_map_char(c))
@@ -529,7 +555,7 @@ void	final_map_validation(t_scene *scene, int map_height, int map_width,
 	if (player_count == 0)
 	{
 		printf("Error: No player character found in the map.\n");
-		exit(EXIT_FAILURE);
+	//	exit(EXIT_FAILURE);
 	}
 	scene->map.map_height = map_height;
 	scene->map.map_width = map_width;
