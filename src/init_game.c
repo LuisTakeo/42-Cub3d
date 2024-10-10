@@ -80,6 +80,9 @@ void	init_values(t_cub3d *cub3d)
 	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
+	update_vector(&cub3d->player.map_pos, 5, 5);
+	update_vector(&cub3d->player.step, 0, 0);
+	update_vector(&cub3d->player.dist_to_side, 0, 0);
 	cub3d->player.angle = 0.0;
 }
 
@@ -96,7 +99,7 @@ void	ft_hook(void* param)
 int	init_game(t_cub3d *cub3d)
 {
 	// mlx_set_setting(MLX_MAXIMIZED, true);
-	cub3d->mlx = mlx_init(WIDTH, HEIGHT, "Cub3d", true);
+	cub3d->mlx = mlx_init(WIDTH, HEIGHT, "Cub3d", false);
 	if (!cub3d->mlx)
 		return (EXIT_FAILURE);
 	cub3d->image = mlx_new_image(cub3d->mlx, WIDTH, HEIGHT);

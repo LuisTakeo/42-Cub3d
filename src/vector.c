@@ -32,7 +32,7 @@ t_vector	sum_vector(t_vector v, t_vector z)
 	return (vector);
 }
 
-t_vector	multi_vector(t_vector v, float num)
+t_vector	multi_vector(t_vector v, double num)
 {
 	t_vector	vector;
 
@@ -41,7 +41,7 @@ t_vector	multi_vector(t_vector v, float num)
 	return (vector);
 }
 
-int	update_vector(t_vector *vector, float x, float y)
+int	update_vector(t_vector *vector, double x, double y)
 {
 	if (!vector)
 		return (EXIT_FAILURE);
@@ -50,4 +50,3 @@ int	update_vector(t_vector *vector, float x, float y)
 
 	return (EXIT_SUCCESS);
 }
-

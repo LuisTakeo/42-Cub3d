@@ -43,6 +43,8 @@ struct s_player
 	t_vector	cameraPlane;
 	t_vector	delta_dist;
 	t_vector	dist_to_side;
+	t_vector	map_pos;
+	t_vector	step;
 };
 
 struct s_cub3d
@@ -67,11 +69,11 @@ void	draw_floor(t_cub3d *cub3d);
 void	draw_walls(t_cub3d *cub3d);
 // calculos de vetores
 t_vector	sum_vector(t_vector v, t_vector z);
-t_vector	multi_vector(t_vector v, float num);
+t_vector	multi_vector(t_vector v, double num);
 // raycasting
 t_vector	find_ray_dir(t_cub3d *cub3d, int x);
 t_vector	calculate_delta_dist(t_vector ray_dir);
-int			update_vector(t_vector *vector, float x, float y);
+int			update_vector(t_vector *vector, double x, double y);
 
 
 #endif
