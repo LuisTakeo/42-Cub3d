@@ -51,7 +51,7 @@ typedef struct s_scene
 	int		f_counter;
 	int		c_counter;
 	int		invalid_c;
-	char	**file_lines;
+	char 		**file_lines;
 	int		line_count;
 	t_map	map;
 }			t_scene;
@@ -62,12 +62,11 @@ typedef struct s_pos
 	int		y;
 }			t_pos;
 
-void	err(char *str)
+void		err(char *str)
 {
 	ft_putstr_fd("Error\n", STDERR_FILENO);
 	ft_putendl_fd(str, STDERR_FILENO);
 }
-
 void	free_line_array(char **lines, int count)
 {
 	int	i;
@@ -80,7 +79,6 @@ void	free_line_array(char **lines, int count)
 	}
 	free(lines);
 }
-
 void	free_map_data(char **map_data, int height)
 {
 	int	i;
@@ -99,7 +97,6 @@ void	free_map_data(char **map_data, int height)
 		}
 	}
 }
-
 void	panic_exit(char *error_message, t_scene *scene)
 {
 	err(error_message);
@@ -175,11 +172,12 @@ bool	is_whitespace(char c)
 	else
 		return (false);
 }
-
 int	is_valid_color_value(int value)
 {
 	return (value >= 0 && value <= 255);
 }
+
+
 
 void	print_map(char **map_data, int map_height, int map_width)
 {
@@ -193,7 +191,6 @@ void	print_map(char **map_data, int map_height, int map_width)
 		i++;
 	}
 }
-
 char	**read_file_lines(int fd, int *line_count)
 {
 	char	**lines;
@@ -226,14 +223,11 @@ char	**read_file_lines(int fd, int *line_count)
 	*line_count = count;
 	return (lines);
 }
-
 int	parse_color(char *line)
 {
 	char	**components;
-	int		r;
-	int		g;
-	int		b;
 
+	int r, g, b;
 	components = ft_split(line, ',');
 	if (!components)
 	{
@@ -427,11 +421,10 @@ void	hex_to_rgb(int hex, int *r, int *g, int *b)
 	*g = (hex >> 8) & 0xFF;
 	*b = hex & 0xFF;
 }
-
 void	print_flood_filled_map(t_scene *scene, bool **filled_map)
 {
-	int	i;
-	int	j;
+	int i;
+	int j;
 
 	i = 0;
 	while (i < scene->map.map_height)
@@ -440,16 +433,15 @@ void	print_flood_filled_map(t_scene *scene, bool **filled_map)
 		while (j < scene->map.map_width)
 		{
 			if (filled_map[i][j])
-				ft_putchar_fd('#', 2);
+				ft_putchar_fd('#', 2); 
 			else
-				ft_putchar_fd(scene->map.map_data[i][j], 2);
+				ft_putchar_fd(scene->map.map_data[i][j] ,2);
 			j++;
 		}
 		ft_putchar_fd('\n', 2);
 		i++;
 	}
 }
-
 static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
@@ -468,6 +460,7 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 	is_surrounded &= floodfill(scene, filled_map, i, j + 1);
 	return (is_surrounded);
 }
+
 
 int	check_map_surrounded(t_scene *scene, t_pos pos)
 {
@@ -499,6 +492,7 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 	}
 	return (0);
 }
+
 
 bool	is_valid_map_char(char c)
 {
@@ -567,8 +561,7 @@ void	copy_map_line(t_scene *scene, char *line, int map_height)
 }
 
 void	validate_map_characters(char *line, int current_width,
-		t_pos *player_pos, int *player_count, int map_height, t_scene scene,
-		int *invalid_c)
+		t_pos *player_pos, int *player_count, int map_height, t_scene scene, int *invalid_c)
 {
 	int		j;
 	char	c;
@@ -591,6 +584,7 @@ void	validate_map_characters(char *line, int current_width,
 		j++;
 	}
 	scene.invalid_c = *invalid_c;
+		
 }
 
 void	final_map_validation(t_scene *scene, int map_height, int map_width,
@@ -598,9 +592,9 @@ void	final_map_validation(t_scene *scene, int map_height, int map_width,
 {
 	scene->map.map_height = map_height;
 	scene->map.map_width = map_width;
-	if (player_count != 1)
+	if(player_count != 1)
 		panic("No player", scene);
-	if (invalid_c > 0)
+	if(invalid_c > 0 )
 		panic("invalid char", scene);
 }
 
@@ -610,15 +604,11 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	bool	map_started;
 	int		i;
 	char	*line;
-	int		map_height;
-	int		map_width;
-	int		player_count;
-	int		invalid_c;
 
+	int map_height, map_width, player_count, invalid_c;
 	i = 0;
+	init_map_vars(&map_height, &map_width, &player_count, &map_started, &invalid_c);
 	scene->map.map_data = NULL;
-	init_map_vars(&map_height, &map_width, &player_count, &map_started,
-		&invalid_c);
 	while (i < line_count)
 	{
 		line = lines[i];
@@ -732,7 +722,6 @@ bool	validate_file(const char *filename)
 	}
 	return (true);
 }
-
 bool	validate_elements(t_scene *scene)
 {
 	if (!validate_extension(scene->north_texture, ".png")
