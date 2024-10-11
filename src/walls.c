@@ -43,16 +43,18 @@ void	calculate_dist_to_side(t_cub3d *cub3d, t_vector ray_dir)
 {
 	if (ray_dir.x < 0)
 		cub3d->player.dist_to_side.x = ((cub3d->player.pos.x / TILE_SIZE)
-			- cub3d->player.map_pos.x) * cub3d->player.delta_dist.x;
+				- cub3d->player.map_pos.x) * cub3d->player.delta_dist.x;
 	else
-		cub3d->player.dist_to_side.x = (cub3d->player.map_pos.x + 1.0 -
-			(cub3d->player.pos.x / TILE_SIZE)) * cub3d->player.delta_dist.x;
+		cub3d->player.dist_to_side.x = (cub3d->player.map_pos.x + 1.0f
+				- (cub3d->player.pos.x / TILE_SIZE))
+			* cub3d->player.delta_dist.x;
 	if (ray_dir.y < 0)
 		cub3d->player.dist_to_side.y = ((cub3d->player.pos.y / TILE_SIZE)
-			- cub3d->player.map_pos.y) * cub3d->player.delta_dist.y;
+				- cub3d->player.map_pos.y) * cub3d->player.delta_dist.y;
 	else
-		cub3d->player.dist_to_side.y = (cub3d->player.map_pos.y + 1.0
-			- (cub3d->player.pos.y / TILE_SIZE)) * cub3d->player.delta_dist.y;
+		cub3d->player.dist_to_side.y = (cub3d->player.map_pos.y + 1.0f
+				- (cub3d->player.pos.y / TILE_SIZE))
+			* cub3d->player.delta_dist.y;
 }
 
 void	set_direction(t_cub3d *cub3d, t_vector ray)
@@ -67,13 +69,15 @@ void	set_direction(t_cub3d *cub3d, t_vector ray)
 		cub3d->player.step.y = 1;
 }
 
-void	calculate_dda(t_cub3d *cub3d)
+void	calculate_dda(t_cub3d *cub3d, t_vector ray_dir)
 {
 	int			hit;
 	int			side;
+	float		perp_wall_dist;
 	t_vector	dda_line_size;
 	t_vector	wall_map_pos;
 
+	(void)ray_dir;
 	update_vector(&wall_map_pos, cub3d->player.map_pos.x, cub3d->player.map_pos.y);
 	update_vector(&dda_line_size, cub3d->player.dist_to_side.x,
 		cub3d->player.dist_to_side.y);
@@ -95,6 +99,13 @@ void	calculate_dda(t_cub3d *cub3d)
 		if (cub3d->map[(int)wall_map_pos.y][(int)wall_map_pos.x] == '1')
 			hit = 1;
 	}
+	if (!side)
+		perp_wall_dist = dda_line_size.x - cub3d->player.delta_dist.x;
+	else
+		perp_wall_dist = dda_line_size.y - cub3d->player.delta_dist.y;
+	printf("Perp wall dist: %f\n", perp_wall_dist);
+
+
 }
 
 void	draw_walls(t_cub3d *cub3d)
@@ -103,8 +114,6 @@ void	draw_walls(t_cub3d *cub3d)
 	t_vector	ray_dir;
 
 	(void)cub3d;
-	printf("player dir: x = %f, y = %f\n", cub3d->player.dir.x, cub3d->player.dir.y);
-	printf("player cameraPlane: x = %f, y = %f\n", cub3d->player.cameraPlane.x, cub3d->player.cameraPlane.y);
 	i = 0;
 	while (i < WIDTH)
 	{
@@ -117,7 +126,8 @@ void	draw_walls(t_cub3d *cub3d)
 		// printf("map pos: x = %f, y = %f\n", cub3d->player.map_pos.x, cub3d->player.map_pos.y);
 		// printf("Delta dist: x = %f, y = %f\n", cub3d->player.delta_dist.x, cub3d->player.delta_dist.y);
 		calculate_dist_to_side(cub3d, ray_dir);
-		printf("dist to side: x = %f, y = %f\n", cub3d->player.dist_to_side.x, cub3d->player.dist_to_side.y);
+		calculate_dda(cub3d, ray_dir);
+		// printf("dist to side: x = %f, y = %f\n", cub3d->player.dist_to_side.x, cub3d->player.dist_to_side.y);
 
 		i++;
 	}

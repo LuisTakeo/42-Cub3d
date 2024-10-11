@@ -71,7 +71,16 @@ void	listen_moves(mlx_key_data_t keydata, void *param)
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
-	cub3d->map = NULL;
+	cub3d->map = ft_split(
+		"1111111111\n"
+		"1000000001\n"
+		"1000000001\n"
+		"1000000001\n"
+		"1000000001\n"
+		"1000000001\n"
+		"1000001001\n"
+		"1111111111"
+		,'\n');
 	update_vector(&cub3d->player.pos, (5.0 * TILE_SIZE + TILE_SIZE / 2.0),
 		(2 * TILE_SIZE + TILE_SIZE / 2));
 	printf("Player position: x = %f, y = %f\n", cub3d->player.pos.x, cub3d->player.pos.y);
