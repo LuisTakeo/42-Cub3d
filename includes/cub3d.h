@@ -71,6 +71,7 @@ void	draw_walls(t_cub3d *cub3d);
 // calculos de vetores
 t_vector	sum_vector(t_vector v, t_vector z);
 t_vector	multi_vector(t_vector v, double num);
+t_vector	rotate_vector(t_vector v, float angle);
 // raycasting
 t_vector	find_ray_dir(t_cub3d *cub3d, int x);
 t_vector	calculate_delta_dist(t_vector ray_dir);
