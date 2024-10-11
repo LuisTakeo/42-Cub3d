@@ -44,7 +44,7 @@ void	draw_floor(t_cub3d *cub3d)
 	while (i < WIDTH)
 	{
 		draw_vertical_line(cub3d->image, (t_vector){i, HEIGHT / 2 + 1},
-			HEIGHT, 0x1111FFFF);
+			HEIGHT, 0x11AAFFFF);
 		i++;
 	}
 }

@@ -68,24 +68,47 @@ void	listen_moves(mlx_key_data_t keydata, void *param)
 	printf("Player direction: x = %f, y = %f\n", cub3d->player.dir.x, cub3d->player.dir.y);
 }
 
+void	init_direction(t_cub3d *cub3d, char direction)
+{
+	if (direction == 'N')
+	{
+		update_vector(&cub3d->player.dir, 0, -1);
+		update_vector(&cub3d->player.cameraPlane, 0.66, 0);
+	}
+	if (direction == 'S')
+	{
+		update_vector(&cub3d->player.dir, 0, 1);
+		update_vector(&cub3d->player.cameraPlane, -0.66, 0);
+	}
+	if (direction == 'W')
+	{
+		update_vector(&cub3d->player.dir, -1, 0);
+		update_vector(&cub3d->player.cameraPlane, 0, -0.66);
+	}
+	if (direction == 'E')
+	{
+		update_vector(&cub3d->player.dir, 1, 0);
+		update_vector(&cub3d->player.cameraPlane, 0, 0.66);
+	}
+
+}
+
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
 	cub3d->map = ft_split(
 		"1111111111\n"
+		"1010000001\n"
+		"1000000001\n"
+		"1010001001\n"
 		"1000000001\n"
 		"1000000001\n"
 		"1000000001\n"
-		"1000000001\n"
-		"1000000001\n"
-		"1000001001\n"
 		"1111111111"
 		,'\n');
-	update_vector(&cub3d->player.pos, (5.0 * TILE_SIZE + TILE_SIZE / 2.0),
-		(2 * TILE_SIZE + TILE_SIZE / 2));
-	printf("Player position: x = %f, y = %f\n", cub3d->player.pos.x, cub3d->player.pos.y);
-	update_vector(&cub3d->player.dir, 0.0, -1.0);
-	update_vector(&cub3d->player.cameraPlane, 0.66, 0.0);
+	update_vector(&cub3d->player.pos, (4.0 * TILE_SIZE + TILE_SIZE / 2.0),
+		(5 * TILE_SIZE + TILE_SIZE / 2.0));
+	init_direction(cub3d, 'W');
 	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
