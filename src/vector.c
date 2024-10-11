@@ -37,7 +37,7 @@ t_vector	multi_vector(t_vector v, double num)
 	t_vector	vector;
 
 	vector.x = v.x * num;
-	vector.y = v.y + num;
+	vector.y = v.y * num;
 	return (vector);
 }
 

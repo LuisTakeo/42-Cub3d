@@ -37,6 +37,7 @@ struct s_vector
 
 struct s_player
 {
+	int			side;
 	float		angle;
 	t_vector	pos;
 	t_vector	dir;
