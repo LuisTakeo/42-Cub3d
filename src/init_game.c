@@ -26,46 +26,36 @@ void	listen_moves(mlx_key_data_t keydata, void *param)
 	if (keydata.key == MLX_KEY_W)
 	{
 		printf("Walking Front\n");
-		cub3d->player.pos.y += 0.1;
-		move_to(&cub3d->player.pos, cub3d->player.dir, 0.1);
+
 	}
 	if (keydata.key == MLX_KEY_S)
 	{
 		printf("Walking Back\n");
-		cub3d->player.pos.y -= 0.1;
-		move_to(&cub3d->player.pos, cub3d->player.dir, -0.1);
+		// cub3d->player.pos.y -= 0.1;
+		// move_to(&cub3d->player.pos, cub3d->player.dir, -0.1);
 	}
 	if (keydata.key == MLX_KEY_A)
 	{
-		printf("Walking Left\n");
-		cub3d->player.pos.x -= 0.1;
+		// printf("Walking Left\n");
+		// cub3d->player.pos.x -= 0.1;
 	}
 	if (keydata.key == MLX_KEY_D)
 	{
-		printf("Walking Right\n");
-		cub3d->player.pos.x += 0.1;
+		// printf("Walking Right\n");
+		// cub3d->player.pos.x += 0.1;
 	}
 	if (keydata.key == MLX_KEY_LEFT)
 	{
-		cub3d->player.angle += 0.03;
-		printf("To the left\n"
-			"Player angle: %f\n", cub3d->player.angle);
+		cub3d->player.cameraPlane = rotate_vector(cub3d->player.cameraPlane,
+			-1.5);
+		cub3d->player.dir = rotate_vector(cub3d->player.dir, -1.5);
 	}
 	if (keydata.key == MLX_KEY_RIGHT)
 	{
-		cub3d->player.angle -= 0.03;
-		printf("To the right\n"
-			"Player angle: %f\n", cub3d->player.angle);
+		cub3d->player.cameraPlane = rotate_vector(cub3d->player.cameraPlane,
+			1.5);
+		cub3d->player.dir = rotate_vector(cub3d->player.dir, 1.5);
 	}
-	if (cub3d->player.angle > 2 * M_PI)
-		cub3d->player.angle -= 2 * M_PI;
-	if (cub3d->player.angle < 0)
-		cub3d->player.angle += 2 * M_PI;
-	cub3d->player.dir.x = cos(cub3d->player.angle);
-	cub3d->player.dir.y = sin(cub3d->player.angle);
-	printf("Player position: x = %f, y = %f\n", cub3d->player.pos.x, cub3d->player.pos.y);
-	// printf("Player position: x = %f, y = %f\n", cub3d->player.pos.x / TILE_SIZE, cub3d->player.pos.y / TILE_SIZE);
-	printf("Player direction: x = %f, y = %f\n", cub3d->player.dir.x, cub3d->player.dir.y);
 }
 
 void	init_direction(t_cub3d *cub3d, char direction)

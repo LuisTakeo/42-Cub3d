@@ -140,7 +140,6 @@ void	draw_walls(t_cub3d *cub3d)
 	float		perp_wall_dist;
 	t_vector	ray_dir;
 
-	(void)cub3d;
 	i = 0;
 	while (i < WIDTH)
 	{
