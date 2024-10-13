@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:12 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/10 23:34:26 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 16:31:20 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ void	validate_map_characters(char *line, int current_width, t_scene *scene,
 		if (is_player_char(c))
 		{
 			scene->player_count++;
-			player_pos->x = j + 1;
-			player_pos->y = scene->map.map_height + 1;
+			player_pos->x = j;
+			player_pos->y = scene->map.map_height;
 		}
 		else if (!is_valid_map_char(c))
 			scene->invalid_c++;

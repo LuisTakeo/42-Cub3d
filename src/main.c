@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:36:24 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/10 23:35:44 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 16:57:14 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	main(int argc, char **argv)
 	if (!validate_elements(&scene))
 		panic("invalid elements", &scene);
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
-	fill_short_lines_with_zeros(&scene);
+	fill_map_with_zeros(&scene);
 	check_map_surrounded(&scene, pos);
 	ok_free("OK OK OK OK OK OK OK OK OK OK OK OK OOOOOOOOOOOKKKKKKKK", &scene);
 }

@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:04:22 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/10 23:29:03 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/11 15:46:15 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ bool	is_empty(const char *filename);
 bool	validate_file(const char *filename);
 bool	validate_elements(t_scene *scene);
 bool	valid_arg(int ac, char **av, int fd);
-void	fill_short_lines_with_zeros(t_scene *scene);
+void	fill_map_with_zeros(t_scene *scene);
 
 
 #endif
