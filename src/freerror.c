@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:45:15 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:37:52 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:32:13 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,19 +96,4 @@ void	panic(char *err_msg, t_scene *scene)
 	free(scene->west_texture);
 	free(scene->east_texture);
 	exit(EXIT_FAILURE);
-}
-
-void	ok_free(char *err_msg, t_scene *scene)
-{
-	err(err_msg);
-	if (scene->map.map_data)
-		free_map_data(scene->map.map_data, scene->map.map_height);
-	if (scene->file_lines)
-		free_line_array(scene->file_lines, scene->line_count);
-	free(scene->map.map_data);
-	free(scene->north_texture);
-	free(scene->south_texture);
-	free(scene->west_texture);
-	free(scene->east_texture);
-	exit(EXIT_SUCCESS);
 }

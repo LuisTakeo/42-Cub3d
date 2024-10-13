@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:36:24 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/13 16:57:14 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:48:22 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,25 @@
 //	return (EXIT_SUCCESS);
 //}
 
+void	okok(char *str)
+{
+	ft_putstr_fd("OK\n", STDERR_FILENO);
+	ft_putendl_fd(str, STDERR_FILENO);
+}
+void	ok_free(char *err_msg, t_scene *scene)
+{
+	okok(err_msg);
+	if (scene->map.map_data)
+		free_map_data(scene->map.map_data, scene->map.map_height);
+	if (scene->file_lines)
+		free_line_array(scene->file_lines, scene->line_count);
+	free(scene->map.map_data);
+	free(scene->north_texture);
+	free(scene->south_texture);
+	free(scene->west_texture);
+	free(scene->east_texture);
+	exit(EXIT_SUCCESS);
+}
 int	main(int argc, char **argv)
 {
 	int		fd;
@@ -50,5 +69,13 @@ int	main(int argc, char **argv)
 	parse_map_from_lines(file_lines, line_count, &scene, &pos);
 	fill_map_with_zeros(&scene);
 	check_map_surrounded(&scene, pos);
+	printf("%s \n", scene.north_texture);
+	printf("%s \n", scene.south_texture);
+	printf("%s \n", scene.west_texture);
+	printf("%s \n", scene.east_texture);
+	printf("%s \n", scene.east_texture);
+	printf("Ceiling color: %#X\n", scene.ceiling_color);
+	printf("Floor color: %#X\n", scene.floor_color);
+	printf("oi \n");
 	ok_free("OK OK OK OK OK OK OK OK OK OK OK OK OOOOOOOOOOOKKKKKKKK", &scene);
 }

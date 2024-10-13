@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:24:20 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:37:30 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 18:46:29 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,16 +55,16 @@ bool	is_empty(const char *filename)
 	return (true);
 }
 
-bool	validate_file(const char *filename)
+bool	validate_file(const char *filename, const char *ext)
 {
 	if (is_directory(filename))
 	{
 		err("Invalid file. Must be a file");
 		return (false);
 	}
-	if (!validate_extension(filename, ".cub"))
+	if (!validate_extension(filename, ext))
 	{
-		err("Invalid file extension. Must be .cub");
+		err("Invalid file extension.");
 		return (false);
 	}
 	if (!is_empty(filename))
@@ -92,6 +92,11 @@ bool	validate_elements(t_scene *scene)
 		err("Texture file does not exist");
 		return (false);
 	}
+	if(!validate_file(scene->north_texture, ".png") || !validate_file(scene->west_texture, ".png") || !validate_file(scene->east_texture, ".png") || !validate_file(scene->south_texture, ".png"))
+	{
+		err("Texture file does not exist");
+		return (false);
+	}
 	if (scene->ceiling_color == -1 || scene->floor_color == -1)
 	{
 		err("Color values missing");
@@ -107,7 +112,7 @@ bool	valid_arg(int ac, char **av, int fd)
 	fd = open(av[1], O_RDONLY);
 	if (fd == -1)
 		return (err("Error opening file"), false);
-	if (!validate_file(av[1]))
+	if (!validate_file(av[1], ".cub"))
 		return (false);
 	return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:33:09 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 18:50:19 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	adjust_line_length(t_scene *scene, int i, int max_width)
 		if (!temp_line)
 			err_exit("Memory allocation failed");
 		ft_strlcpy(temp_line, scene->map.map_data[i], current_length + 1);
-		ft_memset(temp_line + current_length, '0', max_width - current_length);
+		ft_memset(temp_line + current_length, '2', max_width - current_length);
 		temp_line[max_width] = '\0';
 		free(scene->map.map_data[i]);
 		scene->map.map_data[i] = temp_line;
