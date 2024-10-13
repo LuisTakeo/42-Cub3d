@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:57 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/09/11 21:58:57 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/13 20:16:02 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,16 +86,16 @@ void	init_direction(t_cub3d *cub3d, char direction)
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
-	cub3d->map = ft_split(
-		"1111111111\n"
-		"1010000001\n"
-		"1000000001\n"
-		"1010001001\n"
-		"1000000001\n"
-		"1000000001\n"
-		"1000000001\n"
-		"1111111111"
-		,'\n');
+	//cub3d->map = ft_split(
+	//	"1111111111\n"
+	//	"1010000001\n"
+	//	"1000000001\n"
+	//	"1010001001\n"
+	//	"1000000001\n"
+	//	"1000000001\n"
+	//	"1000000001\n"
+	//	"1111111111"
+	//	,'\n');
 	update_vector(&cub3d->player.pos, (4.0 * TILE_SIZE + TILE_SIZE / 2.0),
 		(5 * TILE_SIZE + TILE_SIZE / 2.0));
 	init_direction(cub3d, 'W');

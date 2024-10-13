@@ -14,7 +14,8 @@ FLAGSMLX = -ldl -lglfw -pthread -lm
 # SRC = ./src/main.c ./src/init_game.c ./src/finish_game.c ./src/draw.c ./src/vector.c ./src/walls.c
 SRC_FILE = main vector \
 	$(addprefix game/, init_game finish_game) \
-	$(addprefix graphic/, draw walls)
+	$(addprefix graphic/, draw walls) \
+	$(addprefix parser/, args color flood_fill getter map textures utils validate_map freerror)
 SRC = $(addsuffix .c, $(addprefix ./src/, $(SRC_FILE)))
 
 SRC_BONUS = ./src_bonus/main_bonus.c
