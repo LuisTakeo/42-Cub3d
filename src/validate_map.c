@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:26:12 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:33:09 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,36 +82,41 @@ bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 	return (true);
 }
 
+void	adjust_line_length(t_scene *scene, int i, int max_width)
+{
+	int		current_length;
+	char	*temp_line;
+
+	current_length = ft_strlen(scene->map.map_data[i]);
+	if (current_length > 0 && scene->map.map_data[i][current_length
+		- 1] == '\n')
+	{
+		scene->map.map_data[i][current_length - 1] = '\0';
+		current_length--;
+	}
+	if (current_length < max_width)
+	{
+		temp_line = malloc(max_width + 1);
+		if (!temp_line)
+			err_exit("Memory allocation failed");
+		ft_strlcpy(temp_line, scene->map.map_data[i], current_length + 1);
+		ft_memset(temp_line + current_length, '0', max_width - current_length);
+		temp_line[max_width] = '\0';
+		free(scene->map.map_data[i]);
+		scene->map.map_data[i] = temp_line;
+	}
+}
+
 void	fill_map_with_zeros(t_scene *scene)
 {
-	int		i;
-	int		current_length;
-	int		max_width;
-	char	*temp_line;
+	int	i;
+	int	max_width;
 
 	i = 0;
 	max_width = scene->map.map_width;
 	while (i < scene->map.map_height)
 	{
-		current_length = ft_strlen(scene->map.map_data[i]);
-		if (current_length > 0 && scene->map.map_data[i][current_length
-			- 1] == '\n')
-		{
-			scene->map.map_data[i][current_length - 1] = '\0';
-			current_length--;
-		}
-		if (current_length < max_width)
-		{
-			temp_line = malloc(max_width + 1);
-			if (!temp_line)
-				err_exit("Memory allocation failed");
-			ft_strlcpy(temp_line, scene->map.map_data[i], current_length + 1);
-			ft_memset(temp_line + current_length, '0', max_width
-				- current_length);
-			temp_line[max_width] = '\0';
-			free(scene->map.map_data[i]);
-			scene->map.map_data[i] = temp_line;
-		}
+		adjust_line_length(scene, i, max_width);
 		i++;
 	}
 }

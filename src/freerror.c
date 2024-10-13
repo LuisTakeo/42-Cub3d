@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:45:15 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/10 23:30:36 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:37:52 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,4 +112,3 @@ void	ok_free(char *err_msg, t_scene *scene)
 	free(scene->east_texture);
 	exit(EXIT_SUCCESS);
 }
-

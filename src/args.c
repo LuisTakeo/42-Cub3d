@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:24:20 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/10 23:24:31 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:37:30 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +111,3 @@ bool	valid_arg(int ac, char **av, int fd)
 		return (false);
 	return (true);
 }
-

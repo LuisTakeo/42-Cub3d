@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:20:52 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/10 23:29:26 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:38:36 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ char	**read_file_lines(int fd, int *line_count)
 	*line_count = count;
 	return (lines);
 }
+
 void	count_texture_elements(char *line, t_scene *scene)
 {
 	t_direction	dir;
@@ -69,6 +70,7 @@ void	count_texture_elements(char *line, t_scene *scene)
 	else if (*line == 'C')
 		scene->c_counter++;
 }
+
 void	parse_scene_from_lines(char **lines, int line_count, t_scene *scene)
 {
 	int			i;
@@ -89,4 +91,3 @@ void	parse_scene_from_lines(char **lines, int line_count, t_scene *scene)
 		i++;
 	}
 }
-

@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:50:09 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/10 23:31:04 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:37:47 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	hex_to_rgb(int hex, int *r, int *g, int *b)
 	*g = (hex >> 8) & 0xFF;
 	*b = hex & 0xFF;
 }
+
 int	parse_color(char *line)
 {
 	char	**components;
@@ -124,4 +125,3 @@ int	parse_color(char *line)
 			EXIT_FAILURE);
 	return ((r << 16) | (g << 8) | b);
 }
-

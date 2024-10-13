@@ -6,10 +6,9 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:12 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 16:31:20 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:38:18 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../includes/cub3d.h"
 
@@ -93,4 +92,3 @@ void	init_map_vars(t_scene scene)
 	scene.map_started = false;
 	scene.invalid_c = 0;
 }
-

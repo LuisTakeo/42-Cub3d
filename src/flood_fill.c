@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:17:48 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:37:24 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
 
-	printf("Visiting cell (%d, %d)\n", i, j);
-	print_flood_filled_map(scene, filled_map);
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
 	{
@@ -65,11 +63,10 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 	return (is_surrounded);
 }
 
-int	check_map_surrounded(t_scene *scene, t_pos pos)
+bool	**allocate_filled_map(t_scene *scene)
 {
-	int		i;
 	bool	**filled_map;
-	bool	is_surrounded;
+	int		i;
 
 	filled_map = ft_calloc(scene->map.map_height, sizeof(bool *));
 	if (!filled_map)
@@ -85,14 +82,25 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 		}
 		i++;
 	}
+	return (filled_map);
+}
+
+void	validate_player_position(t_scene *scene, t_pos pos)
+{
 	if (scene->map.map_data[pos.y][pos.x] != 'N'
 		&& scene->map.map_data[pos.y][pos.x] != 'W'
 		&& scene->map.map_data[pos.y][pos.x] != 'E'
 		&& scene->map.map_data[pos.y][pos.x] != 'S')
-	{
-		free_line_array((char **)filled_map, scene->map.map_height);
 		panic("Player position is not in a walkable area", scene);
-	}
+}
+
+int	check_map_surrounded(t_scene *scene, t_pos pos)
+{
+	bool	**filled_map;
+	bool	is_surrounded;
+
+	filled_map = allocate_filled_map(scene);
+	validate_player_position(scene, pos);
 	is_surrounded = floodfill(scene, filled_map, pos.y, pos.x);
 	free_line_array((char **)filled_map, scene->map.map_height);
 	if (!is_surrounded)
