@@ -12,7 +12,7 @@
 
 #ifndef CUB3D_H
 # define CUB3D_H
-# define TILE_SIZE 8.0
+# define TILE_SIZE 1.0
 # define FOV 0.66
 # define WIDTH 800
 # define HEIGHT 600
@@ -58,24 +58,26 @@ struct s_cub3d
 	mlx_image_t	*image;
 };
 
-void	init_values(t_cub3d *cub3d);
-int		init_game(t_cub3d *cub3d);
-void	finish_game(t_cub3d *cub3d);
+void		init_values(t_cub3d *cub3d);
+int			init_game(t_cub3d *cub3d);
+void		finish_game(t_cub3d *cub3d);
 // funções de draw
-void	draw_background(t_cub3d *cub3d);
-void	draw_vertical_line(mlx_image_t *image,
-			t_vector vector, int y_end, int32_t color);
-void	draw_ceiling(t_cub3d *cub3d);
-void	draw_floor(t_cub3d *cub3d);
-void	draw_walls(t_cub3d *cub3d);
+void		draw_background(t_cub3d *cub3d);
+void		draw_vertical_line(mlx_image_t *image,
+				t_vector vector, int y_end, int32_t color);
+void		draw_ceiling(t_cub3d *cub3d);
+void		draw_floor(t_cub3d *cub3d);
+void		draw_walls(t_cub3d *cub3d);
 // calculos de vetores
 t_vector	sum_vector(t_vector v, t_vector z);
 t_vector	multi_vector(t_vector v, double num);
 t_vector	rotate_vector(t_vector v, float angle);
-// raycasting
+// raycasting - dda (digital differential analyzer)
 t_vector	find_ray_dir(t_cub3d *cub3d, int x);
 t_vector	calculate_delta_dist(t_vector ray_dir);
 int			update_vector(t_vector *vector, double x, double y);
+void		calculate_dist_to_side(t_cub3d *cub3d, t_vector ray_dir);
+float		calculate_dda(t_cub3d *cub3d, t_vector ray_dir);
 
 
 #endif

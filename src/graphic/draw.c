@@ -31,7 +31,7 @@ void	draw_ceiling(t_cub3d *cub3d)
 	while (i < WIDTH)
 	{
 		draw_vertical_line(cub3d->image, (t_vector){i, 0},
-			HEIGHT / 2, 0xAAAAFFFF);
+			HEIGHT / 2, get_rgba(200, 200, 255, 255));
 		i++;
 	}
 }
