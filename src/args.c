@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:24:20 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 18:46:29 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 14:09:20 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,13 @@ bool	validate_file(const char *filename, const char *ext)
 		err("Invalid file extension.");
 		return (false);
 	}
-	if (!is_empty(filename))
+	if(ft_memcmp(ext, ".cub", 4) == 0)
 	{
-		err("emptyyyyy");
-		return (false);
+		if (!is_empty(filename))
+		{
+			err("emptyyyyy");
+			return (false);
+		}
 	}
 	return (true);
 }
