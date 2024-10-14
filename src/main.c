@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:36:24 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/14 19:44:57 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 20:17:55 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ok_free(char *err_msg, t_scene *scene)
 	free(scene->south_texture);
 	free(scene->west_texture);
 	free(scene->east_texture);
-	exit(EXIT_SUCCESS);
+//	exit(EXIT_SUCCESS);
 }
 //int	main(int argc, char **argv)
 //{
@@ -96,7 +96,11 @@ int	main(int argc, char **argv)
 	(void)argv;
 	(void)cub3d;
 	printf("Init Cub3d\n");
+	//pos.x++;
+	//pos.y++;
+	printf("x %i y %i\n", pos.x, pos.y);
 	cub3d.map = scene.map.map_data;
+//	ok_free("free", &scene);
 	init_values(&cub3d);
 	init_game(&cub3d);
 	finish_game(&cub3d);
