@@ -13,7 +13,7 @@ FLAGSMLX = -ldl -lglfw -pthread -lm
 
 # SRC = ./src/main.c ./src/init_game.c ./src/finish_game.c ./src/draw.c ./src/vector.c ./src/walls.c
 SRC_FILE = main vector \
-	$(addprefix game/, init_game finish_game) \
+	$(addprefix game/, init_game finish_game hooks) \
 	$(addprefix graphic/, draw walls dda_functions) \
 	$(addprefix movements/, movements)
 

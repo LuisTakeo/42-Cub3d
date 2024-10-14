@@ -37,6 +37,29 @@ void	init_direction(t_cub3d *cub3d, char direction)
 
 }
 
+void	set_pos_and_dir(t_cub3d *cub3d)
+{
+	int		i;
+	int		j;
+
+	i = -1;
+	while (cub3d->map[++i])
+	{
+		j = -1;
+		while (cub3d->map[i][++j])
+		{
+			if (ft_strchr("NSEW", cub3d->map[i][j]))
+			{
+				update_vector(&cub3d->player.pos,
+					(j * TILE_SIZE + TILE_SIZE / 2.0),
+					(i * TILE_SIZE + TILE_SIZE / 2.0));
+				init_direction(cub3d, cub3d->map[i][j]);
+				return ;
+			}
+		}
+	}
+}
+
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
@@ -45,7 +68,7 @@ void	init_values(t_cub3d *cub3d)
 		"1010000001\n"
 		"1000000001\n"
 		"1010001001\n"
-		"1000000001\n"
+		"1000S00001\n"
 		"1000000001\n"
 		"1000000001\n"
 		"1111111111"
@@ -55,26 +78,15 @@ void	init_values(t_cub3d *cub3d)
 	// 	"1N1\n"
 	// 	"212"
 	// 	,'\n');
-	update_vector(&cub3d->player.pos, (1.0 * TILE_SIZE + TILE_SIZE / 2.0),
-		(1 * TILE_SIZE + TILE_SIZE / 2.0));
-	init_direction(cub3d, 'W');
+	set_pos_and_dir(cub3d);
 	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
 	update_vector(&cub3d->player.map_pos, 1, 1);
 	update_vector(&cub3d->player.step, 0, 0);
 	update_vector(&cub3d->player.dist_to_side, 0, 0);
+	cub3d->is_moving = 1;
 	cub3d->player.angle = 0.0;
-}
-
-
-void	ft_hook(void* param)
-{
-	t_cub3d	*cub3d;
-
-	cub3d = (t_cub3d *)param;
-	draw_background(cub3d);
-	draw_walls(cub3d);
 }
 
 int	init_game(t_cub3d *cub3d)

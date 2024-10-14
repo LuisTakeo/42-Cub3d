@@ -78,10 +78,14 @@ t_vector	calculate_delta_dist(t_vector ray_dir);
 int			update_vector(t_vector *vector, double x, double y);
 void		calculate_dist_to_side(t_cub3d *cub3d, t_vector ray_dir);
 float		calculate_dda(t_cub3d *cub3d, t_vector ray_dir);
-// movimentos
+// hooks
 void		listen_moves(mlx_key_data_t keydata, void *param);
+void		ft_hook(void *param);
+// movimentos
 void		moving(t_cub3d *cub3d, t_vector dir, int is_positive, int is_x);
 int			verify_signal(float value);
-int			verify_margin(t_cub3d *cub3d, t_vector dir, t_vector new_pos, int is_x);
+int			verify_margin(t_cub3d *cub3d, t_vector dir,
+				t_vector new_pos, int is_x);
+void		identify_move(t_cub3d *cub3d, mlx_key_data_t keydata);
 
 #endif
