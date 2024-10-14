@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:50:09 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 17:30:58 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 18:03:07 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ bool	check_components(char **components)
 
 	i = 0;
 	while (components[i])
+	{
 		i++;
+	}
 	if (i > 3)
 		return(false);
 	return(true);
