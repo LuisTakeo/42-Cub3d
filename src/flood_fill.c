@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 18:50:43 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 16:32:11 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
 	print_flood_filled_map( scene, filled_map);
+	printf("\n");
 
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
@@ -52,7 +53,7 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 	}
 	if (scene->map.map_data[i][j] == '1' || filled_map[i][j] == true)
 	{
-		//printf("Hit a wall or visited at (%d, %d)\n", i, j);
+		printf("Hit a wall or visited at (%d, %d)\n", i, j);
 		return (true);
 	}
 	filled_map[i][j] = true;

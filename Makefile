@@ -5,8 +5,8 @@ LIBMLX = $(LIBS_FOLDER)/MLX42
 LIBFT = $(LIBS_FOLDER)/libft
 HEADERS = ./includes/cub3d.h
 
-CC = clang-12
-FLAGS = -Wextra -Wall -Werror
+CC = cc
+FLAGS = -Wextra -Wall -Werror 
 FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a
 FLAGSMLX = -ldl -lglfw -pthread -lm
@@ -33,7 +33,7 @@ libft:
 	@make all bonus new_fun -C $(LIBFT) $(FLAGS) --no-print-directory
 
 %.o: %.c $(HEADERS)
-	@$(CC) $(FLAGS) $(FLAGSOMLX) -o $@ -c $< && echo "Compilando: $(notdir $<)"
+	@$(CC) $(FLAGS) -g3 $(FLAGSOMLX) -o $@ -c $< && echo "Compilando: $(notdir $<)"
 
 $(NAME): $(OBJS)
 	@echo "Criando arquivo $(NAME)"

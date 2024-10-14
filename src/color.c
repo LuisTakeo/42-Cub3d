@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:50:09 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:37:47 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/14 17:30:58 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,26 @@ int	is_valid_color_value(int value)
 	return (value >= 0 && value <= 255);
 }
 
+bool	check_components(char **components)
+{
+	int	i;
+
+	i = 0;
+	while (components[i])
+		i++;
+	if (i > 3)
+		return(false);
+	return(true);
+}
+
 bool	validate_color_components(char **components)
 {
+	if (!check_components(components))
+	{
+		err("Invalid color format");
+		free_components(components);
+		return (false);
+	}
 	if (!components[0] || !components[1] || !components[2])
 	{
 		err("Invalid color format");
