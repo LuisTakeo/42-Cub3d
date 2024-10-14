@@ -50,11 +50,11 @@ struct s_player
 
 struct s_cub3d
 {
+	int			is_moving;
 	char		**map;
 	mlx_t		*mlx;
 	t_player	player;
 	t_vector	ray;
-	// t_vector	plane;
 	mlx_image_t	*image;
 };
 
@@ -78,6 +78,10 @@ t_vector	calculate_delta_dist(t_vector ray_dir);
 int			update_vector(t_vector *vector, double x, double y);
 void		calculate_dist_to_side(t_cub3d *cub3d, t_vector ray_dir);
 float		calculate_dda(t_cub3d *cub3d, t_vector ray_dir);
-
+// movimentos
+void		listen_moves(mlx_key_data_t keydata, void *param);
+void		moving(t_cub3d *cub3d, t_vector dir, int is_positive, int is_x);
+int			verify_signal(float value);
+int			verify_margin(t_cub3d *cub3d, t_vector dir, t_vector new_pos, int is_x);
 
 #endif
