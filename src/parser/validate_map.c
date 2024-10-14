@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 15:19:50 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/14 16:10:36 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void	fill_map_with_zeros(t_scene *scene)
 	}
 	// scene->map.map_data[scene->map.map_height] = NULL;
 }
-char	**convert_map_data_to_split_format(t_scene *scene)
+char	**convert_to_split(t_scene *scene)
 {
 	char	*map_string;
 	char	**split_map;

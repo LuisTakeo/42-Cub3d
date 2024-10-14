@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:36:24 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/13 20:14:24 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 16:23:01 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	main(int argc, char **argv)
 	check_map_surrounded(&scene, pos);
 	(void)argc;
 	(void)argv;
+	(void)cub3d;
 	printf("Init Cub3d\n");
 	cub3d.map = scene.map.map_data;
 	init_values(&cub3d);

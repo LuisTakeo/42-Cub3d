@@ -6,11 +6,23 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 20:22:25 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 16:22:21 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
+void	print_map(char **map_data, int map_height, int map_width)
+{
+	int	i;
+
+	i = 0;
+	printf("Map (Height: %d, Width: %d):\n", map_height, map_width);
+	while (i < map_height)
+	{
+		printf("%s\n", map_data[i]);
+		i++;
+	}
+}
 
 void	print_flood_filled_map(t_scene *scene, bool **filled_map)
 {
@@ -106,5 +118,6 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 	free_line_array((char **)filled_map, scene->map.map_height);
 	if (!is_surrounded)
 		panic("Map is not surrounded by walls", scene);
+	print_map(scene->map.map_data, scene->map.map_height, scene->map.map_width);
 	return (0);
 }

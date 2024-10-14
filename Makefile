@@ -6,7 +6,7 @@ LIBFT = $(LIBS_FOLDER)/libft
 HEADERS = ./includes/cub3d.h
 
 CC = cc
-FLAGS = -Wextra -Wall -Werror
+FLAGS = -Wextra -Wall -Werror -g
 FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a
 FLAGSMLX = -ldl -lglfw -pthread -lm

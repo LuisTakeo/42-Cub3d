@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:57 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/13 20:16:02 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 16:24:00 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void	init_values(t_cub3d *cub3d)
 	//	"1000000001\n"
 	//	"1111111111"
 	//	,'\n');
+	cub3d->map = ft_split(*cub3d->map, '\n');
 	update_vector(&cub3d->player.pos, (4.0 * TILE_SIZE + TILE_SIZE / 2.0),
 		(5 * TILE_SIZE + TILE_SIZE / 2.0));
 	init_direction(cub3d, 'W');
