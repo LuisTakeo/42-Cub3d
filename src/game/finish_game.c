@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:37 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/13 20:11:59 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/09/11 21:58:37 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,4 @@ void	finish_game(t_cub3d *cub3d)
 	if (cub3d->map)
 		free_map(cub3d->map);
 }
-	
 

@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 16:10:36 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 19:47:00 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,33 +120,4 @@ void	fill_map_with_zeros(t_scene *scene)
 		i++;
 	}
 	// scene->map.map_data[scene->map.map_height] = NULL;
-}
-char	**convert_to_split(t_scene *scene)
-{
-	char	*map_string;
-	char	**split_map;
-	int		total_length;
-	int		i;
-
-	total_length = 0;
-	i = 0;
-	while (i < scene->map.map_height)
-	{
-		total_length += ft_strlen(scene->map.map_data[i]) + 1;
-		i++;
-	}
-	map_string = malloc(total_length + 1);
-	if (!map_string)
-		err_exit("Memory allocation failed for map_string");
-	map_string[0] = '\0';
-	i = 0;
-	while (i < scene->map.map_height)
-	{
-		ft_strlcat(map_string, scene->map.map_data[i], total_length + 1);
-		ft_strlcat(map_string, "\n", total_length + 1);
-		i++;
-	}
-	split_map = ft_split(map_string, '\n');
-	free(map_string);
-	return (split_map);
 }

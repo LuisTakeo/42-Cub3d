@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 16:22:21 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 19:11:34 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_map(char **map_data, int map_height, int map_width)
 	printf("Map (Height: %d, Width: %d):\n", map_height, map_width);
 	while (i < map_height)
 	{
-		printf("%s\n", map_data[i]);
+		printf("%s \n", map_data[i]);
 		i++;
 	}
 }

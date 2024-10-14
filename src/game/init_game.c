@@ -6,57 +6,11 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:57 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/14 16:24:00 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 19:45:13 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
-
-void	move_to(t_vector *pos, t_vector dir, float speed)
-{
-	pos->x += dir.x * speed;
-	pos->y += dir.y * speed;
-}
-
-void	listen_moves(mlx_key_data_t keydata, void *param)
-{
-	t_cub3d	*cub3d;
-
-	cub3d = (t_cub3d *)param;
-	if (keydata.key == MLX_KEY_W)
-	{
-		printf("Walking Front\n");
-
-	}
-	if (keydata.key == MLX_KEY_S)
-	{
-		printf("Walking Back\n");
-		// cub3d->player.pos.y -= 0.1;
-		// move_to(&cub3d->player.pos, cub3d->player.dir, -0.1);
-	}
-	if (keydata.key == MLX_KEY_A)
-	{
-		// printf("Walking Left\n");
-		// cub3d->player.pos.x -= 0.1;
-	}
-	if (keydata.key == MLX_KEY_D)
-	{
-		// printf("Walking Right\n");
-		// cub3d->player.pos.x += 0.1;
-	}
-	if (keydata.key == MLX_KEY_LEFT)
-	{
-		cub3d->player.cameraPlane = rotate_vector(cub3d->player.cameraPlane,
-			-1.5);
-		cub3d->player.dir = rotate_vector(cub3d->player.dir, -1.5);
-	}
-	if (keydata.key == MLX_KEY_RIGHT)
-	{
-		cub3d->player.cameraPlane = rotate_vector(cub3d->player.cameraPlane,
-			1.5);
-		cub3d->player.dir = rotate_vector(cub3d->player.dir, 1.5);
-	}
-}
 
 void	init_direction(t_cub3d *cub3d, char direction)
 {
@@ -83,40 +37,56 @@ void	init_direction(t_cub3d *cub3d, char direction)
 
 }
 
+void	set_pos_and_dir(t_cub3d *cub3d)
+{
+	int		i;
+	int		j;
+
+	i = -1;
+	while (cub3d->map[++i])
+	{
+		j = -1;
+		while (cub3d->map[i][++j])
+		{
+			if (ft_strchr("NSEW", cub3d->map[i][j]))
+			{
+				update_vector(&cub3d->player.pos,
+					(j * TILE_SIZE + TILE_SIZE / 2.0),
+					(i * TILE_SIZE + TILE_SIZE / 2.0));
+				init_direction(cub3d, cub3d->map[i][j]);
+				return ;
+			}
+		}
+	}
+}
+
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
-	//cub3d->map = ft_split(
-	//	"1111111111\n"
-	//	"1010000001\n"
-	//	"1000000001\n"
-	//	"1010001001\n"
-	//	"1000000001\n"
-	//	"1000000001\n"
-	//	"1000000001\n"
-	//	"1111111111"
-	//	,'\n');
-	cub3d->map = ft_split(*cub3d->map, '\n');
-	update_vector(&cub3d->player.pos, (4.0 * TILE_SIZE + TILE_SIZE / 2.0),
-		(5 * TILE_SIZE + TILE_SIZE / 2.0));
-	init_direction(cub3d, 'W');
+//	cub3d->map = ft_split(
+//		" 11111111\n"
+//		"1010000001\n"
+//		"1000000001\n"
+//		"1010001001\n"
+//		"1000S00001\n"
+//		"1000000001\n"
+//		"1000000001\n"
+//		"1111111111"
+//		,'\n');
+	// cub3d->map = ft_split(
+	// 	"212\n"
+	// 	"1N1\n"
+	// 	"212"
+	// 	,'\n');
+	set_pos_and_dir(cub3d);
 	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
-	update_vector(&cub3d->player.map_pos, 5, 5);
+	update_vector(&cub3d->player.map_pos, 1, 1);
 	update_vector(&cub3d->player.step, 0, 0);
 	update_vector(&cub3d->player.dist_to_side, 0, 0);
+	cub3d->is_moving = 1;
 	cub3d->player.angle = 0.0;
-}
-
-
-void	ft_hook(void* param)
-{
-	t_cub3d	*cub3d;
-
-	cub3d = (t_cub3d *)param;
-	draw_background(cub3d);
-	draw_walls(cub3d);
 }
 
 int	init_game(t_cub3d *cub3d)
