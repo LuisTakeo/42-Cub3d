@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:12 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 20:05:58 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/14 15:20:49 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void	final_map_validation(t_scene *scene)
 
 void	init_map_vars(t_scene scene)
 {
+	//(void)scene;
 	scene.map.map_height = 0;
 	scene.map.map_width = 0;
 	scene.player_count = 0;
