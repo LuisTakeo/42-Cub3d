@@ -87,5 +87,7 @@ int			verify_signal(float value);
 int			verify_margin(t_cub3d *cub3d, t_vector dir,
 				t_vector new_pos, int is_x);
 void		identify_move(t_cub3d *cub3d, mlx_key_data_t keydata);
+// utils
+int			ft_array_size(char **array);
 
 #endif
