@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:24:20 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 14:09:20 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/15 13:47:24 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ bool	validate_file(const char *filename, const char *ext)
 		err("Invalid file extension.");
 		return (false);
 	}
-	if(ft_memcmp(ext, ".cub", 4) == 0)
+	if (ft_memcmp(ext, ".cub", 4) == 0)
 	{
 		if (!is_empty(filename))
 		{
@@ -84,27 +84,18 @@ bool	validate_elements(t_scene *scene)
 		|| !validate_extension(scene->south_texture, ".png")
 		|| !validate_extension(scene->west_texture, ".png")
 		|| !validate_extension(scene->east_texture, ".png"))
-	{
-		err("Invalid texture format");
-		return (false);
-	}
+		return (err("Invalid texture format"), false);
 	if (!file_exists(scene->north_texture) || !file_exists(scene->south_texture)
 		|| !file_exists(scene->west_texture)
 		|| !file_exists(scene->east_texture))
-	{
-		err("Texture file does not exist");
-		return (false);
-	}
-	if(!validate_file(scene->north_texture, ".png") || !validate_file(scene->west_texture, ".png") || !validate_file(scene->east_texture, ".png") || !validate_file(scene->south_texture, ".png"))
-	{
-		err("Texture file does not exist");
-		return (false);
-	}
+		return (err("Texture file does not exist"), false);
+	if (!validate_file(scene->north_texture, ".png")
+		|| !validate_file(scene->west_texture, ".png")
+		|| !validate_file(scene->east_texture, ".png")
+		|| !validate_file(scene->south_texture, ".png"))
+		return (err("Texture file does not exist"), false);
 	if (scene->ceiling_color == -1 || scene->floor_color == -1)
-	{
-		err("Color values missing");
-		return (false);
-	}
+		return (err("Color values missing"), false);
 	return (true);
 }
 

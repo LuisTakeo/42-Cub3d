@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 16:32:11 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/15 13:48:29 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,17 @@ void	print_flood_filled_map(t_scene *scene, bool **filled_map)
 static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
-	print_flood_filled_map( scene, filled_map);
-	printf("\n");
 
+	print_flood_filled_map(scene, filled_map);
+	printf("\n");
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
 	{
 		printf("Out of bounds at (%d, %d)\n", i, j);
 		return (false);
 	}
-	if (scene->map.map_data[i][j] == ' ' || scene->map.map_data[i][j] == '\t' || scene->map.map_data[i][j] == '2')
+	if (scene->map.map_data[i][j] == ' ' || scene->map.map_data[i][j] == '\t'
+		|| scene->map.map_data[i][j] == '2')
 	{
 		printf("space tab");
 		return (false);
