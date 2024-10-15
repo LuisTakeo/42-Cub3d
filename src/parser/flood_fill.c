@@ -6,25 +6,13 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 19:11:34 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/15 17:18:40 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
-void	print_map(char **map_data, int map_height, int map_width)
-{
-	int	i;
+#include "../includes/cub3d.h"
 
-	i = 0;
-	printf("Map (Height: %d, Width: %d):\n", map_height, map_width);
-	while (i < map_height)
-	{
-		printf("%s \n", map_data[i]);
-		i++;
-	}
-}
-
-void	print_flood_filled_map(t_scene *scene, bool **filled_map)
+void	print_flood_filled_map(t_scene *scene, bool **filled_map) // DELETE
 {
 	int	i;
 	int	j;
@@ -49,22 +37,26 @@ void	print_flood_filled_map(t_scene *scene, bool **filled_map)
 static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
-	//print_flood_filled_map( scene, filled_map);
 
+	print_flood_filled_map(scene, filled_map); //DELETE
+	printf("\n"); // DELETE
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
 	{
-		printf("Out of bounds at (%d, %d)\n", i, j);
+		printf("Out of bounds at (%d, %d)\n", i, j); // DELETE
 		return (false);
 	}
-	if (scene->map.map_data[i][j] == ' ' || scene->map.map_data[i][j] == '\t' || scene->map.map_data[i][j] == '2')
+	if (scene->map.map_data[i][j] == ' ' || scene->map.map_data[i][j] == '\t'
+		|| scene->map.map_data[i][j] == '2')
 	{
-		printf("space tab");
+		printf("space tab"); // MAYBE DELETE
 		return (false);
 	}
 	if (scene->map.map_data[i][j] == '1' || filled_map[i][j] == true)
 	{
-		//printf("Hit a wall or visited at (%d, %d)\n", i, j);
+	//	if(scene->map.map_data[i][j] == '1')
+	//		scene->map.map_data[i][j] = 'W';
+		printf("Hit a wall or visited at (%d, %d)\n", i, j);
 		return (true);
 	}
 	filled_map[i][j] = true;
@@ -118,6 +110,5 @@ int	check_map_surrounded(t_scene *scene, t_pos pos)
 	free_line_array((char **)filled_map, scene->map.map_height);
 	if (!is_surrounded)
 		panic("Map is not surrounded by walls", scene);
-	print_map(scene->map.map_data, scene->map.map_height, scene->map.map_width);
 	return (0);
 }

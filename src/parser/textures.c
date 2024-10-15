@@ -6,11 +6,11 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:22:18 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 20:06:12 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/10 23:35:48 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../includes/cub3d.h"
 
 void	handle_texture(t_scene *scene, t_direction dir, char *line)
 {

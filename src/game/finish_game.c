@@ -30,4 +30,3 @@ void	finish_game(t_cub3d *cub3d)
 	if (cub3d->map)
 		free_map(cub3d->map);
 }
-

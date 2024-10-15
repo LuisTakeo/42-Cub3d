@@ -6,11 +6,22 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/14 19:47:00 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/15 17:17:14 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../includes/cub3d.h"
+
+bool	is_empty_line(char *line)
+{
+	while (*line)
+	{
+		if (!is_whitespace(*line))
+			return (false);
+		line++;
+	}
+	return (true);
+}
 
 bool	handle_map_line(char *line, bool *map_started)
 {
@@ -18,7 +29,7 @@ bool	handle_map_line(char *line, bool *map_started)
 	{
 		*map_started = true;
 	}
-	else if (!is_map_line(line) && *map_started)
+	else if (!is_map_line(line) && !is_empty_line(line) && *map_started)
 	{
 		err("Stopped parsing at non-map line after map started.");
 		return (false);
@@ -39,7 +50,7 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	{
 		line = lines[i];
 		if (!handle_map_line(line, &scene->map_started))
-			break ;
+			panic_exit("garbage after the map", scene);
 		if (scene->map_started)
 		{
 			calculate_map_width(line, &scene->map.map_width);
@@ -53,6 +64,38 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	final_map_validation(scene);
 }
 
+bool	is_valid_element_line(char *line)
+{
+	return (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0
+		|| ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0
+		|| *line == 'F' || *line == 'C');
+}
+
+void	process_element_line(char *line, t_scene *scene, char **lines,
+		int line_count)
+{
+	if (is_valid_element_line(line))
+		count_texture_elements(line, scene);
+	else
+	{
+		err("Invalid line in scene configuration");
+		free_line_array(lines, line_count);
+		exit(EXIT_FAILURE);
+	}
+}
+
+bool	validate_element_counters(t_scene *scene)
+{
+	if (scene->no_counter != 1 || scene->so_counter != 1
+		|| scene->we_counter != 1 || scene->ea_counter != 1
+		|| scene->f_counter != 1 || scene->c_counter != 1)
+	{
+		err("Missing or repeated elements");
+		return (false);
+	}
+	return (true);
+}
+
 bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 {
 	bool	map_started;
@@ -64,22 +107,17 @@ bool	count_elements_from_lines(char **lines, int line_count, t_scene *scene)
 	while (i < line_count && !map_started)
 	{
 		line = lines[i];
-		if (is_whitespace(*line))
-		{
+		if (is_empty_line(line))
 			i++;
-			continue ;
-		}
-		if (is_map_line(line))
+		else if (is_map_line(line))
 			map_started = true;
 		else
-			count_texture_elements(line, scene);
-		i++;
+		{
+			process_element_line(line, scene, lines, line_count);
+			i++;
+		}
 	}
-	if (scene->no_counter != 1 || scene->so_counter != 1
-		|| scene->we_counter != 1 || scene->ea_counter != 1
-		|| scene->f_counter != 1 || scene->c_counter != 1)
-		return (err("Missing or repeated elements"), false);
-	return (true);
+	return (validate_element_counters(scene));
 }
 
 void	adjust_line_length(t_scene *scene, int i, int max_width)
@@ -119,5 +157,4 @@ void	fill_map_with_zeros(t_scene *scene)
 		adjust_line_length(scene, i, max_width);
 		i++;
 	}
-	// scene->map.map_data[scene->map.map_height] = NULL;
 }

@@ -6,11 +6,11 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:45:15 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 20:05:39 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/13 17:32:13 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../includes/cub3d.h"
 
 void	err(char *str)
 {

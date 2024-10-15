@@ -6,11 +6,11 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:20:52 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 20:05:47 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/15 13:19:07 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../includes/cub3d.h"
 
 t_direction	get_direction(char *identifier)
 {

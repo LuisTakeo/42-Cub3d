@@ -6,11 +6,11 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:48:42 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 20:06:23 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/10 22:50:00 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/cub3d.h"
+#include "../includes/cub3d.h"
 
 void	*ft_realloc(void *ptr, size_t original_size, size_t new_size)
 {
