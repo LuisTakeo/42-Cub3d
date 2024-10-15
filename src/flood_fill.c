@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/15 13:48:29 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/15 14:14:58 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 	}
 	if (scene->map.map_data[i][j] == '1' || filled_map[i][j] == true)
 	{
+	//	if(scene->map.map_data[i][j] == '1')
+	//		scene->map.map_data[i][j] = 'W';
 		printf("Hit a wall or visited at (%d, %d)\n", i, j);
 		return (true);
 	}

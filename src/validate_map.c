@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/15 13:43:33 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/15 14:15:50 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ bool	handle_map_line(char *line, bool *map_started)
 	{
 		*map_started = true;
 	}
+	// change here if you dont want to accept garbage
 	else if (!is_map_line(line) && *map_started)
 	{
 		err("Stopped parsing at non-map line after map started.");
