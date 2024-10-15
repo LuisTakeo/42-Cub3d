@@ -6,20 +6,29 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/15 14:15:50 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/15 17:09:59 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
 
+bool	is_empty_line(char *line)
+{
+	while (*line)
+	{
+		if (!is_whitespace(*line))
+			return (false);
+		line++;
+	}
+	return (true);
+}
 bool	handle_map_line(char *line, bool *map_started)
 {
 	if (is_map_line(&line[0]))
 	{
 		*map_started = true;
 	}
-	// change here if you dont want to accept garbage
-	else if (!is_map_line(line) && *map_started)
+	else if (!is_map_line(line) && !is_empty_line(line) && *map_started)
 	{
 		err("Stopped parsing at non-map line after map started.");
 		return (false);
@@ -40,7 +49,7 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	{
 		line = lines[i];
 		if (!handle_map_line(line, &scene->map_started))
-			break ;
+			panic_exit("garbage after the map", scene);
 		if (scene->map_started)
 		{
 			calculate_map_width(line, &scene->map.map_width);
@@ -61,16 +70,6 @@ bool	is_valid_element_line(char *line)
 		|| *line == 'F' || *line == 'C');
 }
 
-bool	is_empty_line(char *line)
-{
-	while (*line)
-	{
-		if (!is_whitespace(*line))
-			return (false);
-		line++;
-	}
-	return (true);
-}
 
 void	process_element_line(char *line, t_scene *scene, char **lines,
 		int line_count)
