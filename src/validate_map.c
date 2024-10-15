@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/15 17:09:59 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/15 17:17:14 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ bool	is_empty_line(char *line)
 	}
 	return (true);
 }
+
 bool	handle_map_line(char *line, bool *map_started)
 {
 	if (is_map_line(&line[0]))
@@ -69,7 +70,6 @@ bool	is_valid_element_line(char *line)
 		|| ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0
 		|| *line == 'F' || *line == 'C');
 }
-
 
 void	process_element_line(char *line, t_scene *scene, char **lines,
 		int line_count)
