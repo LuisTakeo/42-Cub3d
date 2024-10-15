@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:36:24 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/13 17:48:22 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/15 12:48:25 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	main(int argc, char **argv)
 	printf("%s \n", scene.north_texture);
 	printf("%s \n", scene.south_texture);
 	printf("%s \n", scene.west_texture);
-	printf("%s \n", scene.east_texture);
 	printf("%s \n", scene.east_texture);
 	printf("Ceiling color: %#X\n", scene.ceiling_color);
 	printf("Floor color: %#X\n", scene.floor_color);
