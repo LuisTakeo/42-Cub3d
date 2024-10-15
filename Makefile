@@ -15,7 +15,8 @@ FLAGSMLX = -ldl -lglfw -pthread -lm
 SRC_FILE = main vector \
 	$(addprefix game/, init_game finish_game hooks) \
 	$(addprefix graphic/, draw walls dda_functions) \
-	$(addprefix movements/, movements)
+	$(addprefix movements/, movements) \
+	$(addprefix parser/, args color flood_fill getter map textures utils validate_map freerror)
 
 SRC = $(addsuffix .c, $(addprefix ./src/, $(SRC_FILE)))
 
