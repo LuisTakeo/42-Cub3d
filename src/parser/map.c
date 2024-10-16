@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:12 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:38:18 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/16 20:43:05 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,10 @@ void	final_map_validation(t_scene *scene)
 		panic("This is not a multiplayer game", scene);
 	if (scene->invalid_c > 0)
 		panic("Invalid characters in map", scene);
+	if (scene->map.map_width > 100)
+		panic("too thicc", scene);
+	if (scene->map.map_height > 100)
+		panic("too tall", scene);
 }
 
 void	init_map_vars(t_scene scene)
