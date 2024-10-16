@@ -11,7 +11,7 @@ FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a
 FLAGSMLX = -ldl -lglfw -pthread -lm
 
-SRC = ./src/main.c ./src/color.c ./src/flood_fill.c ./src/map.c ./src/utils.c ./src/validate_map.c ./src/freerror.c ./src/args.c ./src/getter.c ./src/textures.c
+SRC = ./src/main.c ./src/parser/color.c ./src/parser/flood_fill.c ./src/parser/map.c ./src/parser/utils.c ./src/parser/validate_map.c ./src/parser/freerror.c ./src/parser/args.c ./src/parser/getter.c ./src/parser/textures.c
 
 SRC_BONUS = ./src_bonus/main_bonus.c
 

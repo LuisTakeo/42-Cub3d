@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/cub3d.h"
+#include "../../includes/cub3d.h"
 
 void	print_flood_filled_map(t_scene *scene, bool **filled_map) // DELETE
 {
