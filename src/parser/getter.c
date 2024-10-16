@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:20:52 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/15 13:19:07 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/16 21:04:56 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_direction	get_direction(char *identifier)
 	return (INVALID_DIRECTION);
 }
 
-char	**read_file_lines(int fd, int *line_count)
+char	**read_file_lines(int fd, t_scene *scene)
 {
 	char	**lines;
 	char	*line;
@@ -48,7 +48,7 @@ char	**read_file_lines(int fd, int *line_count)
 		if (line != NULL)
 			line = get_next_line(fd);
 	}
-	*line_count = count;
+	scene->line_count = count;
 	return (lines);
 }
 
