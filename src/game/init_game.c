@@ -17,22 +17,22 @@ void	init_direction(t_cub3d *cub3d, char direction)
 	if (direction == 'N')
 	{
 		update_vector(&cub3d->player.dir, 0, -1);
-		update_vector(&cub3d->player.cameraPlane, 0.66, 0);
+		update_vector(&cub3d->player.camera_plane, 0.66, 0);
 	}
 	if (direction == 'S')
 	{
 		update_vector(&cub3d->player.dir, 0, 1);
-		update_vector(&cub3d->player.cameraPlane, -0.66, 0);
+		update_vector(&cub3d->player.camera_plane, -0.66, 0);
 	}
 	if (direction == 'W')
 	{
 		update_vector(&cub3d->player.dir, -1, 0);
-		update_vector(&cub3d->player.cameraPlane, 0, -0.66);
+		update_vector(&cub3d->player.camera_plane, 0, -0.66);
 	}
 	if (direction == 'E')
 	{
 		update_vector(&cub3d->player.dir, 1, 0);
-		update_vector(&cub3d->player.cameraPlane, 0, 0.66);
+		update_vector(&cub3d->player.camera_plane, 0, 0.66);
 	}
 
 }
@@ -53,10 +53,25 @@ void	set_pos_and_dir(t_cub3d *cub3d)
 				update_vector(&cub3d->player.pos,
 					(j * TILE_SIZE + TILE_SIZE / 2.0),
 					(i * TILE_SIZE + TILE_SIZE / 2.0));
+				update_vector(&cub3d->player.map_pos, j, i);
 				init_direction(cub3d, cub3d->map[i][j]);
 				return ;
 			}
 		}
+	}
+}
+
+void	init_textures(t_cub3d *cub3d)
+{
+	cub3d->north = mlx_load_png("./src/images/mugiwara.png");
+	cub3d->south = mlx_load_png("./src/images/shankusu.png");
+	cub3d->east = mlx_load_png("./src/images/sun.png");
+	cub3d->west = mlx_load_png("./src/images/worldgov.png");
+	if (!cub3d->north || !cub3d->south || !cub3d->east || !cub3d->west)
+	{
+		free_map(cub3d->map);
+		// mlx_terminate(cub3d->mlx);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -73,16 +88,11 @@ void	init_values(t_cub3d *cub3d)
 		"1000000001\n"
 		"1111111111"
 		,'\n');
-	// cub3d->map = ft_split(
-	// 	"212\n"
-	// 	"1N1\n"
-	// 	"212"
-	// 	,'\n');
+	init_textures(cub3d);
 	set_pos_and_dir(cub3d);
 	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
-	update_vector(&cub3d->player.map_pos, 1, 1);
 	update_vector(&cub3d->player.step, 0, 0);
 	update_vector(&cub3d->player.dist_to_side, 0, 0);
 	cub3d->is_moving = 1;

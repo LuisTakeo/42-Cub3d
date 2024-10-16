@@ -28,6 +28,7 @@
 typedef struct s_vector	t_vector;
 typedef struct s_player	t_player;
 typedef struct s_cub3d	t_cub3d;
+typedef struct s_wall	t_wall;
 
 struct s_vector
 {
@@ -41,21 +42,38 @@ struct s_player
 	float		angle;
 	t_vector	pos;
 	t_vector	dir;
-	t_vector	cameraPlane;
+	t_vector	camera_plane;
 	t_vector	delta_dist;
 	t_vector	dist_to_side;
 	t_vector	map_pos;
 	t_vector	step;
 };
 
+struct s_wall
+{
+	int				wall_height;
+	int				draw_start;
+	int				draw_end;
+	int				text_x;
+	int				text_y;
+	float			wall_point_x;
+	float			tex_pos;
+	float			tex_step;
+	mlx_texture_t	*texture;
+};
+
 struct s_cub3d
 {
-	int			is_moving;
-	char		**map;
-	mlx_t		*mlx;
-	t_player	player;
-	t_vector	ray;
-	mlx_image_t	*image;
+	int				is_moving;
+	char			**map;
+	mlx_t			*mlx;
+	t_player		player;
+	t_vector		ray;
+	mlx_image_t		*image;
+	mlx_texture_t	*north;
+	mlx_texture_t	*south;
+	mlx_texture_t	*east;
+	mlx_texture_t	*west;
 };
 
 void		init_values(t_cub3d *cub3d);
@@ -89,5 +107,8 @@ int			verify_margin(t_cub3d *cub3d, t_vector dir,
 void		identify_move(t_cub3d *cub3d, mlx_key_data_t keydata);
 // utils
 int			ft_array_size(char **array);
+int			get_rgba(int r, int g, int b, int a);
+// free
+void		free_map(char **map);
 
 #endif

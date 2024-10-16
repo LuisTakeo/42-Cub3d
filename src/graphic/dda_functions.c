@@ -89,7 +89,7 @@ t_vector	find_ray_dir(t_cub3d *cub3d, int x)
 	t_vector	camera_pixel;
 
 	multiplier = 2 * x / (float)WIDTH - 1;
-	camera_pixel = multi_vector(cub3d->player.cameraPlane, multiplier);
+	camera_pixel = multi_vector(cub3d->player.camera_plane, multiplier);
 	return (sum_vector(cub3d->player.dir, camera_pixel));
 }
 

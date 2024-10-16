@@ -19,18 +19,18 @@ void	identify_move(t_cub3d *cub3d, mlx_key_data_t keydata)
 	if (keydata.key == MLX_KEY_S)
 		moving(cub3d, cub3d->player.dir, 0, 1);
 	if (keydata.key == MLX_KEY_A)
-		moving(cub3d, cub3d->player.cameraPlane, 0, 0);
+		moving(cub3d, cub3d->player.camera_plane, 0, 0);
 	if (keydata.key == MLX_KEY_D)
-		moving(cub3d, cub3d->player.cameraPlane, 1, 0);
+		moving(cub3d, cub3d->player.camera_plane, 1, 0);
 	if (keydata.key == MLX_KEY_LEFT)
 	{
-		cub3d->player.cameraPlane = rotate_vector(cub3d->player.cameraPlane,
+		cub3d->player.camera_plane = rotate_vector(cub3d->player.camera_plane,
 				-1.5);
 		cub3d->player.dir = rotate_vector(cub3d->player.dir, -1.5);
 	}
 	if (keydata.key == MLX_KEY_RIGHT)
 	{
-		cub3d->player.cameraPlane = rotate_vector(cub3d->player.cameraPlane,
+		cub3d->player.camera_plane = rotate_vector(cub3d->player.camera_plane,
 				1.5);
 		cub3d->player.dir = rotate_vector(cub3d->player.dir, 1.5);
 	}

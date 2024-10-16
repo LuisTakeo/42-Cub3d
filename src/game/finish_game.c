@@ -23,10 +23,23 @@ void	free_map(char **map)
 	map = NULL;
 }
 
+void	free_textures(t_cub3d *cub3d)
+{
+	if (cub3d->north)
+		mlx_delete_texture(cub3d->north);
+	if (cub3d->south)
+		mlx_delete_texture(cub3d->south);
+	if (cub3d->west)
+		mlx_delete_texture(cub3d->west);
+	if (cub3d->east)
+		mlx_delete_texture(cub3d->east);
+}
+
 void	finish_game(t_cub3d *cub3d)
 {
 	if (cub3d->mlx)
 		mlx_terminate(cub3d->mlx);
 	if (cub3d->map)
 		free_map(cub3d->map);
+	free_textures(cub3d);
 }
