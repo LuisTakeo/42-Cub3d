@@ -63,10 +63,9 @@ void	moving(t_cub3d *cub3d, t_vector dir, int is_positive, int is_x)
 	{
 		normalize_vector_to_map(*cub3d, &new_pos);
 		update_vector(&cub3d->player.pos,
-			(cub3d->player.pos.x + 1 * (new_pos.x - cub3d->player.pos.x)),
-			(cub3d->player.pos.y + 1 * (new_pos.y - cub3d->player.pos.y)));
+			((cub3d->player.pos.x) + 1 * (new_pos.x - (cub3d->player.pos.x))),
+			((cub3d->player.pos.y) + 1 * (new_pos.y - (cub3d->player.pos.y))));
 	}
-	printf("x: %f y: %f\n", cub3d->player.pos.x, cub3d->player.pos.y);
 }
 
 int	verify_signal(float value)
@@ -82,10 +81,10 @@ int	verify_margin(t_cub3d *cub3d, t_vector dir, t_vector new_pos, int is_x)
 
 	margin = .2;
 	if (is_x && ((cub3d->map[(int)(new_pos.y + margin
-					* verify_signal(new_pos.y - cub3d->player.pos.y))]
+					* verify_signal(new_pos.y - (cub3d->player.pos.y / TILE_SIZE)))]
 			[(int)new_pos.x] == '1')
 		|| (cub3d->map[(int)(new_pos.y)][(int)(new_pos.x + margin
-		* verify_signal(new_pos.x - cub3d->player.pos.x))] == '1')))
+		* verify_signal(new_pos.x - (cub3d->player.pos.x / TILE_SIZE)))] == '1')))
 		return (0);
 	if (!is_x && ((cub3d->map[(int)(new_pos.y + margin
 					* verify_signal(new_pos.y - dir.y))][(int)new_pos.x] == '1')

@@ -54,8 +54,8 @@ struct s_wall
 	int				wall_height;
 	int				draw_start;
 	int				draw_end;
-	int				text_x;
-	int				text_y;
+	uint32_t		text_x;
+	uint32_t		text_y;
 	float			wall_point_x;
 	float			tex_pos;
 	float			tex_step;

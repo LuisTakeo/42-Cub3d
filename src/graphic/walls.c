@@ -42,17 +42,21 @@ mlx_texture_t	*select_texture(t_cub3d *cub3d)
 	}
 }
 
-uint32_t	get_pixel_color(mlx_texture_t *texture, int x, int y)
+uint32_t	get_pixel_color(mlx_texture_t *texture, int y, int x)
 {
 	int		texture_pos;
 	uint8_t	*pixel;
 
-	if (x < 0 || x >= (int)texture->width || y < 0
-		|| y >= (int)texture->height)
-		return (0);
+	// Verifica se x e y estão dentro dos limites da textura
+	if (x < 0 || x >= (int)texture->width || y < 0 || y >= (int)texture->height)
+		return (0);  // Retorna cor preta se estiver fora dos limites
+
+	// Calcula a posição do pixel na textura
 	texture_pos = y * texture->width + x;
 	texture_pos *= texture->bytes_per_pixel;
 	pixel = &texture->pixels[texture_pos];
+
+	// Retorna a cor do pixel no formato RGBA
 	return (pixel[0] << 24 | pixel[1] << 16 | pixel[2] << 8 | pixel[3]);
 }
 
@@ -66,51 +70,59 @@ void	draw_line(t_cub3d *cub3d, t_wall wall, int x)
 	while (y < wall.draw_end)
 	{
 		tex_y = (int)wall.tex_pos;
-		if (tex_y < 0)
-			tex_y = 0;
-		if (tex_y >= (int)wall.texture->height)
-			tex_y = wall.texture->height - 1;
-		wall.tex_pos += wall.tex_step;
-		color = get_pixel_color(wall.texture, wall.text_x, tex_y);
-		mlx_put_pixel(cub3d->image, x, y, color);
-		y++;
+			if (tex_y < 0)
+				tex_y = 0;
+			if (tex_y >= (int)wall.texture->height)
+				tex_y = wall.texture->height - 1;
+			wall.tex_pos += wall.tex_step;
+			color = get_pixel_color(wall.texture, tex_y, wall.text_x);
+			mlx_put_pixel(cub3d->image, x, y, color);
+			y++;
 	}
+
+
 }
+
 
 void	draw_wall_line(t_cub3d *cub3d, float perp_wall_dist, int x)
 {
-	t_wall			wall;
+	t_wall wall;
 
+    wall.texture = select_texture(cub3d);
 
-	wall.texture = select_texture(cub3d);
-	wall.wall_height = (HEIGHT / perp_wall_dist);
-	wall.draw_start = (HEIGHT / 2 - wall.wall_height / 2);
-	wall.draw_end = (HEIGHT / 2 + wall.wall_height / 2);
-	if (wall.draw_start < 0)
-		wall.draw_start = 0;
-	if (wall.draw_end >= HEIGHT)
-		wall.draw_end = HEIGHT - 1;
+    wall.wall_height = (HEIGHT / perp_wall_dist);
+    if (wall.wall_height <= 0)
+		wall.wall_height = 1; // Evita altura 0
+    wall.draw_start = (HEIGHT / 2 - wall.wall_height / 2);
+    wall.draw_end = (HEIGHT / 2 + wall.wall_height / 2);
+    if (wall.draw_start < 0) wall.draw_start = 0;
+    if (wall.draw_end >= HEIGHT) wall.draw_end = HEIGHT - 1;
 
+    // Cálculo da interseção com a parede
+    if (cub3d->player.side == 0)
+        wall.wall_point_x = cub3d->player.pos.y + perp_wall_dist * cub3d->player.dir.y;
+    else
+        wall.wall_point_x = cub3d->player.pos.x + perp_wall_dist * cub3d->player.dir.x;
 
-	if (cub3d->player.side)
-		wall.wall_point_x = cub3d->player.pos.x
-			+ perp_wall_dist * cub3d->player.delta_dist.x;
-	else
-		wall.wall_point_x = cub3d->player.pos.y
-			+ perp_wall_dist * cub3d->player.delta_dist.y;
-	wall.wall_point_x -= floor(wall.wall_point_x);
+    // Ajuste para a faixa [0, 1]
+    wall.wall_point_x = fmod(wall.wall_point_x, TILE_SIZE) / TILE_SIZE;
 
+    // Calcula a posição X da textura
+    wall.text_x = (int)(wall.wall_point_x * wall.texture->width);
+    if (wall.text_x < 0) wall.text_x = 0;
+    if (wall.text_x >= wall.texture->width) wall.text_x = wall.texture->width - 1;
 
-	wall.text_x = (int)(wall.wall_point_x * wall.texture->width);
-	if ((cub3d->player.side == 0 && cub3d->player.dir.x < 0)
-		|| (cub3d->player.side == 1 && cub3d->player.dir.y > 0))
-		wall.text_x = wall.texture->width - wall.text_x - 1;
-	wall.tex_step = 1.0 * wall.texture->height / wall.wall_height;
+    // Corrige a textura para a direção correta
+    if ((cub3d->player.side == 0 && cub3d->player.dir.x < 0) ||
+        (cub3d->player.side == 1 && cub3d->player.dir.y > 0))
+    {
+        wall.text_x = wall.texture->width - wall.text_x - 1;
+    }
 
-	wall.tex_pos = (wall.draw_start - HEIGHT / 2 + wall.wall_height / 2)
-		* wall.tex_step;
-	printf("wall.tex_pos: %f\n", wall.tex_pos);
-	draw_line(cub3d, wall, x);
+    wall.tex_step = 1.0 * wall.texture->height / wall.wall_height;
+    wall.tex_pos = (wall.draw_start - HEIGHT / 2 + wall.wall_height / 2) * wall.tex_step;
+
+    draw_line(cub3d, wall, x);
 }
 
 void	draw_walls(t_cub3d *cub3d)
@@ -135,3 +147,6 @@ void	draw_walls(t_cub3d *cub3d)
 		i++;
 	}
 }
+
+
+// aaaaaaaaaaaaaaaaaaaaaaaaaaaa
