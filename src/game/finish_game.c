@@ -42,8 +42,5 @@ void	finish_game(t_cub3d *cub3d)
 	free_textures(cub3d);
 	if (cub3d->map)
 		free_map(cub3d->map);
-	ok_free("oi", &cub3d->scene);
-
-	//if (cub3d->map)
-	//	free_map(cub3d->map);
+	ok_free("Thanks for playing", &cub3d->scene);
 }

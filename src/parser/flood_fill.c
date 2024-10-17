@@ -6,13 +6,13 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/16 23:23:40 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 01:27:39 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
-void	print_flood_filled_map(t_scene *scene, bool **filled_map) // DELETE
+void	print_flood_filled_map(t_scene *scene, bool **filled_map)
 {
 	int	i;
 	int	j;
@@ -40,21 +40,12 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
-	{
-		printf("Out of bounds at (%d, %d)\n", i, j); // DELETE
 		return (false);
-	}
 	if (scene->map.map_data[i][j] == ' ' || scene->map.map_data[i][j] == '\t'
 		|| scene->map.map_data[i][j] == '2')
-	{
-		printf("space tab"); // MAYBE DELETE
 		return (false);
-	}
 	if (scene->map.map_data[i][j] == '1' || filled_map[i][j] == true)
-	{
-		printf("Hit a wall or visited at (%d, %d)\n", i, j);
 		return (true);
-	}
 	filled_map[i][j] = true;
 	is_surrounded = true;
 	is_surrounded &= floodfill(scene, filled_map, i - 1, j);

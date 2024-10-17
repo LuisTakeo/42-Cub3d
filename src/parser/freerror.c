@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   freerror.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
+/*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:45:15 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/13 17:32:13 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/17 01:49:21 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
-
-void	err(char *str)
-{
-	ft_putstr_fd("Error\n", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-}
-
-void	err_exit(char *str)
-{
-	ft_putstr_fd("Error\n", STDERR_FILENO);
-	ft_putendl_fd(str, STDERR_FILENO);
-	exit(EXIT_FAILURE);
-}
 
 void	free_components(char **components)
 {

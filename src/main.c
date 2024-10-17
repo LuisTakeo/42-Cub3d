@@ -20,7 +20,7 @@ void	okok(char *str)
 
 void	ok_free(char *err_msg, t_scene *scene)
 {
-	okok(err_msg);
+	printf("%s\n", err_msg);
 	if (scene->map.map_data)
 		free_map_data(scene->map.map_data, scene->map.map_height);
 	if (scene->file_lines)
@@ -30,44 +30,7 @@ void	ok_free(char *err_msg, t_scene *scene)
 	free(scene->south_texture);
 	free(scene->west_texture);
 	free(scene->east_texture);
-//	exit(EXIT_SUCCESS);
 }
-
-//int	main(int argc, char **argv)
-//{
-//	int		fd;
-//	t_scene	scene;
-//	char	**file_lines;
-//	int		line_count;
-//	t_pos	pos;
-//
-//	fd = 0;
-//	ft_memset(&scene, 0, sizeof(t_scene));
-//	if (!valid_arg(argc, argv, fd))
-//		return (EXIT_FAILURE);
-//	fd = open(argv[1], O_RDONLY);
-//	file_lines = read_file_lines(fd, &line_count);
-//	scene.file_lines = file_lines;
-//	scene.line_count = line_count;
-//	close(fd);
-//	if (!count_elements_from_lines(file_lines, line_count, &scene))
-//		return (free_line_array(file_lines, line_count), EXIT_FAILURE);
-//	parse_scene_from_lines(file_lines, line_count, &scene);
-//	if (!validate_elements(&scene))
-//		panic("invalid elements", &scene);
-//	parse_map_from_lines(file_lines, line_count, &scene, &pos);
-//	fill_map_with_zeros(&scene);
-//	check_map_surrounded(&scene, pos);
-//	printf("%s \n", scene.north_texture);
-//	printf("%s \n", scene.south_texture);
-//	printf("%s \n", scene.west_texture);
-//	printf("%s \n", scene.east_texture);
-//	printf("%s \n", scene.east_texture);
-//	printf("Ceiling color: %#X\n", scene.ceiling_color);
-//	printf("Floor color: %#X\n", scene.floor_color);
-//	printf("oi \n");
-//	ok_free("OK OK OK OK OK OK OK OK OK OK OK OK OOOOOOOOOOOKKKKKKKK", &scene);
-//}
 
 bool	process_scene_and_map(t_scene *scene, t_pos *pos)
 {

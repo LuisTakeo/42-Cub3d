@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
+/*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:48:42 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/10 22:50:00 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 01:54:50 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,11 @@ bool	handle_line(char *line, t_scene *scene, bool *map_started)
 	}
 	count_texture_elements(line, scene);
 	return (true);
+}
+
+bool	is_valid_element_line(char *line)
+{
+	return (ft_strncmp(line, "NO", 2) == 0 || ft_strncmp(line, "SO", 2) == 0
+		|| ft_strncmp(line, "WE", 2) == 0 || ft_strncmp(line, "EA", 2) == 0
+		|| *line == 'F' || *line == 'C');
 }
