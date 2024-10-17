@@ -12,40 +12,13 @@
 
 #include "../../includes/cub3d.h"
 
-float	calculate_return_of_dda(t_cub3d *cub3d, t_vector ray_dir, t_vector wall_map_pos)
+void	init_wall_dda(t_cub3d *cub3d, t_vector *dda_line_size,
+	t_vector *wall_map_pos)
 {
-	if (!cub3d->player.side)
-		return (((wall_map_pos.x - cub3d->player.pos.x / TILE_SIZE)
-				+ (1 - cub3d->player.step.x) / 2) / ray_dir.x);
-	else
-		return (((wall_map_pos.y - cub3d->player.pos.y / TILE_SIZE)
-				+ (1 - cub3d->player.step.y) / 2) / ray_dir.y);
-}
-
-int			ft_array_size(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (array && array[i])
-		i++;
-	return (i);
-}
-
-t_vector	filter_size(char **map, t_vector pos)
-{
-	t_vector	size;
-
-	size = pos;
-	if (pos.y < 0)
-		size.y = 0;
-	else if (pos.y > ft_array_size(map))
-		size.y = ft_array_size(map) - 1;
-	if (pos.x < 0)
-		size.x = 0;
-	else if (pos.x > ft_strlen(map[(int)pos.y]))
-		size.x = ft_strlen(map[(int)pos.y]) - 1;
-	return (size);
+	update_vector(wall_map_pos, cub3d->player.map_pos.x,
+		cub3d->player.map_pos.y);
+	update_vector(dda_line_size, cub3d->player.dist_to_side.x,
+		cub3d->player.dist_to_side.y);
 }
 
 float	calculate_dda(t_cub3d *cub3d, t_vector ray_dir)
@@ -53,26 +26,11 @@ float	calculate_dda(t_cub3d *cub3d, t_vector ray_dir)
 	t_vector	dda_line_size;
 	t_vector	wall_map_pos;
 
-	(void)ray_dir;
-	update_vector(&wall_map_pos, cub3d->player.map_pos.x,
-		cub3d->player.map_pos.y);
-	update_vector(&dda_line_size, cub3d->player.dist_to_side.x,
-		cub3d->player.dist_to_side.y);
+	init_wall_dda(cub3d, &dda_line_size, &wall_map_pos);
 	while (ft_strchr("0NEWS",
 			cub3d->map[(int)wall_map_pos.y][(int)wall_map_pos.x]))
 	{
-		if (dda_line_size.x < dda_line_size.y)
-		{
-			dda_line_size.x += cub3d->player.delta_dist.x;
-			wall_map_pos.x += cub3d->player.step.x;
-			cub3d->player.side = 0;
-		}
-		else
-		{
-			dda_line_size.y += cub3d->player.delta_dist.y;
-			wall_map_pos.y += cub3d->player.step.y;
-			cub3d->player.side = 1;
-		}
+		compare_and_calculate_x_and_y(cub3d, &dda_line_size, &wall_map_pos);
 		wall_map_pos = filter_size(cub3d->map, wall_map_pos);
 	}
 	if (!cub3d->player.side)
@@ -92,8 +50,6 @@ t_vector	find_ray_dir(t_cub3d *cub3d, int x)
 	camera_pixel = multi_vector(cub3d->player.camera_plane, multiplier);
 	return (sum_vector(cub3d->player.dir, camera_pixel));
 }
-
-
 
 t_vector	calculate_delta_dist(t_vector ray_dir)
 {

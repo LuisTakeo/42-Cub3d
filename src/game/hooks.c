@@ -23,7 +23,6 @@ void	ft_hook(void *param)
 		draw_walls(cub3d);
 		cub3d->is_moving = 0;
 	}
-
 }
 
 void	listen_moves(mlx_key_data_t keydata, void *param)
@@ -44,5 +43,4 @@ void	listen_moves(mlx_key_data_t keydata, void *param)
 		cub3d->is_moving = 1;
 		identify_move(cub3d, keydata);
 	}
-
 }

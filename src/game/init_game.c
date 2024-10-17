@@ -90,7 +90,6 @@ void	init_values(t_cub3d *cub3d)
 		,'\n');
 	init_textures(cub3d);
 	set_pos_and_dir(cub3d);
-	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
 	update_vector(&cub3d->player.step, 0, 0);
@@ -101,8 +100,8 @@ void	init_values(t_cub3d *cub3d)
 
 int	init_game(t_cub3d *cub3d)
 {
-	// mlx_set_setting(MLX_MAXIMIZED, true);
-	cub3d->mlx = mlx_init(WIDTH, HEIGHT, "Cub3d", false);
+	mlx_set_setting(MLX_STRETCH_IMAGE, true);
+	cub3d->mlx = mlx_init(WIDTH, HEIGHT, "Cub3d", true);
 	if (!cub3d->mlx)
 		return (EXIT_FAILURE);
 	cub3d->image = mlx_new_image(cub3d->mlx, WIDTH, HEIGHT);

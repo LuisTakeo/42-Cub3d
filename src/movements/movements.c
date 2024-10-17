@@ -80,17 +80,21 @@ int	verify_margin(t_cub3d *cub3d, t_vector dir, t_vector new_pos, int is_x)
 	float	margin;
 
 	margin = .2;
-	if (is_x && ((cub3d->map[(int)(new_pos.y + margin
-					* verify_signal(new_pos.y - (cub3d->player.pos.y / TILE_SIZE)))]
+	if (is_x && ((cub3d->map[(int)((new_pos.y / TILE_SIZE) + margin
+					* verify_signal((new_pos.y / TILE_SIZE)
+						- (cub3d->player.pos.y / TILE_SIZE)))]
 			[(int)new_pos.x] == '1')
-		|| (cub3d->map[(int)(new_pos.y)][(int)(new_pos.x + margin
-		* verify_signal(new_pos.x - (cub3d->player.pos.x / TILE_SIZE)))] == '1')))
+		|| (cub3d->map[(int)((new_pos.y / TILE_SIZE))]
+		[(int)((new_pos.x / TILE_SIZE) + margin
+			* verify_signal((new_pos.x / TILE_SIZE)
+				- (cub3d->player.pos.x / TILE_SIZE)))] == '1')))
 		return (0);
-	if (!is_x && ((cub3d->map[(int)(new_pos.y + margin
-					* verify_signal(new_pos.y - dir.y))][(int)new_pos.x] == '1')
-				|| (cub3d->map[(int)(new_pos.y)][(int)(new_pos.x + margin
-				* verify_signal(new_pos.x - dir.x))] == '1')))
+	if (!is_x && ((cub3d->map[(int)((new_pos.y / TILE_SIZE) + margin
+					* verify_signal((new_pos.y / TILE_SIZE)
+						- dir.y))][(int)(new_pos.x / TILE_SIZE)] == '1')
+		|| (cub3d->map[(int)((new_pos.y / TILE_SIZE))]
+			[(int)((new_pos.x / TILE_SIZE) + margin
+				* verify_signal((new_pos.x / TILE_SIZE) - dir.x))] == '1')))
 		return (0);
-
 	return (1);
 }

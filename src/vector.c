@@ -47,6 +47,5 @@ int	update_vector(t_vector *vector, double x, double y)
 		return (EXIT_FAILURE);
 	vector->x = x;
 	vector->y = y;
-
 	return (EXIT_SUCCESS);
 }
