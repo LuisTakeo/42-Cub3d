@@ -1,9 +1,9 @@
-SO ./t1.png
-WE ./t1.png
+SO ./images/yonkous.png
+WE ./images/shichibukais.png
 F 240,233,133
-EA ./t1.png
+EA ./images/wanted.png
 C 225,0,0
-NO ./t1.png
+NO ./images/newyonko.png
 
 1111111
 1000001

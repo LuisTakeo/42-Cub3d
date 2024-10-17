@@ -1,12 +1,12 @@
-NO ./t1.png
+NO ./images/newyonko.png
 
-SO ./t1.png
+SO ./images/yonkous.png
 
-WE ./t1.png
+WE ./images/shichibukais.png
 
 
 
-EA ./t1.png
+EA ./images/wanted.png
 
 
 
