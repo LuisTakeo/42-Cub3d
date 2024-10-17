@@ -31,7 +31,7 @@ void	draw_ceiling(t_cub3d *cub3d)
 	while (i < WIDTH)
 	{
 		draw_vertical_line(cub3d->image, (t_vector){i, 0},
-			HEIGHT / 2, get_rgba(200, 200, 255, 255));
+			HEIGHT / 2, cub3d->scene.ceiling_color);
 		i++;
 	}
 }
@@ -44,7 +44,7 @@ void	draw_floor(t_cub3d *cub3d)
 	while (i < WIDTH)
 	{
 		draw_vertical_line(cub3d->image, (t_vector){i, HEIGHT / 2 + 1},
-			HEIGHT, 0x11AAFFFF);
+			HEIGHT, cub3d->scene.floor_color);
 		i++;
 	}
 }

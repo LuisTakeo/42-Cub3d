@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:50:09 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 01:39:33 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 02:22:41 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 int	rgb_to_hex(int r, int g, int b)
 {
-	return ((r << 16) | (g << 8) | b);
+	return ((r << 24) | (g << 16) |(b << 8) | 0xFF);
 }
 
 void	hex_to_rgb(int hex, int *r, int *g, int *b)
 {
-	*r = (hex >> 16) & 0xFF;
-	*g = (hex >> 8) & 0xFF;
-	*b = hex & 0xFF;
+	*r = (hex >> 24) & 0xFF;
+	*g = (hex >> 16) & 0xFF;
+	*b = (hex >> 8) & 0xFF;
 }
 
 int	count_commas(const char *line)
