@@ -75,49 +75,11 @@ void	set_pos_and_dir(t_cub3d *cub3d)
 	}
 }
 
-void	set_pos_and_dir(t_cub3d *cub3d)
-{
-	int		i;
-	int		j;
-
-	i = -1;
-	while (cub3d->map[++i])
-	{
-		j = -1;
-		while (cub3d->map[i][++j])
-		{
-			if (ft_strchr("NSEW", cub3d->map[i][j]))
-			{
-				update_vector(&cub3d->player.pos,
-					(j * TILE_SIZE + TILE_SIZE / 2.0),
-					(i * TILE_SIZE + TILE_SIZE / 2.0));
-				init_direction(cub3d, cub3d->map[i][j]);
-				return ;
-			}
-		}
-	}
-}
 
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
-//	cub3d->map = ft_split(
-//		" 11111111\n"
-//		"1010000001\n"
-//		"1000000001\n"
-//		"1010001001\n"
-//		"1000S00001\n"
-//		"1000000001\n"
-//		"1000000001\n"
-//		"1111111111"
-//		,'\n');
-	// cub3d->map = ft_split(
-	// 	"212\n"
-	// 	"1N1\n"
-	// 	"212"
-	// 	,'\n');
 	set_pos_and_dir(cub3d);
-	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
 	update_vector(&cub3d->player.step, 0, 0);
