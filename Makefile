@@ -1,5 +1,5 @@
-NAME = cub3d
-NAME_BONUS = cub3d_bonus
+NAME = cub3D
+NAME_BONUS = cub3D_bonus
 LIBS_FOLDER = ./lib
 LIBMLX = $(LIBS_FOLDER)/MLX42
 LIBFT = $(LIBS_FOLDER)/libft
