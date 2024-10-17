@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:48:42 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 01:54:50 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:16:45 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ bool	is_whitespace(char c)
 
 bool	is_map_line(char *line)
 {
-	return (ft_isdigit(*line) || *line == SPACE || *line == TAB);
+	return (ft_isdigit(*line) || *line == ' ' || *line == '\t');
 }
 
 bool	handle_line(char *line, t_scene *scene, bool *map_started)

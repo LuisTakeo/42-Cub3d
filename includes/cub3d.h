@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:04:22 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/16 20:19:46 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 17:16:01 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@
 # define HEIGHT 600
 # define VALID_M "01NEWS"
 # define VALID_P "NEWS"
-# define WALL '1'
-# define GROUND '0'
-# define SPACE ' '
-# define TAB '\t'
 
 # include <unistd.h>
 # include <stdio.h>
