@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 01:42:01 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/17 17:04:57 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 17:58:16 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,31 +26,20 @@ bool	is_empty_line(char *line)
 bool	handle_map_line(char *line, bool *map_started)
 {
 	if (is_map_line(&line[0]))
-	{
 		*map_started = true;
-	}
 	else if (!is_map_line(line) && *map_started)
-	{
-		err("Stopped parsing at non-map line after map started.");
 		return (false);
-	}
 	return (true);
 }
 
 bool	non_map_line(char *line, bool *map_started)
 {
 	if (is_map_line(&line[0]))
-	{
 		*map_started = true;
-	}
 	else if (!is_empty_line(line) && is_map_line(line) && *map_started)
-	{
 		return (false);
-	}
 	else if (!is_empty_line(line) && !is_map_line(line) && *map_started)
-	{
 		return (false);
-	}
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 01:38:21 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/17 01:38:21 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:58:29 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ bool	validate_color_components(char **components)
 	if (ft_strlen(components[0]) > 3 || ft_strlen(components[1]) > 3
 		|| ft_strlen(components[2]) > 3)
 	{
-		err("Error: Invalid color format (length)");
+		err("Invalid color format (length)");
 		free_components(components);
 		return (false);
 	}
