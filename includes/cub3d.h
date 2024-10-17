@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:04:22 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/16 21:06:34 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 17:37:27 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 # include <math.h>
 # include <fcntl.h>
 # include <stdbool.h>
-# include <stdio.h>
-# include <stdlib.h>
 
 # include "../lib/libft/libft.h"
 # include "../lib/libft/gnl/includes/get_next_line.h"

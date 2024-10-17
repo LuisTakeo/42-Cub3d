@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 05:41:12 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 17:03:40 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ bool	non_map_line(char *line, bool *map_started)
 		*map_started = false;
 	}
 	else if (!is_empty_line(line) && is_map_line(line) && !*map_started)
+	{
+		return (false);
+	}
+	else if (!is_empty_line(line) && !is_map_line(line) && !*map_started)
 	{
 		return (false);
 	}
