@@ -49,14 +49,14 @@ void	handle_floor_color(t_scene *scene, char *line)
 		if (!temp)
 		{
 			free(line);
-			scene->floor_color = -1;
+			scene->floor_color = -2;
 			return ;
 		}
 		scene->floor_color = parse_color(temp);
-		if (scene->floor_color == EXIT_FAILURE)
+		if (scene->floor_color == -2)
 		{
 			free(temp);
-			scene->floor_color = -1;
+			scene->floor_color = -2;
 			return ;
 		}
 	}
@@ -77,14 +77,14 @@ void	handle_ceiling_color(t_scene *scene, char *line)
 		if (!temp)
 		{
 			free(line);
-			scene->ceiling_color = -1;
+			scene->ceiling_color = -2;
 			return ;
 		}
 		scene->ceiling_color = parse_color(temp);
-		if (scene->ceiling_color == EXIT_FAILURE)
+		if (scene->ceiling_color == -2)
 		{
 			free(temp);
-			scene->ceiling_color = -1;
+			scene->ceiling_color = -2;
 			return ;
 		}
 	}

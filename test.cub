@@ -1,10 +1,10 @@
-NO ./src/images/mugiwara.png
-SO ./src/images/shankusu.png
-WE ./src/images/worldgov.png
-EA ./src/images/sun.png
+NO ./images/newyonko.png
+SO ./images/yonkous.png
+WE ./images/shichibukais.png
+EA ./images/wanted.png
 
-F 255,0,255
-C 255,255,0
+F 255,255,0
+C 255,255,255
 
 111111111111111
 11100010110111011

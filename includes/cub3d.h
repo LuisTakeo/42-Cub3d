@@ -221,7 +221,7 @@ void			handle_floor_color(t_scene *scene, char *line);
 void			handle_ceiling_color(t_scene *scene, char *line);
 void			parse_scene_from_lines(char **lines, int line_count,
 					t_scene *scene);
-int				rgb_to_hex(int r, int g, int b);
+int32_t			rgb_to_hex(int r, int g, int b);
 void			hex_to_rgb(int hex, int *r, int *g, int *b);
 void			print_flood_filled_map(t_scene *scene, bool **filled_map);
 int				check_map_surrounded(t_scene *scene, t_pos pos);

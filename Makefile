@@ -5,7 +5,7 @@ LIBMLX = $(LIBS_FOLDER)/MLX42
 LIBFT = $(LIBS_FOLDER)/libft
 HEADERS = ./includes/cub3d.h
 
-CC = clang-12
+CC = cc
 FLAGS = -Wextra -Wall -Werror
 FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a

@@ -6,13 +6,13 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:50:09 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 02:22:41 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 04:44:32 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
-int	rgb_to_hex(int r, int g, int b)
+int32_t	rgb_to_hex(int r, int g, int b)
 {
 	return ((r << 24) | (g << 16) |(b << 8) | 0xFF);
 }
@@ -57,16 +57,16 @@ int	parse_color(char *line)
 	int		b;
 
 	if (count_commas(line) != 2)
-		return (err("Color must contain exactly two commas."), EXIT_FAILURE);
+		return (err("Color must contain exactly two commas."), -2);
 	color = ft_split(line, ',');
 	if (!color)
-		return (err("ft_split"), EXIT_FAILURE);
+		return (err("ft_split"), -2);
 	if (!validate_color_components(color))
-		return (EXIT_FAILURE);
+		return (-2);
 	if (!rgb_digit(color[0]) || !rgb_digit(color[1]) || !rgb_digit(color[2]))
 	{
 		free_components(color);
-		return (err("Color values must contain only digits."), EXIT_FAILURE);
+		return (err("Color values must contain only digits."), -2);
 	}
 	r = ft_atoi(color[0]);
 	g = ft_atoi(color[1]);
@@ -74,6 +74,6 @@ int	parse_color(char *line)
 	free_components(color);
 	if (!is_valid_color_value(r) || !is_valid_color_value(g)
 		|| !is_valid_color_value(b))
-		return (err("Color values must be between 0 and 255"), EXIT_FAILURE);
+		return (err("Color values must be between 0 and 255"), -2);
 	return (rgb_to_hex(r, g, b));
 }

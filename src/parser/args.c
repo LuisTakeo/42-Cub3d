@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:24:20 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 01:37:15 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 04:39:49 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ bool	validate_elements(t_scene *scene)
 		|| !validate_file(scene->east_texture, ".png")
 		|| !validate_file(scene->south_texture, ".png"))
 		return (err("Texture file does not exist"), false);
-	if (scene->ceiling_color == -1 || scene->floor_color == -1)
+	if (scene->ceiling_color == -2 || scene->floor_color == -2)
 		return (err("Color values missing"), false);
 	return (true);
 }
