@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:57 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/09/11 21:58:57 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/15 18:46:51 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,21 @@ void	init_direction(t_cub3d *cub3d, char direction)
 		update_vector(&cub3d->player.dir, 1, 0);
 		update_vector(&cub3d->player.camera_plane, 0, 0.66);
 	}
+}
 
+void	init_textures(t_cub3d *cub3d)
+{
+	cub3d->north = mlx_load_png(cub3d->scene.north_texture);
+	cub3d->south = mlx_load_png(cub3d->scene.south_texture);
+	cub3d->east = mlx_load_png(cub3d->scene.east_texture);
+	cub3d->west = mlx_load_png(cub3d->scene.west_texture);
+	if (!cub3d->north || !cub3d->south || !cub3d->east || !cub3d->west)
+	{
+		free_map(cub3d->map);
+		err_exit("Error loading textures");
+		ok_free("", &cub3d->scene);
+		exit(EXIT_FAILURE);
+	}
 }
 
 void	set_pos_and_dir(t_cub3d *cub3d)
@@ -61,33 +75,11 @@ void	set_pos_and_dir(t_cub3d *cub3d)
 	}
 }
 
-void	init_textures(t_cub3d *cub3d)
-{
-	cub3d->north = mlx_load_png("./src/images/mugiwara.png");
-	cub3d->south = mlx_load_png("./src/images/shankusu.png");
-	cub3d->east = mlx_load_png("./src/images/sun.png");
-	cub3d->west = mlx_load_png("./src/images/worldgov.png");
-	if (!cub3d->north || !cub3d->south || !cub3d->east || !cub3d->west)
-	{
-		free_map(cub3d->map);
-		// mlx_terminate(cub3d->mlx);
-		exit(EXIT_FAILURE);
-	}
-}
-
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
-	cub3d->map = ft_split(
-		" 11111111\n"
-		"1010000001\n"
-		"1000000001\n"
-		"1010001001\n"
-		"1000S00001\n"
-		"1000000001\n"
-		"1000000001\n"
-		"1111111111"
-		,'\n');
+	cub3d->image = NULL;
+	cub3d->map = push_map(&cub3d->scene.map);
 	init_textures(cub3d);
 	set_pos_and_dir(cub3d);
 	update_vector(&cub3d->ray, 0, 0);
