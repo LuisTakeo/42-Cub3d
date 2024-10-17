@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:57 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/09/11 21:58:57 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/15 18:46:51 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,21 @@ void	init_direction(t_cub3d *cub3d, char direction)
 
 }
 
+
+void	init_textures(t_cub3d *cub3d)
+{
+	cub3d->north = mlx_load_png("./src/images/mugiwara.png");
+	cub3d->south = mlx_load_png("./src/images/shankusu.png");
+	cub3d->east = mlx_load_png("./src/images/sun.png");
+	cub3d->west = mlx_load_png("./src/images/worldgov.png");
+	if (!cub3d->north || !cub3d->south || !cub3d->east || !cub3d->west)
+	{
+		free_map(cub3d->map);
+		// mlx_terminate(cub3d->mlx);
+		exit(EXIT_FAILURE);
+	}
+}
+
 void	set_pos_and_dir(t_cub3d *cub3d)
 {
 	int		i;
@@ -53,7 +68,6 @@ void	set_pos_and_dir(t_cub3d *cub3d)
 				update_vector(&cub3d->player.pos,
 					(j * TILE_SIZE + TILE_SIZE / 2.0),
 					(i * TILE_SIZE + TILE_SIZE / 2.0));
-				update_vector(&cub3d->player.map_pos, j, i);
 				init_direction(cub3d, cub3d->map[i][j]);
 				return ;
 			}
@@ -61,35 +75,49 @@ void	set_pos_and_dir(t_cub3d *cub3d)
 	}
 }
 
-void	init_textures(t_cub3d *cub3d)
+void	set_pos_and_dir(t_cub3d *cub3d)
 {
-	cub3d->north = mlx_load_png("./src/images/mugiwara.png");
-	cub3d->south = mlx_load_png("./src/images/shankusu.png");
-	cub3d->east = mlx_load_png("./src/images/sun.png");
-	cub3d->west = mlx_load_png("./src/images/worldgov.png");
-	if (!cub3d->north || !cub3d->south || !cub3d->east || !cub3d->west)
+	int		i;
+	int		j;
+
+	i = -1;
+	while (cub3d->map[++i])
 	{
-		free_map(cub3d->map);
-		// mlx_terminate(cub3d->mlx);
-		exit(EXIT_FAILURE);
+		j = -1;
+		while (cub3d->map[i][++j])
+		{
+			if (ft_strchr("NSEW", cub3d->map[i][j]))
+			{
+				update_vector(&cub3d->player.pos,
+					(j * TILE_SIZE + TILE_SIZE / 2.0),
+					(i * TILE_SIZE + TILE_SIZE / 2.0));
+				init_direction(cub3d, cub3d->map[i][j]);
+				return ;
+			}
+		}
 	}
 }
 
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
-	cub3d->map = ft_split(
-		" 11111111\n"
-		"1010000001\n"
-		"1000000001\n"
-		"1010001001\n"
-		"1000S00001\n"
-		"1000000001\n"
-		"1000000001\n"
-		"1111111111"
-		,'\n');
-	init_textures(cub3d);
+//	cub3d->map = ft_split(
+//		" 11111111\n"
+//		"1010000001\n"
+//		"1000000001\n"
+//		"1010001001\n"
+//		"1000S00001\n"
+//		"1000000001\n"
+//		"1000000001\n"
+//		"1111111111"
+//		,'\n');
+	// cub3d->map = ft_split(
+	// 	"212\n"
+	// 	"1N1\n"
+	// 	"212"
+	// 	,'\n');
 	set_pos_and_dir(cub3d);
+	// update_vector(&cub3d->plane, 0, 0);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);
 	update_vector(&cub3d->player.step, 0, 0);

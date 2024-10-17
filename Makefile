@@ -5,7 +5,7 @@ LIBMLX = $(LIBS_FOLDER)/MLX42
 LIBFT = $(LIBS_FOLDER)/libft
 HEADERS = ./includes/cub3d.h
 
-CC = cc
+CC = clang-12
 FLAGS = -Wextra -Wall -Werror
 FLAGSOMLX = -Wunreachable-code -Ofast
 LIBS = $(LIBMLX)/build/libmlx42.a $(LIBFT)/libft.a
@@ -14,8 +14,9 @@ FLAGSMLX = -ldl -lglfw -pthread -lm
 # SRC = ./src/main.c ./src/init_game.c ./src/finish_game.c ./src/draw.c ./src/vector.c ./src/walls.c
 SRC_FILE = main vector \
 	$(addprefix game/, init_game finish_game hooks) \
-	$(addprefix graphic/, draw draw_utils walls walls_utils dda_functions dda_utils) \
-	$(addprefix movements/, movements)
+	$(addprefix graphic/, draw walls dda_functions) \
+	$(addprefix movements/, movements) \
+	$(addprefix parser/, args color flood_fill getter map textures utils validate_map freerror)
 
 SRC = $(addsuffix .c, $(addprefix ./src/, $(SRC_FILE)))
 

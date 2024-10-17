@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:37 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/09/11 21:58:37 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:02:37 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,11 @@ void	free_textures(t_cub3d *cub3d)
 
 void	finish_game(t_cub3d *cub3d)
 {
+	t_scene scene;
 	if (cub3d->mlx)
 		mlx_terminate(cub3d->mlx);
-	if (cub3d->map)
-		free_map(cub3d->map);
-	free_textures(cub3d);
+	ok_free("oi", &scene);
+
+	//if (cub3d->map)
+	//	free_map(cub3d->map);
 }
