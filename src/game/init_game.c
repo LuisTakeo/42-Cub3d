@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:58:57 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/15 18:46:51 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/17 19:18:26 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,15 @@ void	init_textures(t_cub3d *cub3d)
 	if (!cub3d->north || !cub3d->south || !cub3d->east || !cub3d->west)
 	{
 		free_map(cub3d->map);
-		err_exit("Error loading textures");
-		ok_free("", &cub3d->scene);
-		exit(EXIT_FAILURE);
+		if (cub3d->north)
+			mlx_delete_texture(cub3d->north);
+		if (cub3d->west)
+			mlx_delete_texture(cub3d->west);
+		if (cub3d->east)
+			mlx_delete_texture(cub3d->east);
+		if (cub3d->south)
+			mlx_delete_texture(cub3d->south);
+		panic_exit("", &cub3d->scene);
 	}
 }
 
