@@ -3,8 +3,8 @@ SO ./images/yonkous.png
 WE ./images/shichibukais.png
 EA ./images/wanted.png
 
-F 255,255,0
-C 255,255,255
+F 111,0,0
+C 111,0,111
 
 111111111111111
 11100010110111011
