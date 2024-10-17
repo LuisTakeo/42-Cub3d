@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:36:24 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/16 20:36:15 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 16:26:55 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	okok(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 }
 
-void	ok_free(char *err_msg, t_scene *scene)
+void	ok_free(char *ok_msg, t_scene *scene)
 {
-	printf("%s\n", err_msg);
+	printf("%s\n", ok_msg);
 	if (scene->map.map_data)
 		free_map_data(scene->map.map_data, scene->map.map_height);
 	if (scene->file_lines)
