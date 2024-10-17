@@ -87,9 +87,6 @@ bool	process_scene_and_map(t_scene *scene, t_pos *pos)
 
 void	init_all(t_cub3d *cub3d, t_scene *scene, t_pos *pos, int *fd)
 {
-	(void)scene;
-	(void)pos;
-	(void)cub3d;
 	ft_memset(cub3d, 0, sizeof(t_cub3d));
 	ft_memset(scene, 0, sizeof(t_scene));
 	ft_memset(pos, 0, sizeof(t_pos));
@@ -102,12 +99,7 @@ int	main(int argc, char **argv)
 	t_pos	pos;
 	int		fd;
 
-	//init_all(&cub3d, &scene, &pos, &fd);
-	fd = 0;
-	ft_memset(&cub3d.scene, 0, sizeof(t_scene));
-	ft_memset(&pos, 0, sizeof(t_pos));
-	ft_memset(&cub3d, 0, sizeof(t_cub3d));
-
+	init_all(&cub3d, &cub3d.scene, &pos, &fd);
 	if (!valid_arg(argc, argv, fd))
 		return (EXIT_FAILURE);
 	fd = open(argv[1], O_RDONLY);
@@ -122,43 +114,3 @@ int	main(int argc, char **argv)
 	finish_game(&cub3d);
 	return (EXIT_SUCCESS);
 }
-
-//int	main(int argc, char **argv)
-//{
-//	t_cub3d	cub3d;
-//
-//	int		fd;
-//	t_scene	scene;
-//	t_pos	pos;
-//
-//	fd = 0;
-//	ft_memset(&scene, 0, sizeof(t_scene));
-//	if (!valid_arg(argc, argv, fd))
-//		return (EXIT_FAILURE);
-//	fd = open(argv[1], O_RDONLY);
-//	scene.file_lines = read_file_lines(fd, &scene);
-//	close(fd);
-//	if (!count_elements_from_lines(scene.file_lines, scene.line_count, &scene))
-//		return (free_line_array(scene.file_lines, scene.line_count), EXIT_FAILURE);
-//	parse_scene_from_lines(scene.file_lines, scene.line_count, &scene);
-//	if (!validate_elements(&scene))
-//		panic("invalid elements", &scene);
-//	parse_map_from_lines(scene.file_lines, scene.line_count, &scene, &pos);
-//	fill_map_with_zeros(&scene);
-//	check_map_surrounded(&scene, pos);
-//	(void)argc;
-//	(void)argv;
-//	(void)cub3d;
-//	printf("Init Cub3d\n");
-//	//pos.x++;
-//	//pos.y++;
-//	printf("x %i y %i\n", pos.x, pos.y);
-//	cub3d.map = scene.map.map_data;
-////	ok_free("free", &scene);
-//	init_values(&cub3d);
-//	init_game(&cub3d);
-//	finish_game(&cub3d);
-//	return (EXIT_SUCCESS);
-//}
-//
-
