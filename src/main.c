@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:36:24 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/16 20:36:15 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 18:11:19 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@ void	okok(char *str)
 	ft_putendl_fd(str, STDERR_FILENO);
 }
 
-void	ok_free(char *err_msg, t_scene *scene)
+void	ok_free(char *ok_msg, t_scene *scene)
 {
-	printf("%s\n", err_msg);
+	printf("%s\n", ok_msg);
 	if (scene->map.map_data)
 		free_map_data(scene->map.map_data, scene->map.map_height);
 	if (scene->file_lines)
@@ -43,7 +43,7 @@ bool	process_scene_and_map(t_scene *scene, t_pos *pos)
 	if (!validate_elements(scene))
 		panic("Invalid elements", scene);
 	parse_map_from_lines(scene->file_lines, scene->line_count, scene, pos);
-	fill_map_with_zeros(scene);
+	fill_map_with_twos(scene);
 	check_map_surrounded(scene, *pos);
 	return (true);
 }

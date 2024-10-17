@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 23:24:20 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 04:39:49 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 19:04:41 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ bool	validate_file(const char *filename, const char *ext)
 {
 	if (is_directory(filename))
 	{
-		err("Invalid file. Must be a file");
+		err("It's a folder.");
 		return (false);
 	}
 	if (!validate_extension(filename, ext))
@@ -53,7 +53,7 @@ bool	validate_file(const char *filename, const char *ext)
 	{
 		if (!is_empty(filename))
 		{
-			err("emptyyyyy");
+			err("Empty file");
 			return (false);
 		}
 	}
@@ -75,7 +75,7 @@ bool	validate_elements(t_scene *scene)
 		|| !validate_file(scene->west_texture, ".png")
 		|| !validate_file(scene->east_texture, ".png")
 		|| !validate_file(scene->south_texture, ".png"))
-		return (err("Texture file does not exist"), false);
+		return (err("Texture problem"), false);
 	if (scene->ceiling_color == -2 || scene->floor_color == -2)
 		return (err("Color values missing"), false);
 	return (true);

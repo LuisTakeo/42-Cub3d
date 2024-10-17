@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 01:43:03 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:35:48 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	adjust_line_length(t_scene *scene, int i, int max_width)
 	}
 }
 
-void	fill_map_with_zeros(t_scene *scene)
+void	fill_map_with_twos(t_scene *scene)
 {
 	int	i;
 	int	max_width;

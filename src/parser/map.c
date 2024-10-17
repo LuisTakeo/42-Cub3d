@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:12 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/17 01:35:27 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 18:57:30 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	validate_map_characters(char *line, int current_width, t_scene *scene,
 void	final_map_validation(t_scene *scene)
 {
 	if (scene->player_count != 1)
-		panic("This is not a multiplayer game", scene);
+		panic("This is not a multiplayer game, nor a non player game", scene);
 	if (scene->invalid_c > 0)
 		panic("Invalid characters in map", scene);
 	if (scene->map.map_width > 100)

@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 01:42:01 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/17 01:42:01 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:58:16 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,20 @@ bool	is_empty_line(char *line)
 bool	handle_map_line(char *line, bool *map_started)
 {
 	if (is_map_line(&line[0]))
-	{
 		*map_started = true;
-	}
 	else if (!is_map_line(line) && *map_started)
-	{
-		err("Stopped parsing at non-map line after map started.");
 		return (false);
-	}
 	return (true);
 }
 
 bool	non_map_line(char *line, bool *map_started)
 {
 	if (is_map_line(&line[0]))
-	{
 		*map_started = true;
-	}
-	else if (!is_empty_line(line) && !is_map_line(line) && *map_started)
-	{
+	else if (!is_empty_line(line) && is_map_line(line) && *map_started)
 		return (false);
-	}
+	else if (!is_empty_line(line) && !is_map_line(line) && *map_started)
+		return (false);
 	return (true);
 }
 
@@ -75,8 +68,6 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	while (i < line_count)
 	{
 		line = lines[i];
-		if (!non_map_line(line, &scene->map_started))
-			panic_exit("garbage after the map", scene);
 		if (!handle_map_line(line, &scene->map_started))
 			break ;
 		if (scene->map_started)

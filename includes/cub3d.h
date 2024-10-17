@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 21:04:22 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/16 20:19:46 by phraranha        ###   ########.org.br   */
+/*   Updated: 2024/10/17 17:36:02 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@
 # define HEIGHT 600
 # define VALID_M "01NEWS"
 # define VALID_P "NEWS"
-# define WALL '1'
-# define GROUND '0'
-# define SPACE ' '
-# define TAB '\t'
 
 # include <unistd.h>
 # include <stdio.h>
@@ -246,7 +242,7 @@ bool			is_empty(const char *filename);
 bool			validate_file(const char *filename, const char *ext);
 bool			validate_elements(t_scene *scene);
 bool			valid_arg(int ac, char **av, int fd);
-void			fill_map_with_zeros(t_scene *scene);
+void			fill_map_with_twos(t_scene *scene);
 char			**convert_to_split(t_scene *scene);
 bool			is_valid_element_line(char *line);
 void			parse_map_from_lines(char **lines, int line_count,
