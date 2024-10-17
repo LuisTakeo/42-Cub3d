@@ -1,7 +1,7 @@
-NO ./images/newyonko.png
-SO ./images/yonkous.png
-WE ./images/shichibukais.png
-EA ./images/wanted.png
+NO ./images/n.png
+SO ./images/s.png
+WE ./images/w.png
+EA ./images/e.png
 F 266,233,133
 C 225,0,0
 

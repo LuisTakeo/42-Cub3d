@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 22:18:50 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/16 22:18:50 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:52:40 by paranha          ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,15 @@ mlx_texture_t	*select_texture(t_cub3d *cub3d)
 	if (!cub3d->player.side)
 	{
 		if (cub3d->player.step.x == -1)
-			return (cub3d->north);
+			return (cub3d->west);
 		else
-			return (cub3d->south);
+			return (cub3d->east);
 	}
 	else
 	{
 		if (cub3d->player.step.y == -1)
-			return (cub3d->west);
+			return (cub3d->north);
 		else
-			return (cub3d->east);
+			return (cub3d->south);
 	}
 }
