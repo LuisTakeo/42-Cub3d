@@ -1,7 +1,7 @@
-NO ./t1.png
-SO ./t1.png
-WE ./t1.png
-EA ./t1.png
+NO ./src/images/mugiwara.png
+SO ./src/images/shankusu.png
+WE ./src/images/worldgov.png
+EA ./src/images/sun.png
 
 F 220,100,0
 C 225,30,0

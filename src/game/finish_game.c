@@ -37,10 +37,12 @@ void	free_textures(t_cub3d *cub3d)
 
 void	finish_game(t_cub3d *cub3d)
 {
-	t_scene scene;
 	if (cub3d->mlx)
 		mlx_terminate(cub3d->mlx);
-	ok_free("oi", &scene);
+	free_textures(cub3d);
+	if (cub3d->map)
+		free_map(cub3d->map);
+	ok_free("oi", &cub3d->scene);
 
 	//if (cub3d->map)
 	//	free_map(cub3d->map);

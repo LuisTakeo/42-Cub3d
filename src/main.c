@@ -99,25 +99,24 @@ void	init_all(t_cub3d *cub3d, t_scene *scene, t_pos *pos, int *fd)
 int	main(int argc, char **argv)
 {
 	t_cub3d	cub3d;
-	t_scene	scene;
 	t_pos	pos;
 	int		fd;
 
 	//init_all(&cub3d, &scene, &pos, &fd);
 	fd = 0;
-	ft_memset(&scene, 0, sizeof(t_scene));
-	ft_memset(&pos, 0, sizeof(t_scene));
-	ft_memset(&cub3d, 0, sizeof(t_scene));
+	ft_memset(&cub3d.scene, 0, sizeof(t_scene));
+	ft_memset(&pos, 0, sizeof(t_pos));
+	ft_memset(&cub3d, 0, sizeof(t_cub3d));
 
 	if (!valid_arg(argc, argv, fd))
 		return (EXIT_FAILURE);
 	fd = open(argv[1], O_RDONLY);
-	scene.file_lines = read_file_lines(fd, &scene);
+	cub3d.scene.file_lines = read_file_lines(fd, &cub3d.scene);
 	close(fd);
-	if (!process_scene_and_map(&scene, &pos))
+	if (!process_scene_and_map(&cub3d.scene, &pos))
 		return (EXIT_FAILURE);
 	(void)cub3d;
-	cub3d.map = scene.map.map_data;
+	cub3d.map = cub3d.scene.map.map_data;
 	init_values(&cub3d);
 	init_game(&cub3d);
 	finish_game(&cub3d);

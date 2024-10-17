@@ -4,7 +4,8 @@
 		"mlx42.h": "c",
 		"libft.h": "c",
 		"get_next_line.h": "c",
-		"cmath": "cpp"
+		"cmath": "cpp",
+		"system_error": "c"
 	},
 	"cmake.sourceDirectory": "/nfs/homes/tpaim-yu/repo/42-Cub3d/lib/MLX42"
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   flood_fill.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
+/*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:51:19 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/15 17:18:40 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/16 23:23:40 by tpaim-yu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 {
 	bool	is_surrounded;
 
-	print_flood_filled_map(scene, filled_map); //DELETE
-	printf("\n"); // DELETE
 	if (i < 0 || i >= scene->map.map_height || j < 0
 		|| j >= scene->map.map_width)
 	{
@@ -54,8 +52,6 @@ static bool	floodfill(t_scene *scene, bool **filled_map, int i, int j)
 	}
 	if (scene->map.map_data[i][j] == '1' || filled_map[i][j] == true)
 	{
-	//	if(scene->map.map_data[i][j] == '1')
-	//		scene->map.map_data[i][j] = 'W';
 		printf("Hit a wall or visited at (%d, %d)\n", i, j);
 		return (true);
 	}

@@ -40,14 +40,15 @@ void	init_direction(t_cub3d *cub3d, char direction)
 
 void	init_textures(t_cub3d *cub3d)
 {
-	cub3d->north = mlx_load_png("./src/images/mugiwara.png");
-	cub3d->south = mlx_load_png("./src/images/shankusu.png");
-	cub3d->east = mlx_load_png("./src/images/sun.png");
-	cub3d->west = mlx_load_png("./src/images/worldgov.png");
+	cub3d->north = mlx_load_png(cub3d->scene.north_texture);
+	cub3d->south = mlx_load_png(cub3d->scene.south_texture);
+	cub3d->east = mlx_load_png(cub3d->scene.east_texture);
+	cub3d->west = mlx_load_png(cub3d->scene.west_texture);
+
 	if (!cub3d->north || !cub3d->south || !cub3d->east || !cub3d->west)
 	{
 		free_map(cub3d->map);
-		// mlx_terminate(cub3d->mlx);
+		ok_free("Error loading textures", &cub3d->scene);
 		exit(EXIT_FAILURE);
 	}
 }
@@ -68,6 +69,7 @@ void	set_pos_and_dir(t_cub3d *cub3d)
 				update_vector(&cub3d->player.pos,
 					(j * TILE_SIZE + TILE_SIZE / 2.0),
 					(i * TILE_SIZE + TILE_SIZE / 2.0));
+				update_vector(&cub3d->player.map_pos, j, i);
 				init_direction(cub3d, cub3d->map[i][j]);
 				return ;
 			}
@@ -75,10 +77,34 @@ void	set_pos_and_dir(t_cub3d *cub3d)
 	}
 }
 
+char	**push_map(t_map *map)
+{
+	char	**new_map;
+	int		i;
+
+	new_map = ft_calloc(map->map_height + 1, sizeof(char *));
+	if (!new_map)
+		err_exit("Memory allocation failed for new_map");
+	i = 0;
+	while (i < map->map_height)
+	{
+		new_map[i] = ft_strdup(map->map_data[i]);
+		if (!new_map[i])
+		{
+			free_map(new_map);
+			err_exit("Memory allocation failed for new_map row");
+		}
+		i++;
+	}
+	return (new_map);
+}
 
 void	init_values(t_cub3d *cub3d)
 {
 	cub3d->mlx = NULL;
+	cub3d->image = NULL;
+	cub3d->map = push_map(&cub3d->scene.map);
+	init_textures(cub3d);
 	set_pos_and_dir(cub3d);
 	update_vector(&cub3d->ray, 0, 0);
 	update_vector(&cub3d->player.delta_dist, 0, 0);

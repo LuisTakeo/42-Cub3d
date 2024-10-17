@@ -137,10 +137,12 @@ struct s_cub3d
 	mlx_texture_t	*south;
 	mlx_texture_t	*east;
 	mlx_texture_t	*west;
+	t_scene			scene;
 };
 
 void			init_values(t_cub3d *cub3d);
 int				init_game(t_cub3d *cub3d);
+void			init_textures(t_cub3d *cub3d);
 void			finish_game(t_cub3d *cub3d);
 // funções de draw
 void			draw_background(t_cub3d *cub3d);
