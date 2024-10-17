@@ -6,7 +6,7 @@
 /*   By: tpaim-yu <tpaim-yu@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 01:42:01 by tpaim-yu          #+#    #+#             */
-/*   Updated: 2024/10/17 01:42:01 by tpaim-yu         ###   ########.fr       */
+/*   Updated: 2024/10/17 12:38:24 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,6 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	while (i < line_count)
 	{
 		line = lines[i];
-		if (!non_map_line(line, &scene->map_started))
-			panic_exit("garbage after the map", scene);
 		if (!handle_map_line(line, &scene->map_started))
 			break ;
 		if (scene->map_started)
