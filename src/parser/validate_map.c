@@ -6,7 +6,7 @@
 /*   By: phraranha <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 22:52:48 by phraranha         #+#    #+#             */
-/*   Updated: 2024/10/16 20:29:24 by paranha          ###   ########.org.br   */
+/*   Updated: 2024/10/17 05:41:12 by phraranha        ###   ########.org.br   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ bool	handle_map_line(char *line, bool *map_started)
 bool	non_map_line(char *line, bool *map_started)
 {
 
-	if (is_map_line(&line[0]))
+	if (is_empty_line(&line[0]))
 	{
-		*map_started = true;
+		*map_started = false;
 	}
-	else if (!is_empty_line(line) && !is_map_line(line) && *map_started)
+	else if (!is_empty_line(line) && is_map_line(line) && !*map_started)
 	{
 		return (false);
 	}
@@ -63,8 +63,8 @@ void	parse_map_from_lines(char **lines, int line_count, t_scene *scene,
 	while (i < line_count)
 	{
 		line = lines[i];
-		if (!non_map_line(line, &scene->map_started))
-			panic_exit("garbage after the map", scene);
+		//if (!non_map_line(line, &scene->map_started))
+		//	panic_exit("garbage after the map1", scene);
 		if (!handle_map_line(line, &scene->map_started))
 		{
 			break ;
